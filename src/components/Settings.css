@@ -1,0 +1,7 @@
+.Settings {
+  padding: 1em;
+}
+
+.Settings .btn-primary {
+  float: right;
+}
