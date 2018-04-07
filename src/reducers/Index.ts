@@ -8,7 +8,7 @@ import { reducer as formReducer } from 'redux-form';
 
 export function window(state: WindowState, action: WindowAction): WindowState {
   if (!state) {
-    return initialState.window;
+    return { ...initialState.window };
   }
 
   switch (action.type) {
@@ -21,14 +21,16 @@ export function window(state: WindowState, action: WindowAction): WindowState {
 
 export function logGroups(state: LogGroupsState, action: LogGroupAction): LogGroupsState {
   if (!state) {
-    return initialState.logGroups;
+    return { ...initialState.logGroups };
   }
 
   switch (action.type) {
     case ActionTypes.REQUEST_LOG_GROUPS:
       return { ...state };
     case ActionTypes.RECEIVE_LOG_GROUPS:
-      return { ...state, logGroups: action.logGroups };
+      return { ...state, logGroups: action.logGroups, lastModified: action.lastModified, errorMessage: undefined };
+    case ActionTypes.ERROR_LOG_GROUPS:
+      return { ...state, errorMessage: action.errorMessage };
     case ActionTypes.SELECT_LOG_GROUP:
       return { ...state, selectedArn: action.selectedArn };
     default:
@@ -38,14 +40,14 @@ export function logGroups(state: LogGroupsState, action: LogGroupAction): LogGro
 
 export function settings(state: SettingsState, action: SettingsAction): SettingsState {
   if (!state) {
-    return initialState.settings;
+    return { ...initialState.settings };
   }
 
   switch (action.type) {
     case ActionTypes.SAVE_SETTINGS:
-      return { ...state, settings: action.settings };
+      return { ...state, settings: action.settings, lastModified: action.lastModified };
     case ActionTypes.RECEIVE_SETTINGS:
-      return { ...state, settings: action.settings };
+      return { ...state, settings: action.settings, lastModified: action.lastModified };
     default:
       return state;
   }

@@ -19,7 +19,12 @@ export interface RequestLogGroups {
 export interface ReceiveLogGroups {
   type: ActionTypes.RECEIVE_LOG_GROUPS;
   logGroups: LogGroup[];
-  errorMessage?: string;
+  lastModified: Date;
+}
+
+export interface ErrorLogGroups {
+  type: ActionTypes.ERROR_LOG_GROUPS;
+  errorMessage: string;
 }
 
 export interface SelectLogGroup {
@@ -30,18 +35,20 @@ export interface SelectLogGroup {
 export interface SaveSettings {
   type: ActionTypes.SAVE_SETTINGS;
   settings: Settings;
+  lastModified: Date;
 }
 
 export interface ReceiveSettings {
   type: ActionTypes.RECEIVE_SETTINGS;
   settings: Settings;
+  lastModified: Date;
 }
 
 //////////// Action types ////////////
 
 export type WindowAction = ShowWindowContent;
 
-export type LogGroupAction = RequestLogGroups | ReceiveLogGroups | SelectLogGroup;
+export type LogGroupAction = RequestLogGroups | ReceiveLogGroups | ErrorLogGroups | SelectLogGroup;
 
 export type SettingsAction = SaveSettings | ReceiveSettings;
 
@@ -60,10 +67,17 @@ export function requestLogGroups(): RequestLogGroups {
   };
 }
 
-export function receiveLogGroups(logGroups: LogGroup[], errorMessage?: string): ReceiveLogGroups {
+export function receiveLogGroups(logGroups: LogGroup[], lastModified: Date): ReceiveLogGroups {
   return {
     type: ActionTypes.RECEIVE_LOG_GROUPS,
     logGroups: logGroups,
+    lastModified: lastModified,
+  };
+}
+
+export function errorLogGroups(errorMessage: string): ErrorLogGroups {
+  return {
+    type: ActionTypes.ERROR_LOG_GROUPS,
     errorMessage: errorMessage,
   };
 }
@@ -71,20 +85,26 @@ export function receiveLogGroups(logGroups: LogGroup[], errorMessage?: string): 
 export function fetchLogGroups(settings: Settings): any {
   return (dispatch: Dispatch<LogGroupAction>) => {
 
+    if (!settings.region || !settings.awsAccessKeyId || !settings.awsSecretAccessKey) {
+      return;
+    }
+
     const cloudwatchlogs = new AWS.CloudWatchLogs({
       region: settings.region,
       accessKeyId: settings.awsAccessKeyId,
       secretAccessKey: settings.awsSecretAccessKey,
     });
 
-    var result = cloudwatchlogs.describeLogGroups({}, (err, data) => {
+    cloudwatchlogs.describeLogGroups({}, (err, data) => {
+      let now = new Date();
+
       if (err) {
-        dispatch(receiveLogGroups([], err.message));
+        dispatch(errorLogGroups(err.message));
         return;
       }
 
       if (!data.logGroups) {
-        dispatch(receiveLogGroups([]));
+        dispatch(receiveLogGroups([], now));
         return;
       }
 
@@ -97,12 +117,9 @@ export function fetchLogGroups(settings: Settings): any {
           creationTime: g.creationTime,
           storedBytes: g.storedBytes
         }));
-      groups.filter(g => g != null);
 
-      dispatch(receiveLogGroups(groups));
+      dispatch(receiveLogGroups(groups, now));
     });
-
-    return result;
   };
 }
 
@@ -113,27 +130,29 @@ export function selectLogGroup(selectedArn: string): SelectLogGroup {
   };
 }
 
-export function saveSettings(settings: Settings, save: (settings: Settings) => void): SaveSettings {
+export function saveSettings(settings: Settings, lastModified: Date, save: (settings: Settings) => void): SaveSettings {
   // save settings to app local.
   save(settings);
 
   return {
     type: ActionTypes.SAVE_SETTINGS,
     settings: settings,
+    lastModified: lastModified,
   };
 }
 
 export function loadSettings(load: () => Promise<Settings>) {
   return (dispatch: Dispatch<LogGroupAction>) => {
     load().then((settings: Settings) => {
-      dispatch(receiveSettings(settings));
+      dispatch(receiveSettings(settings, new Date()));
     });
   };
 }
 
-export function receiveSettings(settings: Settings): ReceiveSettings {
+export function receiveSettings(settings: Settings, lastModified: Date): ReceiveSettings {
   return {
     type: ActionTypes.RECEIVE_SETTINGS,
     settings: settings,
+    lastModified: lastModified,
   };
 }

@@ -30,6 +30,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.SettingsAction>) {
           awsAccessKeyId: values.awsAccessKeyId,
           awsSecretAccessKey: values.awsSecretAccessKey
         },
+        new Date(),
         save)
     ),
   };

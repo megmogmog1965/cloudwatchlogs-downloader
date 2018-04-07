@@ -10,38 +10,50 @@ import { Provider } from 'react-redux';
 export interface Props {
   windowContent: enums.WindowContent;
   ShowWindowContent: (windowContent: enums.WindowContent) => void;
+  LoadSettings: () => void;
 }
 
-function App({ windowContent, ShowWindowContent }: Props) {
-  return (
-    <div className="App window">
-      <header className="toolbar toolbar-header">
+class App extends React.Component<Props> {
 
-        <div className="toolbar-actions">
-          <div className="btn-group">
-            <button className={'btn btn-default ' + buttonState(enums.WindowContent.LogDownload, windowContent)} onClick={() => ShowWindowContent(enums.WindowContent.LogDownload)}>
-              <span className="icon icon-install" />
-            </button>
-            <button className={'btn btn-default ' + buttonState(enums.WindowContent.Settings, windowContent)} onClick={() => ShowWindowContent(enums.WindowContent.Settings)}>
-              <span className="icon icon-cog" />
+  constructor(props: Props) {
+    super(props);
+  }
+
+  componentDidMount(): void {
+    this.props.LoadSettings();
+  }
+
+  render() {
+    return (
+      <div className="App window">
+        <header className="toolbar toolbar-header">
+
+          <div className="toolbar-actions">
+            <div className="btn-group">
+              <button className={'btn btn-default ' + buttonState(enums.WindowContent.LogDownload, this.props.windowContent)} onClick={() => this.props.ShowWindowContent(enums.WindowContent.LogDownload)}>
+                <span className="icon icon-install" />
+              </button>
+              <button className={'btn btn-default ' + buttonState(enums.WindowContent.Settings, this.props.windowContent)} onClick={() => this.props.ShowWindowContent(enums.WindowContent.Settings)}>
+                <span className="icon icon-cog" />
+              </button>
+            </div>
+
+            <button className="btn btn-default">
+              <span className="icon icon-home icon-text" />Filters
+          </button>
+
+            <button className="btn btn-default btn-dropdown pull-right">
+              <span className="icon icon-megaphone" />
             </button>
           </div>
+        </header>
 
-          <button className="btn btn-default">
-            <span className="icon icon-home icon-text" />Filters
-          </button>
-
-          <button className="btn btn-default btn-dropdown pull-right">
-            <span className="icon icon-megaphone" />
-          </button>
+        <div className="window-content">
+          {createWindowContent(this.props.windowContent)}
         </div>
-      </header>
-
-      <div className="window-content">
-        {createWindowContent(windowContent)}
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 function buttonState(target: enums.WindowContent, current: enums.WindowContent): string {

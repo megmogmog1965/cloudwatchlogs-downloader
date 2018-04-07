@@ -1,24 +1,29 @@
 import * as React from 'react';
 import { LogGroup } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
-import * as actions from '../actions';
-import store from '../Store';
 
 export interface Props {
   logGroups: LogGroup[];
   selectedArn?: string;
+  lastModified: Date;
   settings: Settings;
+  FetchLogGroups: (settings: Settings) => void;
   SelectLogGroup: (selectedArn: string) => void;
 }
 
-class LogGroups extends React.Component<Props, any> {
+class LogGroups extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props);
   }
 
-  componentDidMount() {
-    store.dispatch(actions.fetchLogGroups(this.props.settings));
+  componentDidUpdate(prevProps: Props, prevState: any, prevContext: any) {
+    // fetch log groups per 5 minutes.
+    let secondsLastModified = (new Date().getTime() - this.props.lastModified.getTime()) / 1000;
+    let threshold = 5 * 60;
+    if (secondsLastModified > threshold) {
+      this.props.FetchLogGroups(this.props.settings);
+    }
   }
 
   render() {

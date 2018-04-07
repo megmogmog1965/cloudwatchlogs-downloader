@@ -10,6 +10,9 @@ export namespace ActionTypes {
   export const RECEIVE_LOG_GROUPS = 'RECEIVE_LOG_GROUPS';
   export type RECEIVE_LOG_GROUPS = typeof RECEIVE_LOG_GROUPS;
 
+  export const ERROR_LOG_GROUPS = 'ERROR_LOG_GROUPS';
+  export type ERROR_LOG_GROUPS = typeof ERROR_LOG_GROUPS;
+
   export const SELECT_LOG_GROUP = 'SELECT_LOG_GROUP';
   export type SELECT_LOG_GROUP = typeof SELECT_LOG_GROUP;
 

@@ -19,10 +19,12 @@ export interface LogGroupsState {
   logGroups: LogGroup[];
   selectedArn?: string;
   errorMessage?: string;
+  lastModified: Date;
 }
 
 export interface SettingsState {
   settings: Settings;
+  lastModified: Date;
 }
 
 export const initialState: StoreState = {
@@ -31,6 +33,7 @@ export const initialState: StoreState = {
   },
   logGroups: {
     logGroups: [],
+    lastModified: new Date(0),
   },
   settings: {
     settings: {
@@ -38,5 +41,6 @@ export const initialState: StoreState = {
       awsAccessKeyId: '',
       awsSecretAccessKey: '',
     },
+    lastModified: new Date(0),
   },
 };
