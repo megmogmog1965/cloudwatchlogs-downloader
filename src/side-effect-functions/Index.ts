@@ -5,7 +5,7 @@ import { Settings } from '../common-interfaces/Settings';
 const storage = (<any> window).require('electron-json-storage'); // @see https://github.com/electron/electron/issues/7300
 
 export function applicationPassphrase(): string {
-  let seed = utils.hash(os.hostname());
+  let seed = utils.hash(os.type() + os.release() + os.hostname() + 'ufQROog1Q8');
   return utils.random(seed).toString(36).slice(-8);
 }
 

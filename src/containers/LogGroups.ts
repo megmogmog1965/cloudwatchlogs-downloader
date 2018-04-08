@@ -9,7 +9,7 @@ import { Settings } from '../common-interfaces/Settings';
 export function mapStateToProps({ logGroups, settings }: StoreState) {
   return {
     logGroups: logGroups.logGroups,
-    selectedArn: logGroups.selectedArn,
+    selectedName: logGroups.selectedName,
     lastModified: logGroups.lastModified,
     settings: settings.settings,
   };
@@ -18,7 +18,8 @@ export function mapStateToProps({ logGroups, settings }: StoreState) {
 export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
   return {
     FetchLogGroups: (settings: Settings) => dispatch(actions.fetchLogGroups(settings)),
-    SelectLogGroup: (selectedArn: string) => dispatch(actions.selectLogGroup(selectedArn)),
+    SelectLogGroup: (selectedName: string) => dispatch(actions.selectLogGroup(selectedName)),
+    FetchLogStreams: (settings: Settings, logGroupName: string) => dispatch(actions.fetchLogStreams(settings, logGroupName)),
   };
 }
 

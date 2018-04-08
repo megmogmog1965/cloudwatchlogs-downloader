@@ -1,28 +1,32 @@
 import * as React from 'react';
+import { LogStream } from '../common-interfaces/Aws';
+import { Settings } from '../common-interfaces/Settings';
 
 export interface Props {
+  logStreams: LogStream[];
+  selectedName?: string;
+  lastModified: Date;
+  settings: Settings;
+  SelectLogStream: (selectedName: string) => void;
 }
 
-function LogStreams({ }: Props) {
+function LogGroups({ logStreams, selectedName, lastModified, SelectLogStream }: Props) {
   return (
     <ul className="list-group">
       <li className="list-group-header">
-        <strong>Log Streams</strong>
+        <strong>Log Groups</strong>
       </li>
-      <li className="list-group-item">
-        <div className="media-body">
-          <strong>Stream 1</strong>
-          <p>Lorem ipsum dolor sit amet.</p>
-        </div>
-      </li>
-      <li className="list-group-item">
-        <div className="media-body">
-          <strong>Stream 2</strong>
-          <p>Lorem ipsum dolor sit amet.</p>
-        </div>
-      </li>
+      {logStreams.map(s => (
+        <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => SelectLogStream(s.logStreamName)}>
+          <div className="media-body">
+            <strong>{s.logStreamName}</strong>
+            <p>- Created: {new Date(s.firstEventTimestamp).toISOString()}</p>
+            <p>- Bytes: {s.storedBytes}</p>
+          </div>
+        </li>
+      ))}
     </ul>
   );
 }
 
-export default LogStreams;
+export default LogGroups;

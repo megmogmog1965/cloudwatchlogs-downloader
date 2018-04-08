@@ -4,11 +4,12 @@ import { Settings } from '../common-interfaces/Settings';
 
 export interface Props {
   logGroups: LogGroup[];
-  selectedArn?: string;
+  selectedName?: string;
   lastModified: Date;
   settings: Settings;
   FetchLogGroups: (settings: Settings) => void;
-  SelectLogGroup: (selectedArn: string) => void;
+  SelectLogGroup: (selectedName: string) => void;
+  FetchLogStreams: (settings: Settings, logGroupName: string) => void;
 }
 
 class LogGroups extends React.Component<Props> {
@@ -27,16 +28,23 @@ class LogGroups extends React.Component<Props> {
   }
 
   render() {
+    let props = this.props;
+
+    let onClick = (logGroupName: string) => {
+      props.SelectLogGroup(logGroupName);
+      props.FetchLogStreams(props.settings, logGroupName);
+    };
+
     return (
       <ul className="list-group">
         <li className="list-group-header">
           <strong>Log Groups</strong>
         </li>
-        {this.props.logGroups.map(g => (
-          <li className={(this.props.selectedArn === g.arn) ? 'list-group-item active' : 'list-group-item'} onClick={() => this.props.SelectLogGroup(g.arn)}>
+        {props.logGroups.map(g => (
+          <li className={(props.selectedName === g.logGroupName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(g.logGroupName)}>
             <div className="media-body">
               <strong>{g.logGroupName}</strong>
-              <p>- Created: {g.creationTime ? new Date(g.creationTime).toISOString() : ''}</p>
+              <p>- Created: {new Date(g.creationTime).toISOString()}</p>
               <p>- Bytes: {g.storedBytes}</p>
             </div>
           </li>

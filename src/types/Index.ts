@@ -2,12 +2,13 @@
 
 import * as enums from '../enums';
 import { Region } from '../constants';
-import { LogGroup } from '../common-interfaces/Aws';
+import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
 
 export interface StoreState {
   window: WindowState;
   logGroups: LogGroupsState;
+  logStreams: LogStreamsState;
   settings: SettingsState;
 }
 
@@ -17,7 +18,14 @@ export interface WindowState {
 
 export interface LogGroupsState {
   logGroups: LogGroup[];
-  selectedArn?: string;
+  selectedName?: string;
+  errorMessage?: string;
+  lastModified: Date;
+}
+
+export interface LogStreamsState {
+  logStreams: LogStream[];
+  selectedName?: string;
   errorMessage?: string;
   lastModified: Date;
 }
@@ -33,6 +41,10 @@ export const initialState: StoreState = {
   },
   logGroups: {
     logGroups: [],
+    lastModified: new Date(0),
+  },
+  logStreams: {
+    logStreams: [],
     lastModified: new Date(0),
   },
   settings: {

@@ -6,10 +6,14 @@ import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
 import { load } from '../side-effect-functions';
+import { Settings } from '../common-interfaces/Settings';
 
-export function mapStateToProps({ window }: StoreState) {
+export function mapStateToProps({ window, settings, logGroups, logStreams }: StoreState) {
   return {
     windowContent: window.windowContent,
+    settings: settings.settings,
+    logGroupName: logGroups.selectedName,
+    logStreamName: logStreams.selectedName,
   };
 }
 
@@ -17,6 +21,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.WindowAction>) {
   return {
     ShowWindowContent: (windowContent: enums.WindowContent) => dispatch(actions.showWindowContent(windowContent)),
     LoadSettings: () => dispatch(actions.loadSettings(load)),
+    ReloadAll: (settings: Settings, logGroupName?: string, logStreamName?: string) => dispatch(actions.reloadAll(settings, logGroupName, logStreamName)),
   };
 }
 

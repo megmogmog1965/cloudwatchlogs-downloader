@@ -4,6 +4,9 @@ export namespace ActionTypes {
   export const SHOW_WINDOW_CONTENT = 'SHOW_WINDOW_CONTENT';
   export type SHOW_WINDOW_CONTENT = typeof SHOW_WINDOW_CONTENT;
 
+  export const RELOAD_ALL = 'RELOAD_ALL';
+  export type RELOAD_ALL = typeof RELOAD_ALL;
+
   export const REQUEST_LOG_GROUPS = 'REQUEST_LOG_GROUPS';
   export type REQUEST_LOG_GROUPS = typeof REQUEST_LOG_GROUPS;
 
@@ -15,6 +18,18 @@ export namespace ActionTypes {
 
   export const SELECT_LOG_GROUP = 'SELECT_LOG_GROUP';
   export type SELECT_LOG_GROUP = typeof SELECT_LOG_GROUP;
+
+  export const REQUEST_LOG_STREAMS = 'REQUEST_LOG_STREAMS';
+  export type REQUEST_LOG_STREAMS = typeof REQUEST_LOG_STREAMS;
+
+  export const RECEIVE_LOG_STREAMS = 'RECEIVE_LOG_STREAMS';
+  export type RECEIVE_LOG_STREAMS = typeof RECEIVE_LOG_STREAMS;
+
+  export const ERROR_LOG_STREAMS = 'ERROR_LOG_STREAMS';
+  export type ERROR_LOG_STREAMS = typeof ERROR_LOG_STREAMS;
+
+  export const SELECT_LOG_STREAM = 'SELECT_LOG_STREAM';
+  export type SELECT_LOG_STREAM = typeof SELECT_LOG_STREAM;
 
   export const SAVE_SETTINGS = 'SAVE_SETTINGS';
   export type SAVE_SETTINGS = typeof SAVE_SETTINGS;

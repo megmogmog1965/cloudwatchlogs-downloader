@@ -1,8 +1,8 @@
 // src/reducers/index.tsx
 
 import { combineReducers, Reducer } from 'redux';
-import { LogGroupAction, WindowAction, SettingsAction } from '../actions';
-import { LogGroupsState, WindowState, SettingsState, initialState } from '../types';
+import { LogGroupAction, LogStreamAction, WindowAction, SettingsAction } from '../actions';
+import { LogGroupsState, LogStreamsState, WindowState, SettingsState, initialState } from '../types';
 import { ActionTypes } from '../constants';
 import { reducer as formReducer } from 'redux-form';
 
@@ -32,7 +32,26 @@ export function logGroups(state: LogGroupsState, action: LogGroupAction): LogGro
     case ActionTypes.ERROR_LOG_GROUPS:
       return { ...state, errorMessage: action.errorMessage };
     case ActionTypes.SELECT_LOG_GROUP:
-      return { ...state, selectedArn: action.selectedArn };
+      return { ...state, selectedName: action.selectedName };
+    default:
+      return state;
+  }
+}
+
+export function logStreams(state: LogStreamsState, action: LogStreamAction): LogStreamsState {
+  if (!state) {
+    return { ...initialState.logStreams };
+  }
+
+  switch (action.type) {
+    case ActionTypes.REQUEST_LOG_STREAMS:
+      return { ...state };
+    case ActionTypes.RECEIVE_LOG_STREAMS:
+      return { ...state, logStreams: action.logStreams, lastModified: action.lastModified, errorMessage: undefined };
+    case ActionTypes.ERROR_LOG_STREAMS:
+      return { ...state, errorMessage: action.errorMessage };
+    case ActionTypes.SELECT_LOG_STREAM:
+      return { ...state, selectedName: action.selectedName };
     default:
       return state;
   }
@@ -56,6 +75,7 @@ export function settings(state: SettingsState, action: SettingsAction): Settings
 const reducers: Reducer<any> = combineReducers({
   window,
   logGroups,
+  logStreams,
   settings,
   form: formReducer,
 });

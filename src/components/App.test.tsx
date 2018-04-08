@@ -2,8 +2,25 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
 import * as enums from '../enums';
+import * as types from '../common-interfaces/Settings';
+
+let settings: types.Settings = {
+  region: '',
+  awsAccessKeyId: '',
+  awsSecretAccessKey: '',
+};
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<App windowContent={enums.WindowContent.LogDownload} ShowWindowContent={(windowContent) => windowContent} LoadSettings={() => 0} />, div);
+  let props = {
+    windowContent: enums.WindowContent.LogDownload,
+    settings: settings,
+    logGroupName: '',
+    logStreamName: '',
+    ShowWindowContent: (windowContent: any) => windowContent,
+    LoadSettings: () => 0,
+    ReloadAll: () => 0,
+  };
+
+  ReactDOM.render(<App {...props} />, div);
 });
