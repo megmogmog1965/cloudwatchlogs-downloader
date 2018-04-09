@@ -1,3 +1,13 @@
 .App {
 
 }
+
+.log-groups{
+  max-width: 220px;
+  min-width: 150px;
+}
+
+.log-streams {
+  max-width: 220px;
+  min-width: 150px;
+}

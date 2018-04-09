@@ -4,6 +4,7 @@ import * as enums from '../enums';
 import store from '../Store';
 import LogStreams from '../containers/LogStreams';
 import LogGroups from '../containers/LogGroups';
+import LogContent from '../containers/LogContent';
 import Settings from '../containers/Settings';
 import { Provider } from 'react-redux';
 import * as types from '../common-interfaces/Settings';
@@ -72,14 +73,19 @@ function createWindowContent(windowContent: enums.WindowContent) {
     case enums.WindowContent.LogDownload:
       return (
         <div className="pane-group">
-          <div className="pane-sm sidebar">
+          <div className="pane sidebar log-groups">
             <Provider store={store}>
               <LogGroups />
             </Provider>
           </div>
-          <div className="pane">
+          <div className="pane sidebar log-streams">
             <Provider store={store}>
               <LogStreams />
+            </Provider>
+          </div>
+          <div className="pane">
+            <Provider store={store}>
+              <LogContent />
             </Provider>
           </div>
         </div>

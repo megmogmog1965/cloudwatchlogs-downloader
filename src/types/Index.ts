@@ -9,6 +9,7 @@ export interface StoreState {
   window: WindowState;
   logGroups: LogGroupsState;
   logStreams: LogStreamsState;
+  dateRange: DateRangeState;
   settings: SettingsState;
 }
 
@@ -35,6 +36,11 @@ export interface SettingsState {
   lastModified: Date;
 }
 
+export interface DateRangeState {
+  startDate: Date;
+  endDate: Date;
+}
+
 export const initialState: StoreState = {
   window: {
     windowContent: enums.WindowContent.LogDownload,
@@ -54,5 +60,9 @@ export const initialState: StoreState = {
       awsSecretAccessKey: '',
     },
     lastModified: new Date(0),
+  },
+  dateRange: {
+    startDate: new Date(),
+    endDate: new Date(new Date().getTime() - 60 * 60 * 1000),
   },
 };

@@ -52,6 +52,12 @@ export interface SelectLogStream {
   selectedName?: string;
 }
 
+export interface SetDateRange {
+  type: ActionTypes.SET_DATERANGE;
+  startDate: Date;
+  endDate: Date;
+}
+
 export interface SaveSettings {
   type: ActionTypes.SAVE_SETTINGS;
   settings: Settings;
@@ -71,6 +77,8 @@ export type WindowAction = ShowWindowContent;
 export type LogGroupAction = RequestLogGroups | ReceiveLogGroups | ErrorLogGroups | SelectLogGroup;
 
 export type LogStreamAction = RequestLogStreams | ReceiveLogStreams | ErrorLogStreams | SelectLogStream;
+
+export type DateRangeAction = SetDateRange;
 
 export type SettingsAction = SaveSettings | ReceiveSettings;
 
@@ -237,6 +245,14 @@ export function selectLogStream(selectedName?: string): SelectLogStream {
   return {
     type: ActionTypes.SELECT_LOG_STREAM,
     selectedName: selectedName,
+  };
+}
+
+export function setDateRange(startDate: Date, endDate: Date): SetDateRange {
+  return {
+    type: ActionTypes.SET_DATERANGE,
+    startDate,
+    endDate,
   };
 }
 

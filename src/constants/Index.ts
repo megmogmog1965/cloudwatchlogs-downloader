@@ -31,6 +31,9 @@ export namespace ActionTypes {
   export const SELECT_LOG_STREAM = 'SELECT_LOG_STREAM';
   export type SELECT_LOG_STREAM = typeof SELECT_LOG_STREAM;
 
+  export const SET_DATERANGE = 'SET_DATERANGE';
+  export type SET_DATERANGE = typeof SET_DATERANGE;
+
   export const SAVE_SETTINGS = 'SAVE_SETTINGS';
   export type SAVE_SETTINGS = typeof SAVE_SETTINGS;
 

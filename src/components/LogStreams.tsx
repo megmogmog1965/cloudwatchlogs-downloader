@@ -14,7 +14,7 @@ function LogGroups({ logStreams, selectedName, lastModified, SelectLogStream }: 
   return (
     <ul className="list-group">
       <li className="list-group-header">
-        <strong>Log Groups</strong>
+        <strong>Log Streams</strong>
       </li>
       {logStreams.map(s => (
         <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => SelectLogStream(s.logStreamName)}>
