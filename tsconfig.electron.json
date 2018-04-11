@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "build/electron",
+    "module": "commonjs",
+    "rootDir": "src/electron"
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/app/setupTests.ts",
+    "public",
+    "src/app"
+  ]
+}
