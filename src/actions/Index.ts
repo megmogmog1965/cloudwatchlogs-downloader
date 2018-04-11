@@ -161,33 +161,45 @@ export function fetchLogGroups(settings: Settings): (dispatch: Dispatch<LogGroup
 
     dispatch(requestLogGroups());
 
-    cloudwatchlogs.describeLogGroups({}, (err, data) => {
-      let now = new Date();
+    let fetchRecursively = (groups: LogGroup[], nextToken?: string) => {
+      cloudwatchlogs.describeLogGroups({}, (err, data) => {
+        let now = new Date();
 
-      if (err) {
-        dispatch(errorLogGroups(err.message));
-        return;
-      }
+        if (err) {
+          dispatch(errorLogGroups(err.message));
+          return;
+        }
 
-      if (!data.logGroups) {
-        dispatch(receiveLogGroups([], now));
-        return;
-      }
+        if (!data.logGroups) {
+          dispatch(receiveLogGroups([], now));
+          return;
+        }
 
-      let groups: LogGroup[] = data.logGroups
-        .filter(g => g.arn)
-        .filter(g => g.logGroupName)
-        .filter(g => g.creationTime)
-        .filter(g => g.storedBytes)
-        .map(g => ({
-          arn: g.arn!,
-          logGroupName: g.logGroupName!,
-          creationTime: g.creationTime!,
-          storedBytes: g.storedBytes!
-        }));
+        let part: LogGroup[] = data.logGroups
+          .filter(g => g.arn)
+          .filter(g => g.logGroupName)
+          .filter(g => g.creationTime)
+          .filter(g => g.storedBytes)
+          .map(g => ({
+            arn: g.arn!,
+            logGroupName: g.logGroupName!,
+            creationTime: g.creationTime!,
+            storedBytes: g.storedBytes!
+          }));
 
-      dispatch(receiveLogGroups(groups, now));
-    });
+        let merged = groups.concat(part);
+
+        if (!data.nextToken) {
+          dispatch(receiveLogGroups(merged, now));
+          return;
+        }
+
+        // call recursively.
+        fetchRecursively(merged, data.nextToken);
+      });
+    };
+
+    fetchRecursively([]);
   };
 }
 
@@ -234,37 +246,49 @@ export function fetchLogStreams(settings: Settings, logGroupName: string): (disp
 
     dispatch(requestLogStreams());
 
-    cloudwatchlogs.describeLogStreams({ logGroupName, descending: true, orderBy: 'LastEventTime' }, (err, data) => {
-      let now = new Date();
+    let fetchRecursively = (streams: LogStream[], nextToken?: string) => {
+      cloudwatchlogs.describeLogStreams({ logGroupName, descending: true, orderBy: 'LastEventTime', nextToken }, (err, data) => {
+        let now = new Date();
 
-      if (err) {
-        dispatch(errorLogGroups(err.message));
-        return;
-      }
+        if (err) {
+          dispatch(errorLogGroups(err.message));
+          return;
+        }
 
-      if (!data.logStreams) {
-        dispatch(receiveLogGroups([], now));
-        return;
-      }
+        if (!data.logStreams) {
+          dispatch(receiveLogGroups([], now));
+          return;
+        }
 
-      let streams: LogStream[] = data.logStreams
-        .filter(g => g.arn)
-        .filter(g => g.logStreamName)
-        .filter(g => g.creationTime)
-        .filter(g => g.firstEventTimestamp)
-        .filter(g => g.lastEventTimestamp)
-        .filter(g => g.storedBytes)
-        .map(g => ({
-          arn: g.arn!,
-          logStreamName: g.logStreamName!,
-          creationTime: g.creationTime!,
-          firstEventTimestamp: g.firstEventTimestamp!,
-          lastEventTimestamp: g.lastEventTimestamp!,
-          storedBytes: g.storedBytes!,
-        }));
+        let part: LogStream[] = data.logStreams
+          .filter(g => g.arn)
+          .filter(g => g.logStreamName)
+          .filter(g => g.creationTime)
+          .filter(g => g.firstEventTimestamp)
+          .filter(g => g.lastEventTimestamp)
+          .filter(g => g.storedBytes)
+          .map(g => ({
+            arn: g.arn!,
+            logStreamName: g.logStreamName!,
+            creationTime: g.creationTime!,
+            firstEventTimestamp: g.firstEventTimestamp!,
+            lastEventTimestamp: g.lastEventTimestamp!,
+            storedBytes: g.storedBytes!,
+          }));
 
-      dispatch(receiveLogStreams(streams, now));
-    });
+        let merged = streams.concat(part);
+
+        if (!data.nextToken) {
+          dispatch(receiveLogStreams(merged, now));
+          return;
+        }
+
+        // call recursively.
+        fetchRecursively(merged, data.nextToken);
+      });
+    };
+
+    fetchRecursively([]);
   };
 }
 
