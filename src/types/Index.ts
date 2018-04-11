@@ -9,6 +9,7 @@ export interface StoreState {
   window: WindowState;
   logGroups: LogGroupsState;
   logStreams: LogStreamsState;
+  logEvents: LogEventsState;
   dateRange: DateRangeState;
   settings: SettingsState;
 }
@@ -29,6 +30,12 @@ export interface LogStreamsState {
   selectedName?: string;
   errorMessage?: string;
   lastModified: Date;
+}
+
+export interface LogEventsState {
+  runningIds: string[];
+  finishedIds: string[];
+  errorIds: string[];
 }
 
 export interface SettingsState {
@@ -52,6 +59,11 @@ export const initialState: StoreState = {
   logStreams: {
     logStreams: [],
     lastModified: new Date(0),
+  },
+  logEvents: {
+    runningIds: [],
+    finishedIds: [],
+    errorIds: [],
   },
   settings: {
     settings: {

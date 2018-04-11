@@ -7,6 +7,7 @@ declare var $: any;
 declare var moment: any;
 
 const DATERANGEPICKER_DOM_ID = 'daterange-picker';
+const DOWNLOADBUTTON_DOM_ID = 'download-button';
 
 export interface Props {
   settings: Settings;
@@ -15,7 +16,7 @@ export interface Props {
   startDate: Date;
   endDate: Date;
   SetDateRange: (startDate: Date, endDate: Date) => void;
-  DownloadLogs: (logGroupName: string, logStreamName: string, startDate: Date, endDate: Date) => void;
+  DownloadLogs: (settings: Settings, logGroupName: string, logStreamName: string, startDate: Date, endDate: Date) => void;
 }
 
 class LogContent extends React.Component<Props> {
@@ -54,15 +55,28 @@ class LogContent extends React.Component<Props> {
   }
 
   render() {
-    // let { settings, logGroupName, logStreamName, DownloadLogs } = this.props;
-
     return (
       <div className="LogContent" >
-        <p id={DATERANGEPICKER_DOM_ID} style={{ border: '1px', borderColor: 'gray', borderRadius: '4px' }}>aaa</p>
-        {/* <input id="daterange-picker" /> */}
+        <p id={DATERANGEPICKER_DOM_ID}>dummy text</p>
+        <div className="clearfix">
+          {downloadButton(this.props)}
+        </div>
+        {/* <p>THIS AREA SHOWS SELECTED LOG CONTENTS...</p> */}
       </div>
     );
   }
+}
+
+function downloadButton(props: Props) {
+  const { settings, logGroupName, logStreamName, startDate, endDate, DownloadLogs } = props;
+
+  if (!logGroupName || !logStreamName) {
+    return <button type="button" id={DOWNLOADBUTTON_DOM_ID} className="btn btn-negative" disabled={true}>Download Logs</button>;
+  }
+
+  let onClick = () => DownloadLogs(settings, logGroupName, logStreamName, startDate, endDate);
+
+  return <button type="button" id={DOWNLOADBUTTON_DOM_ID} className="btn btn-primary" onClick={onClick}>Download Logs</button>;
 }
 
 export default LogContent;

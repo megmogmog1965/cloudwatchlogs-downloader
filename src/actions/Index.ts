@@ -2,8 +2,14 @@ import { ActionTypes } from '../constants';
 import * as enums from '../enums';
 import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
+import * as zlib from 'zlib';
 import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
+import { getCloudWatchLogsEvents } from '../side-effect-functions';
+
+// declare variables for external modules.
+declare var fs: any;
 
 //////////// Action object interfaces ////////////
 
@@ -52,6 +58,21 @@ export interface SelectLogStream {
   selectedName?: string;
 }
 
+export interface RequestLogEvents {
+  type: ActionTypes.REQUEST_LOG_EVENTS;
+  id: string;
+}
+
+export interface ReceiveLogEvents {
+  type: ActionTypes.RECEIVE_LOG_EVENTS;
+  id: string;
+}
+
+export interface ErrorLogEvents {
+  type: ActionTypes.ERROR_LOG_EVENTS;
+  id: string;
+}
+
 export interface SetDateRange {
   type: ActionTypes.SET_DATERANGE;
   startDate: Date;
@@ -77,6 +98,8 @@ export type WindowAction = ShowWindowContent;
 export type LogGroupAction = RequestLogGroups | ReceiveLogGroups | ErrorLogGroups | SelectLogGroup;
 
 export type LogStreamAction = RequestLogStreams | ReceiveLogStreams | ErrorLogStreams | SelectLogStream;
+
+export type LogEventAction = RequestLogEvents | ReceiveLogEvents | ErrorLogEvents;
 
 export type DateRangeAction = SetDateRange;
 
@@ -135,6 +158,8 @@ export function fetchLogGroups(settings: Settings): (dispatch: Dispatch<LogGroup
       accessKeyId: settings.awsAccessKeyId,
       secretAccessKey: settings.awsSecretAccessKey,
     });
+
+    dispatch(requestLogGroups());
 
     cloudwatchlogs.describeLogGroups({}, (err, data) => {
       let now = new Date();
@@ -207,6 +232,8 @@ export function fetchLogStreams(settings: Settings, logGroupName: string): (disp
       secretAccessKey: settings.awsSecretAccessKey,
     });
 
+    dispatch(requestLogStreams());
+
     cloudwatchlogs.describeLogStreams({ logGroupName, descending: true, orderBy: 'LastEventTime' }, (err, data) => {
       let now = new Date();
 
@@ -256,6 +283,74 @@ export function setDateRange(startDate: Date, endDate: Date): SetDateRange {
   };
 }
 
+export function requestLogEvents(id: string): RequestLogEvents {
+  return {
+    type: ActionTypes.REQUEST_LOG_EVENTS,
+    id,
+  };
+}
+
+export function receiveLogEvents(id: string): ReceiveLogEvents {
+  return {
+    type: ActionTypes.RECEIVE_LOG_EVENTS,
+    id,
+  };
+}
+
+export function errorLogEvents(id: string): ErrorLogEvents {
+  return {
+    type: ActionTypes.ERROR_LOG_EVENTS,
+    id,
+  };
+}
+
+export function downloadLogs(
+  settings: Settings,
+  logGroupName: string,
+  logStreamName: string,
+  startDate: Date,
+  endDate: Date,
+  fileChooser: () => string
+): (dispatch: Dispatch<LogGroupAction>) => void {
+
+  return (dispatch: Dispatch<LogGroupAction>) => {
+    let filename = fileChooser();
+    const id = uuid();
+
+    dispatch(requestLogEvents(id));
+
+    // open write stream.
+    let rawstream = fs.createWriteStream(filename);
+    let out = filename.endsWith('.gz') ? zlib.createGzip().pipe(rawstream) : rawstream;
+
+    getCloudWatchLogsEvents(
+      settings,
+      logGroupName,
+      logStreamName,
+      startDate,
+      endDate,
+      (data) => {
+        if (!data.events) {
+          return;
+        }
+
+        let messages = data.events.map(e => e.message).join();
+        out.write(messages);
+
+        dispatch(receiveLogEvents(id));
+      },
+      (err) => {
+        out.end();
+        dispatch(errorLogEvents(id));
+      },
+      () => {
+        out.end();
+        dispatch(receiveLogEvents(id));
+      },
+    );
+  };
+}
+
 export function saveSettings(settings: Settings, lastModified: Date, save: (settings: Settings) => void): SaveSettings {
   // save settings to app local.
   save(settings);
@@ -267,7 +362,7 @@ export function saveSettings(settings: Settings, lastModified: Date, save: (sett
   };
 }
 
-export function loadSettings(load: () => Promise<Settings>) {
+export function loadSettings(load: () => Promise<Settings>): (dispatch: Dispatch<LogGroupAction>) => void {
   return (dispatch: Dispatch<LogGroupAction>) => {
     load().then((settings: Settings) => {
       dispatch(receiveSettings(settings, new Date()));

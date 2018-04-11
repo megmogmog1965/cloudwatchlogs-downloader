@@ -17,6 +17,7 @@ export interface Props {
   ShowWindowContent: (windowContent: enums.WindowContent) => void;
   LoadSettings: () => void;
   ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => void;
+  OpenGithub: () => void;
 }
 
 class App extends React.Component<Props> {
@@ -50,7 +51,7 @@ class App extends React.Component<Props> {
               <span className="icon icon-arrows-ccw icon-text" />Reload
           </button>
 
-            <button className="btn btn-default pull-right">
+            <button className="btn btn-default pull-right" onClick={this.props.OpenGithub}>
               <span className="icon icon-github" />
             </button>
           </div>

@@ -20,6 +20,7 @@ it('renders without crashing', () => {
     ShowWindowContent: (windowContent: any) => windowContent,
     LoadSettings: () => 0,
     ReloadAll: () => 0,
+    OpenGithub: () => 0,
   };
 
   ReactDOM.render(<App {...props} />, div);

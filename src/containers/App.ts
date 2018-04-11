@@ -8,6 +8,9 @@ import { connect, Dispatch } from 'react-redux';
 import { load } from '../side-effect-functions';
 import { Settings } from '../common-interfaces/Settings';
 
+// declare variables for external modules.
+declare var shell: any;
+
 export function mapStateToProps({ window, settings, logGroups, logStreams }: StoreState) {
   return {
     windowContent: window.windowContent,
@@ -22,6 +25,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.WindowAction>) {
     ShowWindowContent: (windowContent: enums.WindowContent) => dispatch(actions.showWindowContent(windowContent)),
     LoadSettings: () => dispatch(actions.loadSettings(load)),
     ReloadAll: (settings: Settings, logGroupName?: string, logStreamName?: string) => dispatch(actions.reloadAll(settings, logGroupName, logStreamName)),
+    OpenGithub: () => shell.openExternal('https://github.com/megmogmog1965/cloudwatchlogs-downloader'),
   };
 }
 

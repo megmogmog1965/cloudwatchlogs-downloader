@@ -1,8 +1,8 @@
 // src/reducers/index.tsx
 
 import { combineReducers, Reducer } from 'redux';
-import { LogGroupAction, LogStreamAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
-import { LogGroupsState, LogStreamsState, WindowState, DateRangeState, SettingsState, initialState } from '../types';
+import { LogGroupAction, LogStreamAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
+import { LogGroupsState, LogStreamsState, LogEventsState, WindowState, DateRangeState, SettingsState, initialState } from '../types';
 import { ActionTypes } from '../constants';
 import { reducer as formReducer } from 'redux-form';
 
@@ -57,6 +57,25 @@ export function logStreams(state: LogStreamsState, action: LogStreamAction): Log
   }
 }
 
+export function logEvents(state: LogEventsState, action: LogEventAction): LogEventsState {
+  if (!state) {
+    return { ...initialState.logEvents };
+  }
+
+  let filteredRunningIds = (id: string) => state.runningIds.filter(i => i !== id);
+
+  switch (action.type) {
+    case ActionTypes.REQUEST_LOG_EVENTS:
+      return { ...state, runningIds: state.runningIds.concat(action.id) };
+    case ActionTypes.RECEIVE_LOG_EVENTS:
+      return { ...state, runningIds: filteredRunningIds(action.id), finishedIds: state.finishedIds.concat(action.id) };
+    case ActionTypes.ERROR_LOG_EVENTS:
+      return { ...state, runningIds: filteredRunningIds(action.id), errorIds: state.errorIds.concat(action.id) };
+    default:
+      return state;
+  }
+}
+
 export function dateRange(state: DateRangeState, action: DateRangeAction): DateRangeState {
   if (!state) {
     return { ...initialState.dateRange };
@@ -89,6 +108,7 @@ const reducers: Reducer<any> = combineReducers({
   window,
   logGroups,
   logStreams,
+  logEvents,
   dateRange,
   settings,
   form: formReducer,

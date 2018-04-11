@@ -29,6 +29,13 @@
     <script>window.$ = window.jQuery = require('./libs/jquery-3.3.1.min.js');</script>
     <script type="text/javascript" src="libs/moment.js"></script>
     <script type="text/javascript" src="libs/jquery.daterangepicker.min.js"></script>
+
+    <!-- load electron modules -->
+    <script>
+    const dialog = require('electron').remote.dialog;
+    const shell = require('electron').shell;
+    const fs = require('fs');
+    </script>
   </head>
   <body>
     <noscript>
