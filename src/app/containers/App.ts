@@ -9,9 +9,6 @@ import { connect, Dispatch } from 'react-redux';
 import { load } from '../side-effect-functions';
 import { Settings } from '../common-interfaces/Settings';
 
-// declare variables for external modules.
-// declare var shell: any;
-
 export function mapStateToProps({ window, settings, logGroups, logStreams }: StoreState) {
   return {
     windowContent: window.windowContent,

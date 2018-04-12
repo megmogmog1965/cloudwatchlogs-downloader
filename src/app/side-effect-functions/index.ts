@@ -4,7 +4,7 @@ import * as utils from '../utils';
 import * as AWS from 'aws-sdk';
 import { Settings } from '../common-interfaces/Settings';
 import * as storage from 'electron-json-storage';
-// const storage = (window as any).require('electron-json-storage'); // @see https://github.com/electron/electron/issues/7300
+import * as constants from '../constants';
 
 const dialog = remote.dialog;
 
@@ -33,11 +33,16 @@ export function load(): Promise<Settings> {
   };
 
   return new Promise<Settings>((resolve, reject) => {
-    storage.get('aws', (error: object, data: Settings) => {
+    storage.get('aws', (error: object, data: any) => {
       if (error) {
         reject(error);
       } else {
-        resolve(decrypted(data));
+        let settings: Settings = {
+          region: (typeof data.region === 'string') ? data.region : constants.Region.AP_NORTHEAST_1,
+          awsAccessKeyId: (typeof data.region === 'string') ? data.region : '',
+          awsSecretAccessKey: (typeof data.region === 'string') ? data.region : '',
+        };
+        resolve(decrypted(settings));
       }
     });
   });

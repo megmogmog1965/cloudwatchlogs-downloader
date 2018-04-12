@@ -9,9 +9,6 @@ import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
 import { getCloudWatchLogsEvents } from '../side-effect-functions';
 
-// declare variables for external modules.
-// declare var fs: any;
-
 //////////// Action object interfaces ////////////
 
 export interface ShowWindowContent {
@@ -163,7 +160,7 @@ export function fetchLogGroups(settings: Settings): (dispatch: Dispatch<LogGroup
     dispatch(requestLogGroups());
 
     let fetchRecursively = (groups: LogGroup[], nextToken?: string) => {
-      cloudwatchlogs.describeLogGroups({}, (err, data) => {
+      cloudwatchlogs.describeLogGroups({ nextToken }, (err, data) => {
         let now = new Date();
 
         if (err) {
