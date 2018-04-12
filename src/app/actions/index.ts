@@ -332,13 +332,16 @@ export function downloadLogs(
   logStreamName: string,
   startDate: Date,
   endDate: Date,
-  fileChooser: () => string,
+  fileChooser: () => string | undefined,
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
     let filename = fileChooser();
-    const id = uuid();
+    if (!filename) {
+      return; // "cancel" chosen.
+    }
 
+    const id = uuid();
     dispatch(requestLogEvents(id));
 
     // open write stream.

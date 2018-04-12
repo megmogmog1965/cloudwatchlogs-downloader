@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './Settings.css';
-// import * as types from '../common-interfaces/Settings';
 import { Region } from '../constants';
 import { Field, reduxForm } from 'redux-form';
 

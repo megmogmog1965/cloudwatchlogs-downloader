@@ -48,7 +48,7 @@ export function load(): Promise<Settings> {
   });
 }
 
-export function showSaveDialog(): string {
+export function showSaveDialog(): string | undefined {
   return dialog.showSaveDialog({
     filters: [
       { name: 'Raw Text', extensions: ['txt'] },

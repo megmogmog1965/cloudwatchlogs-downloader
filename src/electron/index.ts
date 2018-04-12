@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu, shell } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as defaultMenu from 'electron-default-menu';
 // import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
 let mainWindow: Electron.BrowserWindow | null;
@@ -15,10 +16,10 @@ function createWindow() {
     ENV !== 'production'
       ? `${PROTOCOL}://${HOST}:${PORT}`
       : url.format({
-          pathname: path.join(__dirname, '..', 'app', 'index.html'),
-          protocol: 'file:',
-          slashes: true,
-        });
+        pathname: path.join(__dirname, '..', 'app', 'index.html'),
+        protocol: 'file:',
+        slashes: true,
+      });
 
   mainWindow = new BrowserWindow({ width: 1000, height: 600 });
   mainWindow.loadURL(appUrl);
@@ -29,15 +30,35 @@ function createWindow() {
   //   installExtension(REACT_DEVELOPER_TOOLS)
   //     .then((name) => console.log(`Added Extension:  ${name}`))
   //     .catch((err) => console.log('An error occurred: ', err));
+
+  // add menu.
+  Menu.setApplicationMenu(Menu.buildFromTemplate(createMenu()));
+}
+
+function createMenu() {
+  const menu = defaultMenu(app, shell);
+
+  menu.splice(4, 0, {
+    label: 'Developer',
+    submenu: [{
+      label: 'Show Developer Tools',
+      click: () => {
+        if (mainWindow !== null) {
+          mainWindow.webContents.openDevTools({ mode: 'detach' });
+        }
+      },
+    }],
+  });
+
+  return menu;
 }
 
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  // if (process.platform !== 'darwin') { app.quit(); }
+  app.quit();
 });
 
 app.on('activate', () => {
