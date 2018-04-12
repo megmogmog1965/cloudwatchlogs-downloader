@@ -39,8 +39,8 @@ export function load(): Promise<Settings> {
       } else {
         let settings: Settings = {
           region: (typeof data.region === 'string') ? data.region : constants.Region.AP_NORTHEAST_1,
-          awsAccessKeyId: (typeof data.region === 'string') ? data.region : '',
-          awsSecretAccessKey: (typeof data.region === 'string') ? data.region : '',
+          awsAccessKeyId: (typeof data.awsAccessKeyId === 'string') ? data.awsAccessKeyId : '',
+          awsSecretAccessKey: (typeof data.awsSecretAccessKey === 'string') ? data.awsSecretAccessKey : '',
         };
         resolve(decrypted(settings));
       }
