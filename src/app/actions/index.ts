@@ -174,10 +174,10 @@ export function fetchLogGroups(settings: Settings): (dispatch: Dispatch<LogGroup
         }
 
         let part: LogGroup[] = data.logGroups
-          .filter(g => g.arn)
-          .filter(g => g.logGroupName)
-          .filter(g => g.creationTime)
-          .filter(g => g.storedBytes)
+          .filter(g => g.arn != null)
+          .filter(g => g.logGroupName != null)
+          .filter(g => g.creationTime != null)
+          .filter(g => g.storedBytes != null)
           .map(g => ({
             arn: g.arn!,
             logGroupName: g.logGroupName!,
@@ -259,12 +259,12 @@ export function fetchLogStreams(settings: Settings, logGroupName: string): (disp
         }
 
         let part: LogStream[] = data.logStreams
-          .filter(g => g.arn)
-          .filter(g => g.logStreamName)
-          .filter(g => g.creationTime)
-          .filter(g => g.firstEventTimestamp)
-          .filter(g => g.lastEventTimestamp)
-          .filter(g => g.storedBytes)
+          .filter(g => typeof g.arn != null)
+          .filter(g => g.logStreamName != null)
+          .filter(g => g.creationTime != null)
+          .filter(g => g.firstEventTimestamp != null)
+          .filter(g => g.lastEventTimestamp != null)
+          .filter(g => g.storedBytes != null)
           .map(g => ({
             arn: g.arn!,
             logStreamName: g.logStreamName!,
@@ -359,7 +359,10 @@ export function downloadLogs(
           return;
         }
 
-        let messages = data.events.map(e => e.message).join();
+        let messages = data.events
+          .filter(e => e != null)
+          .map(e => e.message!.trim())  // @fixme user should choose LF/CRLF/Raw.
+          .join('\n');  // @fixme user should choose LF/CRLF/Raw.
         out.write(messages);
 
         dispatch(receiveLogEvents(id));
