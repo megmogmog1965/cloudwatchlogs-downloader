@@ -7,16 +7,13 @@ import * as defaultMenu from 'electron-default-menu';
 let mainWindow: Electron.BrowserWindow | null;
 
 function createWindow() {
-  const ENV = process.env.NODE_ENV || 'production';
-  const PROTOCOL = process.env.HTTPS === 'true' ? 'https' : 'http';
-  const PORT = parseInt(process.env.PORT || '', 10) || 3000;
-  const HOST = process.env.HOST || '127.0.0.1';
+  // const ENV = process.env.NODE_ENV || 'production';
+  // const PROTOCOL = process.env.HTTPS === 'true' ? 'https' : 'http';
+  // const PORT = parseInt(process.env.PORT || '', 10) || 3000;
+  // const HOST = process.env.HOST || '127.0.0.1';
 
-  const appUrl =
-    ENV !== 'production'
-      ? `${PROTOCOL}://${HOST}:${PORT}`
-      : url.format({
-        pathname: path.join(__dirname, '..', 'app', 'index.html'),
+  const appUrl = url.format({
+        pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true,
       });

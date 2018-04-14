@@ -1,9 +1,9 @@
 {
   "productName": "CloudWatch Logs Downloader",
   "appId": "com.megmogmog1965.cloudWatchlogsdownloader",
-  "files": ["app/", "electron/"],
+  "files": [],
   "directories": {
-    "app": "build",
+    "app": "dist",
     "buildResources": "src/resources",
     "output": "releases"
   }
