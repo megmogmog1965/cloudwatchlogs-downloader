@@ -18,6 +18,7 @@ export function save(settings: Settings): void {
     region: settings.region,
     awsAccessKeyId: utils.encrypt(settings.awsAccessKeyId, applicationPassphrase()),
     awsSecretAccessKey: utils.encrypt(settings.awsSecretAccessKey, applicationPassphrase()),
+    lineBreak: settings.lineBreak,
   };
 
   storage.set('aws', crypted, (err: object) => console.log(err));
@@ -29,10 +30,12 @@ export function load(): Promise<Settings> {
       region: settings.region,
       awsAccessKeyId: utils.decrypt(settings.awsAccessKeyId, applicationPassphrase()),
       awsSecretAccessKey: utils.decrypt(settings.awsSecretAccessKey, applicationPassphrase()),
+      lineBreak: settings.lineBreak,
     };
   };
 
   return new Promise<Settings>((resolve, reject) => {
+    // console.log(storage.getDataPath());
     storage.get('aws', (error: object, data: any) => {
       if (error) {
         reject(error);
@@ -41,6 +44,7 @@ export function load(): Promise<Settings> {
           region: (typeof data.region === 'string') ? data.region : constants.Region.AP_NORTHEAST_1,
           awsAccessKeyId: (typeof data.awsAccessKeyId === 'string') ? data.awsAccessKeyId : '',
           awsSecretAccessKey: (typeof data.awsSecretAccessKey === 'string') ? data.awsSecretAccessKey : '',
+          lineBreak: (typeof data.lineBreak === 'string') ? data.lineBreak : constants.LineBreak.LF,
         };
         resolve(decrypted(settings));
       }

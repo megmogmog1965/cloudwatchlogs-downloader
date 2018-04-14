@@ -1,7 +1,7 @@
 // src/types/index.tsx
 
 import * as enums from '../enums';
-import { Region } from '../constants';
+import { Region, LineBreak } from '../constants';
 import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
 
@@ -70,6 +70,7 @@ export const initialState: StoreState = {
       region: Region.AP_NORTHEAST_1,
       awsAccessKeyId: '',
       awsSecretAccessKey: '',
+      lineBreak: LineBreak.LF,
     },
     lastModified: new Date(0),
   },

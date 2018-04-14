@@ -8,6 +8,7 @@ let settings: types.Settings = {
   region: '',
   awsAccessKeyId: '',
   awsSecretAccessKey: '',
+  lineBreak: 'LF',
 };
 
 it('renders without crashing', () => {

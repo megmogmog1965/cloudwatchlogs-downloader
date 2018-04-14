@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './Settings.css';
-import { Region } from '../constants';
+import { Region, LineBreak } from '../constants';
 import { Field, reduxForm } from 'redux-form';
 
 export interface Props {
@@ -40,6 +40,14 @@ let raw = ({ handleSubmit }: Props) => {
       <div className="form-group">
         <label><strong>AWS Secret Access Key</strong></label>
         <Field name="awsSecretAccessKey" component="input" type="text" className="form-control" />
+      </div>
+      <div className="form-group">
+        <label><strong>Line Break</strong></label>
+        <Field name="lineBreak" component="select" className="form-control">
+          <option value={LineBreak.LF}>{LineBreak.LF}</option>
+          <option value={LineBreak.CRLF}>{LineBreak.CRLF}</option>
+          <option value={LineBreak.NO_MODIFICATION}>None (No modification. Just download logs.)</option>
+        </Field>
       </div>
       <div className="form-actions">
         <button type="submit" className="btn btn-form btn-primary">Save</button>

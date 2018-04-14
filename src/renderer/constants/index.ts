@@ -69,3 +69,9 @@ export namespace Region {
   export const EU_WEST_3 = 'eu-west-3';
   export const SA_EAST_1 = 'sa-east-1';
 }
+
+export namespace LineBreak {
+  export const LF = 'LF';
+  export const CRLF = 'CRLF';
+  export const NO_MODIFICATION = 'NO_MODIFICATION';
+}
