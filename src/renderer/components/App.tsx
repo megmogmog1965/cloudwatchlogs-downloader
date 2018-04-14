@@ -74,15 +74,17 @@ function createWindowContent(windowContent: enums.WindowContent) {
     case enums.WindowContent.LogDownload:
       return (
         <div className="pane-group">
-          <div className="pane sidebar log-groups">
-            <Provider store={store}>
-              <LogGroups />
-            </Provider>
-          </div>
-          <div className="pane sidebar log-streams">
-            <Provider store={store}>
-              <LogStreams />
-            </Provider>
+          <div className="pane pane-group">
+            <div className="pane">
+              <Provider store={store}>
+                <LogGroups />
+              </Provider>
+            </div>
+            <div className="pane">
+              <Provider store={store}>
+                <LogStreams />
+              </Provider>
+            </div>
           </div>
           <div className="pane">
             <Provider store={store}>

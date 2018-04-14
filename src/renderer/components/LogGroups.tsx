@@ -44,8 +44,7 @@ class LogGroups extends React.Component<Props> {
           <li className={(props.selectedName === g.logGroupName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(g.logGroupName)}>
             <div className="media-body">
               <strong>{g.logGroupName}</strong>
-              <p>- Created: {new Date(g.creationTime).toISOString()}</p>
-              <p>- Bytes: {g.storedBytes}</p>
+              <p>Created: {new Date(g.creationTime).toISOString()}</p>
             </div>
           </li>
         ))}
