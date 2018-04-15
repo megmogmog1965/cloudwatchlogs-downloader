@@ -9,12 +9,14 @@ import { connect, Dispatch } from 'react-redux';
 import { load } from '../side-effect-functions';
 import { Settings } from '../common-interfaces/Settings';
 
-export function mapStateToProps({ window, settings, logGroups, logStreams }: StoreState) {
+export function mapStateToProps({ window, settings, logGroups, logStreams, logEvents }: StoreState) {
   return {
     windowContent: window.windowContent,
     settings: settings.settings,
     logGroupName: logGroups.selectedName,
     logStreamName: logStreams.selectedName,
+    runningIds: logEvents.runningIds,
+    errorIds: logEvents.errorIds,
   };
 }
 

@@ -6,6 +6,7 @@ import LogStreams from '../containers/LogStreams';
 import LogGroups from '../containers/LogGroups';
 import LogContent from '../containers/LogContent';
 import Settings from '../containers/Settings';
+import Loading from '../components/Loading';
 import { Provider } from 'react-redux';
 import * as types from '../common-interfaces/Settings';
 
@@ -14,6 +15,8 @@ export interface Props {
   settings: types.Settings;
   logGroupName: string;
   logStreamName: string;
+  runningIds: string[];
+  errorIds: string[];
   ShowWindowContent: (windowContent: enums.WindowContent) => void;
   LoadSettings: () => void;
   ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => void;
@@ -49,11 +52,23 @@ class App extends React.Component<Props> {
 
             <button className="btn btn-default" onClick={() => props.ReloadAll(props.settings, props.logGroupName, props.logStreamName)}>
               <span className="icon icon-arrows-ccw icon-text" />Reload
-          </button>
+            </button>
 
             <button className="btn btn-default pull-right" onClick={this.props.OpenGithub}>
               <span className="icon icon-github" />
             </button>
+
+            {this.props.errorIds.length !== 0 ?
+              <div className="pull-right">
+                <span className="errors">Errors: {this.props.errorIds.length}</span>
+              </div>
+              : null}
+
+            {this.props.runningIds.length !== 0 ?
+              <div className="pull-right">
+                <Loading text="DOWNLOADING" />
+              </div>
+              : null}
           </div>
         </header>
 

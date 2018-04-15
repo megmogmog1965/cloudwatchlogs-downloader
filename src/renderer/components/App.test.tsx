@@ -18,6 +18,8 @@ it('renders without crashing', () => {
     settings: settings,
     logGroupName: '',
     logStreamName: '',
+    runningIds: [],
+    errorIds: [],
     ShowWindowContent: (windowContent: any) => windowContent,
     LoadSettings: () => 0,
     ReloadAll: () => 0,

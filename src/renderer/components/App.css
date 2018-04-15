@@ -1,3 +1,8 @@
 .App {
 
 }
+
+.errors {
+  color: Crimson;
+  font-family: 'Arial', sans-serif;
+}
