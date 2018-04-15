@@ -375,12 +375,14 @@ export function downloadLogs(
           }
         };
 
+        let sep = separator(settings.lineBreak);
         let messages = data.events
           .filter(e => e.message != null)
           .map(trimmer)
-          .join(separator(settings.lineBreak));
+          .join(sep);
 
         out.write(messages);
+        out.write(sep);
 
         dispatch(receiveLogEvents(id));
       },
