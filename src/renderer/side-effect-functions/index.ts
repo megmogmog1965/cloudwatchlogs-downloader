@@ -73,11 +73,7 @@ export function getCloudWatchLogsEvents(
   limit?: number): void {
 
   // authorization for aws-sdk.
-  const cloudwatchlogs = new AWS.CloudWatchLogs({
-    region: settings.region,
-    accessKeyId: settings.awsAccessKeyId,
-    secretAccessKey: settings.awsSecretAccessKey,
-  });
+  const cloudwatchlogs = connectCloudWatchLogs(settings);
 
   let createParams = (nextToken?: string) => {
     return {
@@ -91,12 +87,17 @@ export function getCloudWatchLogsEvents(
     };
   };
 
-  let fetchRecursively = (nextToken?: string) => {
+  let fetchRecursively = (nextToken?: string, retry = 3) => {
     cloudwatchlogs.getLogEvents(
       createParams(nextToken),
       (err, data) => {
         // error.
         if (err) {
+          if (retry > 0) {
+            setTimeout(() => fetchRecursively(nextToken, retry - 1), 5000); // wait 5 secs until next try.
+            return;
+          }
+
           callbackError(err);
           return;
         }
@@ -123,4 +124,12 @@ export function getCloudWatchLogsEvents(
   };
 
   fetchRecursively();
+}
+
+function connectCloudWatchLogs(settings: Settings): AWS.CloudWatchLogs {
+  return new AWS.CloudWatchLogs({
+    region: settings.region,
+    accessKeyId: settings.awsAccessKeyId,
+    secretAccessKey: settings.awsSecretAccessKey,
+  });
 }
