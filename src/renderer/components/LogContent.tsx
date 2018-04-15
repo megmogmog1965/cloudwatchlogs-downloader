@@ -34,7 +34,7 @@ class LogContent extends React.Component<Props> {
     $('#' + DATERANGEPICKER_DOM_ID).dateRangePicker({
       startOfWeek: 'monday',
       separator: ' ~ ',
-      format: 'YYYY/MM/DD HH:mm',
+      format: 'YYYY/MM/DD HH:mm (Z)',
       autoClose: false,
       time: {
         enabled: true,
@@ -46,12 +46,12 @@ class LogContent extends React.Component<Props> {
       },
       setValue: function(range: string, startDate: string, endDate: string) {
         this.innerHTML = range;
-        SetDateRange(new Date(startDate), new Date(endDate));
+        SetDateRange(new Date(startDate), new Date(endDate)); // @fixme should be parsed explicitly.
       },
     });
 
     $('#' + DATERANGEPICKER_DOM_ID).data('dateRangePicker')
-      .setDateRange(moment(start).format('YYYY/MM/DD HH:mm'), moment(end).format('YYYY/MM/DD HH:mm'));
+      .setDateRange(moment(start).format('YYYY/MM/DD HH:mm (Z)'), moment(end).format('YYYY/MM/DD HH:mm (Z)'));
   }
 
   render() {
