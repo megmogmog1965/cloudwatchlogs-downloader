@@ -383,8 +383,6 @@ export function downloadLogs(
 
         out.write(messages);
         out.write(sep);
-
-        dispatch(receiveLogEvents(id));
       },
       (err) => {
         out.end();
