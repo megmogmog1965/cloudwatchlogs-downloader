@@ -2,6 +2,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as zlib from 'zlib';
 import * as stream from 'stream';
+import { v4 as uuid } from 'uuid';
 import { remote } from 'electron';
 import * as utils from '../utils';
 import * as AWS from 'aws-sdk';
@@ -15,6 +16,11 @@ const dialog = remote.dialog;
 export function applicationPassphrase(): string {
   let seed = utils.hash(os.type() + os.release() + os.hostname() + 'ufQROog1Q8');
   return utils.random(seed).toString(36).slice(-8);
+}
+
+export function createUuid(): string {
+  let id = uuid();
+  return id;
 }
 
 export function save(settings: Settings): void {

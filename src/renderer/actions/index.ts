@@ -2,7 +2,6 @@ import { ActionTypes, LineBreak } from '../constants';
 import * as enums from '../enums';
 import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
-import { v4 as uuid } from 'uuid';
 import * as stream from 'stream';
 import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
@@ -243,12 +242,13 @@ export function errorLogEvents(id: string): ErrorLogEvents {
 
 export function downloadLogs(
   settings: Settings,
+  fileChooser: () => stream.Writable | undefined,
+  createJobId: () => string,
   getCloudWatchLogsEvents: (
     callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
     callbackError: (err: AWS.AWSError) => void,
     callbackEnd: () => void,
   ) => void,
-  fileChooser: () => stream.Writable | undefined,
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
@@ -260,7 +260,7 @@ export function downloadLogs(
     const out = choosed;
 
     // create job id.
-    const id = uuid();
+    const id = createJobId();
     dispatch(requestLogEvents(id));
 
     // callback for receive log chunks.

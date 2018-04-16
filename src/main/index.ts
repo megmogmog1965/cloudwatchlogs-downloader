@@ -34,19 +34,6 @@ function createWindow() {
 
 function createMenu() {
   const menu = defaultMenu(app, shell);
-
-  menu.splice(4, 0, {
-    label: 'Developer',
-    submenu: [{
-      label: 'Show Developer Tools',
-      click: () => {
-        if (mainWindow !== null) {
-          mainWindow.webContents.openDevTools({ mode: 'detach' });
-        }
-      },
-    }],
-  });
-
   return menu;
 }
 
