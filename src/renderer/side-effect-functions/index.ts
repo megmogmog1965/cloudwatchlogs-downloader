@@ -1,4 +1,7 @@
 import * as os from 'os';
+import * as fs from 'fs';
+import * as zlib from 'zlib';
+import * as stream from 'stream';
 import { remote } from 'electron';
 import * as utils from '../utils';
 import * as AWS from 'aws-sdk';
@@ -52,13 +55,26 @@ export function load(): Promise<Settings> {
   });
 }
 
-export function showSaveDialog(): string | undefined {
-  return dialog.showSaveDialog({
+export function showSaveDialog(): stream.Writable | undefined {
+  let fileName = dialog.showSaveDialog({
     filters: [
       { name: 'Raw Text', extensions: ['txt'] },
       { name: 'GZip', extensions: ['gz'] },
     ],
   });
+
+  // open write stream.
+  let out = fs.createWriteStream(fileName);
+
+  // or gzip ?
+  if (fileName.endsWith('.gz')) {
+    let gzip = zlib.createGzip();
+    gzip.pipe(out);
+
+    return gzip;
+  }
+
+  return out;
 }
 
 export function getCloudWatchLogsEvents(

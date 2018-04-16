@@ -3,11 +3,9 @@ import * as enums from '../enums';
 import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
-import * as fs from 'fs';
-import * as zlib from 'zlib';
+import * as stream from 'stream';
 import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
-import { getCloudWatchLogsEvents } from '../side-effect-functions';
 import * as voca from 'voca';
 
 //////////// Action object interfaces ////////////
@@ -329,69 +327,73 @@ export function errorLogEvents(id: string): ErrorLogEvents {
 
 export function downloadLogs(
   settings: Settings,
-  logGroupName: string,
-  logStreamName: string,
-  startDate: Date,
-  endDate: Date,
-  fileChooser: () => string | undefined,
+  getCloudWatchLogsEvents: (
+    callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+    callbackError: (err: AWS.AWSError) => void,
+    callbackEnd: () => void,
+  ) => void,
+  fileChooser: () => stream.Writable | undefined,
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
-    let filename = fileChooser();
-    if (!filename) {
+    // it returns a file that user choosed.
+    let choosed = fileChooser();
+    if (!choosed) {
       return; // "cancel" chosen.
     }
+    const out = choosed;
 
+    // create job id.
     const id = uuid();
     dispatch(requestLogEvents(id));
 
-    // open write stream.
-    let rawstream = fs.createWriteStream(filename);
-    let out = filename.endsWith('.gz') ? zlib.createGzip().pipe(rawstream) : rawstream;
+    // callback for receive log chunks.
+    let callbackData = (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => {
+      if (!data.events) {
+        return;
+      }
+
+      let trimmer: (e: AWS.CloudWatchLogs.OutputLogEvent) => string = (settings.lineBreak === LineBreak.NO_MODIFICATION) ?
+        e => e.message! : e => voca.trimRight(e.message!, '\r\n');
+
+      let separator: (lineBreak: string) => string = (lineBreak) => {
+        switch (lineBreak) {
+          case LineBreak.LF:
+            return '\n';
+          case LineBreak.CRLF:
+            return '\r\n';
+          case LineBreak.NO_MODIFICATION:
+          default:
+            return '';
+        }
+      };
+
+      let sep = separator(settings.lineBreak);
+      let messages = data.events
+        .filter(e => e.message != null)
+        .map(trimmer)
+        .join(sep);
+
+      out.write(messages);
+      out.write(sep);
+    };
+
+    // callback for end processing.
+    let callbackEnd = (err: AWS.AWSError) => {
+      out.end();
+      dispatch(errorLogEvents(id));
+    };
+
+    // callback for handling errors.
+    let callbackError = () => {
+      out.end();
+      dispatch(receiveLogEvents(id));
+    };
 
     getCloudWatchLogsEvents(
-      settings,
-      logGroupName,
-      logStreamName,
-      startDate,
-      endDate,
-      (data) => {
-        if (!data.events) {
-          return;
-        }
-
-        let trimmer: (e: AWS.CloudWatchLogs.OutputLogEvent) => string = (settings.lineBreak === LineBreak.NO_MODIFICATION) ?
-          e => e.message! : e => voca.trimRight(e.message!, '\r\n');
-
-        let separator: (lineBreak: string) => string = (lineBreak) => {
-          switch (lineBreak) {
-            case LineBreak.LF:
-              return '\n';
-            case LineBreak.CRLF:
-              return '\r\n';
-            case LineBreak.NO_MODIFICATION:
-            default:
-              return '';
-          }
-        };
-
-        let sep = separator(settings.lineBreak);
-        let messages = data.events
-          .filter(e => e.message != null)
-          .map(trimmer)
-          .join(sep);
-
-        out.write(messages);
-        out.write(sep);
-      },
-      (err) => {
-        out.end();
-        dispatch(errorLogEvents(id));
-      },
-      () => {
-        out.end();
-        dispatch(receiveLogEvents(id));
-      },
+      callbackData,
+      callbackEnd,
+      callbackError,
     );
   };
 }
