@@ -111,17 +111,6 @@ export function showWindowContent(windowContent: enums.WindowContent): ShowWindo
   };
 }
 
-export function reloadAll(settings: Settings, logGroupName?: string, logStreamName?: string): (dispatch: Dispatch<LogGroupAction>) => void {
-  // calls other actions.
-  return (dispatch: Dispatch<LogGroupAction>) => {
-    dispatch(fetchLogGroups(settings));
-
-    if (logGroupName) {
-      dispatch(fetchLogStreams(settings, logGroupName));
-    }
-  };
-}
-
 export function requestLogGroups(): RequestLogGroups {
   return {
     type: ActionTypes.REQUEST_LOG_GROUPS,
@@ -143,60 +132,25 @@ export function errorLogGroups(errorMessage: string): ErrorLogGroups {
   };
 }
 
-export function fetchLogGroups(settings: Settings): (dispatch: Dispatch<LogGroupAction>) => void {
-  return (dispatch: Dispatch<LogGroupAction>) => {
+export function fetchLogGroups(
+  settings: Settings,
+  getCloudWatchLogGroups: (
+    callbackStart: (time: Date) => void,
+    callbackError: (time: Date, err: AWS.AWSError) => void,
+    callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
+  ) => void,
+): (dispatch: Dispatch<LogGroupAction>) => void {
 
+  return (dispatch: Dispatch<LogGroupAction>) => {
     if (!settings.region || !settings.awsAccessKeyId || !settings.awsSecretAccessKey) {
       return;
     }
 
-    const cloudwatchlogs = new AWS.CloudWatchLogs({
-      region: settings.region,
-      accessKeyId: settings.awsAccessKeyId,
-      secretAccessKey: settings.awsSecretAccessKey,
-    });
-
-    dispatch(requestLogGroups());
-
-    let fetchRecursively = (groups: LogGroup[], nextToken?: string) => {
-      cloudwatchlogs.describeLogGroups({ nextToken }, (err, data) => {
-        let now = new Date();
-
-        if (err) {
-          dispatch(errorLogGroups(err.message));
-          return;
-        }
-
-        if (!data.logGroups) {
-          dispatch(receiveLogGroups([], now));
-          return;
-        }
-
-        let part: LogGroup[] = data.logGroups
-          .filter(g => g.arn != null)
-          .filter(g => g.logGroupName != null)
-          .filter(g => g.creationTime != null)
-          .filter(g => g.storedBytes != null)
-          .map(g => ({
-            arn: g.arn!,
-            logGroupName: g.logGroupName!,
-            creationTime: g.creationTime!,
-            storedBytes: g.storedBytes!,
-          }));
-
-        let merged = groups.concat(part);
-
-        if (!data.nextToken) {
-          dispatch(receiveLogGroups(merged, now));
-          return;
-        }
-
-        // call recursively.
-        fetchRecursively(merged, data.nextToken);
-      });
-    };
-
-    fetchRecursively([]);
+    getCloudWatchLogGroups(
+      (time: Date) => dispatch(requestLogGroups()),
+      (time: Date, err: AWS.AWSError) => dispatch(errorLogGroups(err.message)),
+      (time: Date, logGroups: LogGroup[]) => dispatch(receiveLogGroups(logGroups, time)),
+    );
   };
 }
 
@@ -228,64 +182,26 @@ export function errorLogStreams(errorMessage: string): ErrorLogStreams {
   };
 }
 
-export function fetchLogStreams(settings: Settings, logGroupName: string): (dispatch: Dispatch<LogStreamAction>) => void {
-  return (dispatch: Dispatch<LogStreamAction>) => {
+export function fetchLogStreams(
+  settings: Settings,
+  logGroupName: string,
+  getCloudWatchLogStreams: (
+    callbackStart: (time: Date) => void,
+    callbackError: (time: Date, err: AWS.AWSError) => void,
+    callbackEnd: (time: Date, logStreams: LogStream[]) => void,
+  ) => void,
+): (dispatch: Dispatch<LogStreamAction>) => void {
 
+  return (dispatch: Dispatch<LogStreamAction>) => {
     if (!settings.region || !settings.awsAccessKeyId || !settings.awsSecretAccessKey || !logGroupName) {
       return;
     }
 
-    const cloudwatchlogs = new AWS.CloudWatchLogs({
-      region: settings.region,
-      accessKeyId: settings.awsAccessKeyId,
-      secretAccessKey: settings.awsSecretAccessKey,
-    });
-
-    dispatch(requestLogStreams());
-
-    let fetchRecursively = (streams: LogStream[], nextToken?: string) => {
-      cloudwatchlogs.describeLogStreams({ logGroupName, descending: true, orderBy: 'LastEventTime', nextToken }, (err, data) => {
-        let now = new Date();
-
-        if (err) {
-          dispatch(errorLogGroups(err.message));
-          return;
-        }
-
-        if (!data.logStreams) {
-          dispatch(receiveLogGroups([], now));
-          return;
-        }
-
-        let part: LogStream[] = data.logStreams
-          .filter(g => typeof g.arn != null)
-          .filter(g => g.logStreamName != null)
-          .filter(g => g.creationTime != null)
-          .filter(g => g.firstEventTimestamp != null)
-          .filter(g => g.lastEventTimestamp != null)
-          .filter(g => g.storedBytes != null)
-          .map(g => ({
-            arn: g.arn!,
-            logStreamName: g.logStreamName!,
-            creationTime: g.creationTime!,
-            firstEventTimestamp: g.firstEventTimestamp!,
-            lastEventTimestamp: g.lastEventTimestamp!,
-            storedBytes: g.storedBytes!,
-          }));
-
-        let merged = streams.concat(part);
-
-        if (!data.nextToken) {
-          dispatch(receiveLogStreams(merged, now));
-          return;
-        }
-
-        // call recursively.
-        fetchRecursively(merged, data.nextToken);
-      });
-    };
-
-    fetchRecursively([]);
+    getCloudWatchLogStreams(
+      (time: Date) => dispatch(requestLogStreams()),
+      (time: Date, err: AWS.AWSError) => dispatch(errorLogStreams(err.message)),
+      (time: Date, logStreams: LogStream[]) => dispatch(receiveLogStreams(logStreams, time)),
+    );
   };
 }
 

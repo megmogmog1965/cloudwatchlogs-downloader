@@ -5,6 +5,7 @@ import * as stream from 'stream';
 import { remote } from 'electron';
 import * as utils from '../utils';
 import * as AWS from 'aws-sdk';
+import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
 import * as storage from 'electron-json-storage';
 import * as constants from '../constants';
@@ -77,6 +78,115 @@ export function showSaveDialog(): stream.Writable | undefined {
   return out;
 }
 
+export function getCloudWatchLogGroups(
+  settings: Settings,
+  callbackStart: (time: Date) => void,
+  callbackError: (time: Date, err: AWS.AWSError) => void,
+  callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
+): void {
+
+  const cloudwatchlogs = connectCloudWatchLogs(settings);
+
+  callbackStart(new Date());
+
+  let fetchRecursively = (groups: LogGroup[], nextToken?: string) => {
+    cloudwatchlogs.describeLogGroups({ nextToken }, (err, data) => {
+      let now = new Date();
+
+      if (err) {
+        callbackError(now, err);
+        return;
+      }
+
+      if (!data.logGroups) {
+        callbackEnd(now, groups);
+        return;
+      }
+
+      let part: LogGroup[] = data.logGroups
+        .filter(g => g.arn != null)
+        .filter(g => g.logGroupName != null)
+        .filter(g => g.creationTime != null)
+        .filter(g => g.storedBytes != null)
+        .map(g => ({
+          arn: g.arn!,
+          logGroupName: g.logGroupName!,
+          creationTime: g.creationTime!,
+          storedBytes: g.storedBytes!,
+        }));
+
+      let merged = groups.concat(part);
+
+      if (!data.nextToken) {
+        callbackEnd(now, merged);
+        return;
+      }
+
+      // call recursively.
+      fetchRecursively(merged, data.nextToken);
+    });
+  };
+
+  fetchRecursively([]);
+}
+
+export function getCloudWatchLogStreams(
+  settings: Settings,
+  logGroupName: string,
+  callbackStart: (time: Date) => void,
+  callbackError: (time: Date, err: AWS.AWSError) => void,
+  callbackEnd: (time: Date, logStreams: LogStream[]) => void,
+): void {
+
+  const cloudwatchlogs = connectCloudWatchLogs(settings);
+
+  callbackStart(new Date());
+
+  let fetchRecursively = (streams: LogStream[], nextToken?: string) => {
+    cloudwatchlogs.describeLogStreams({ logGroupName, descending: true, orderBy: 'LastEventTime', nextToken }, (err, data) => {
+      let now = new Date();
+
+      if (err) {
+        callbackError(now, err);
+        return;
+      }
+
+      if (!data.logStreams) {
+        callbackEnd(now, streams);
+        return;
+      }
+
+      let part: LogStream[] = data.logStreams
+        .filter(g => typeof g.arn != null)
+        .filter(g => g.logStreamName != null)
+        .filter(g => g.creationTime != null)
+        .filter(g => g.firstEventTimestamp != null)
+        .filter(g => g.lastEventTimestamp != null)
+        .filter(g => g.storedBytes != null)
+        .map(g => ({
+          arn: g.arn!,
+          logStreamName: g.logStreamName!,
+          creationTime: g.creationTime!,
+          firstEventTimestamp: g.firstEventTimestamp!,
+          lastEventTimestamp: g.lastEventTimestamp!,
+          storedBytes: g.storedBytes!,
+        }));
+
+      let merged = streams.concat(part);
+
+      if (!data.nextToken) {
+        callbackEnd(now, merged);
+        return;
+      }
+
+      // call recursively.
+      fetchRecursively(merged, data.nextToken);
+    });
+  };
+
+  fetchRecursively([]);
+}
+
 export function getCloudWatchLogsEvents(
   settings: Settings,
   logGroupName: string,
@@ -110,7 +220,8 @@ export function getCloudWatchLogsEvents(
         // error.
         if (err) {
           if (retry > 0) {
-            setTimeout(() => fetchRecursively(nextToken, retry - 1), 5000); // wait 5 secs until next try.
+            // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
+            setTimeout(() => fetchRecursively(nextToken, retry - 1), 2000); // wait 2 secs until next try.
             return;
           }
 
