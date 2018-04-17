@@ -295,21 +295,21 @@ export function downloadLogs(
     };
 
     // callback for end processing.
-    let callbackEnd = (err: AWS.AWSError) => {
+    let callbackError = (err: AWS.AWSError) => {
       out.end();
       dispatch(errorLogEvents(id));
     };
 
     // callback for handling errors.
-    let callbackError = () => {
+    let callbackEnd = () => {
       out.end();
       dispatch(receiveLogEvents(id));
     };
 
     getCloudWatchLogsEvents(
       callbackData,
-      callbackEnd,
       callbackError,
+      callbackEnd,
     );
   };
 }
