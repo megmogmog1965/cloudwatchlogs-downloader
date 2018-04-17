@@ -6,7 +6,7 @@ import App from '../components/App';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import { load, getCloudWatchLogGroups, getCloudWatchLogStreams } from '../side-effect-functions';
+import { load, currentDate, getCloudWatchLogGroups, getCloudWatchLogStreams } from '../side-effect-functions';
 import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
 
@@ -24,7 +24,7 @@ export function mapStateToProps({ window, settings, logGroups, logStreams, logEv
 export function mapDispatchToProps(dispatch: Dispatch<actions.WindowAction>) {
   return {
     ShowWindowContent: (windowContent: enums.WindowContent) => dispatch(actions.showWindowContent(windowContent)),
-    LoadSettings: () => dispatch(actions.loadSettings(load)),
+    LoadSettings: () => dispatch(actions.loadSettings(load, currentDate)),
     ReloadAll: (settings: Settings, logGroupName?: string, logStreamName?: string) => reloadAll(dispatch, settings, logGroupName, logStreamName),
     OpenGithub: () => shell.openExternal('https://github.com/megmogmog1965/cloudwatchlogs-downloader'),
   };

@@ -325,10 +325,14 @@ export function saveSettings(settings: Settings, lastModified: Date, save: (sett
   };
 }
 
-export function loadSettings(load: () => Promise<Settings>): (dispatch: Dispatch<LogGroupAction>) => void {
+export function loadSettings(
+  load: () => Promise<Settings>,
+  now: () => Date,
+): (dispatch: Dispatch<LogGroupAction>) => void {
+
   return (dispatch: Dispatch<LogGroupAction>) => {
     load().then((settings: Settings) => {
-      dispatch(receiveSettings(settings, new Date()));
+      dispatch(receiveSettings(settings, now()));
     });
   };
 }

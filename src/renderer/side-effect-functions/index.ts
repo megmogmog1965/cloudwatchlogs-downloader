@@ -23,6 +23,10 @@ export function createUuid(): string {
   return id;
 }
 
+export function currentDate(): Date {
+  return new Date();
+}
+
 export function save(settings: Settings): void {
   let crypted: Settings = {
     region: settings.region,
