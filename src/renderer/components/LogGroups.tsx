@@ -36,7 +36,7 @@ class LogGroups extends React.Component<Props> {
     };
 
     return (
-      <ul className="list-group">
+      <ul className="LogGroups list-group">
         <li className="list-group-header">
           <strong>Log Groups</strong>
         </li>

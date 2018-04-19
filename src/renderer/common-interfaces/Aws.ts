@@ -5,7 +5,7 @@ export interface LogGroup {
   arn: string;
   logGroupName: string;
   creationTime: Timestamp;
-  storedBytes: Timestamp;
+  storedBytes: number;
 }
 
 export interface LogStream {
