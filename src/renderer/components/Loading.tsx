@@ -5,7 +5,7 @@ export interface Props {
   text: string;
 }
 
-function Loading({ text }: Props) {
+const Loading: React.SFC<Props> = ({ text }) => {
   return (
     <div className="Loading">
       <span className="line line-1" />

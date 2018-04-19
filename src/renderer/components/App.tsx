@@ -1,16 +1,14 @@
 import * as React from 'react';
 import './App.css';
 import * as enums from '../enums';
-import store from '../Store';
-import LogStreams from '../containers/LogStreams';
-import LogGroups from '../containers/LogGroups';
-import LogContent from '../containers/LogContent';
-import Settings from '../containers/Settings';
 import Loading from '../components/Loading';
-import { Provider } from 'react-redux';
 import * as types from '../common-interfaces/Settings';
 
 export interface Props {
+  LogGroups: React.ComponentClass<any> | React.SFC<any>;
+  LogStreams: React.ComponentClass<any> | React.SFC<any>;
+  LogContent: React.ComponentClass<any> | React.SFC<any>;
+  Settings: React.ComponentClass<any> | React.SFC<any>;
   windowContent: enums.WindowContent;
   settings: types.Settings;
   logGroupName: string;
@@ -73,7 +71,7 @@ class App extends React.Component<Props> {
         </header>
 
         <div className="window-content">
-          {createWindowContent(props.windowContent)}
+          {createWindowContent(props.windowContent, this.props)}
         </div>
       </div>
     );
@@ -84,35 +82,29 @@ function buttonState(target: enums.WindowContent, current: enums.WindowContent):
   return target === current ? 'active' : '';
 }
 
-function createWindowContent(windowContent: enums.WindowContent) {
+function createWindowContent(windowContent: enums.WindowContent, props: Props) {
+  let { LogGroups, LogStreams, LogContent, Settings } = props;
+
   switch (windowContent) {
     case enums.WindowContent.LogDownload:
       return (
         <div className="pane-group">
           <div className="pane pane-group">
             <div className="pane">
-              <Provider store={store}>
-                <LogGroups />
-              </Provider>
+              <LogGroups />
             </div>
             <div className="pane">
-              <Provider store={store}>
-                <LogStreams />
-              </Provider>
+              <LogStreams />
             </div>
           </div>
           <div className="pane">
-            <Provider store={store}>
-              <LogContent />
-            </Provider>
+            <LogContent />
           </div>
         </div>
       );
     case enums.WindowContent.Settings:
       return (
-        <Provider store={store}>
-          <Settings />
-        </Provider>
+        <Settings />
       );
     default:
       throw new Error('Undefined WindowContent: ' + windowContent);

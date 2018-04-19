@@ -3,15 +3,23 @@
 import { shell } from 'electron';
 import * as enums from '../enums';
 import App from '../components/App';
+import LogGroups from '../containers/LogGroups';
+import LogStreams from '../containers/LogStreams';
+import LogContent from '../containers/LogContent';
+import Settings from '../containers/Settings';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
 import { load, currentDate, getCloudWatchLogGroups, getCloudWatchLogStreams } from '../side-effect-functions';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import * as awstypes from '../common-interfaces/Aws';
+import * as types from '../common-interfaces/Settings';
 
 export function mapStateToProps({ window, settings, logGroups, logStreams, logEvents }: StoreState) {
   return {
+    LogGroups: LogGroups,
+    LogStreams: LogStreams,
+    LogContent: LogContent,
+    Settings: Settings,
     windowContent: window.windowContent,
     settings: settings.settings,
     logGroupName: logGroups.selectedName,
@@ -25,14 +33,14 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.WindowAction>) {
   return {
     ShowWindowContent: (windowContent: enums.WindowContent) => dispatch(actions.showWindowContent(windowContent)),
     LoadSettings: () => dispatch(actions.loadSettings(load, currentDate)),
-    ReloadAll: (settings: Settings, logGroupName?: string, logStreamName?: string) => reloadAll(dispatch, settings, logGroupName, logStreamName),
+    ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => reloadAll(dispatch, settings, logGroupName, logStreamName),
     OpenGithub: () => shell.openExternal('https://github.com/megmogmog1965/cloudwatchlogs-downloader'),
   };
 }
 
 function reloadAll(
   dispatch: Dispatch<actions.WindowAction>,
-  settings: Settings,
+  settings: types.Settings,
   logGroupName?: string,
   logStreamName?: string) {
 
@@ -42,7 +50,7 @@ function reloadAll(
     (
       callbackStart: (time: Date) => void,
       callbackError: (time: Date, err: AWS.AWSError) => void,
-      callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
+      callbackEnd: (time: Date, logGroups: awstypes.LogGroup[]) => void,
     ) => getCloudWatchLogGroups(settings, callbackStart, callbackError, callbackEnd), // currying.
   ));
 
@@ -57,7 +65,7 @@ function reloadAll(
     (
       callbackStart: (time: Date) => void,
       callbackError: (time: Date, err: AWS.AWSError) => void,
-      callbackEnd: (time: Date, logStreams: LogStream[]) => void,
+      callbackEnd: (time: Date, logStreams: awstypes.LogStream[]) => void,
     ) => getCloudWatchLogStreams(settings, logGroupName, callbackStart, callbackError, callbackEnd), // currying.
   ));
 }

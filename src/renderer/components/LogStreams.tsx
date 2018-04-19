@@ -10,7 +10,7 @@ export interface Props {
   SelectLogStream: (selectedName: string) => void;
 }
 
-function LogGroups({ logStreams, selectedName, lastModified, SelectLogStream }: Props) {
+const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, SelectLogStream }) => {
   // first & last timestamps.
   let first = Math.min(...logStreams.map(s => s.firstEventTimestamp));
   let last = Math.max(...logStreams.map(s => s.lastEventTimestamp));

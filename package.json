@@ -7,6 +7,7 @@
     "start": "npm run build:development && electron ./dist/",
     "build:development": "npx webpack --config webpack.development.js && gulp copy",
     "build:production": "npx webpack --config webpack.production.js && gulp copy",
+    "test": "jest",
     "pack": "npm run build:production && electron-builder --dir",
     "dist": "npm run build:production && electron-builder"
   },
@@ -23,9 +24,28 @@
   ],
   "author": "Yusuke Kawatsu",
   "license": "MIT",
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
   "devDependencies": {
     "@types/electron": "^1.6.10",
     "@types/electron-json-storage": "^4.0.0",
+    "@types/enzyme": "^3.1.9",
+    "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/jest": "^22.2.3",
     "@types/node": "^9.6.5",
     "@types/react": "^16.3.10",
@@ -39,7 +59,10 @@
     "css-loader": "^0.28.11",
     "electron": "^1.8.4",
     "electron-builder": "^20.8.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "gulp": "^3.9.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^22.4.3",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.20.3",

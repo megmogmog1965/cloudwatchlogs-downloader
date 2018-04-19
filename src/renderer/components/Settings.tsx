@@ -7,7 +7,7 @@ export interface Props {
   handleSubmit: (value: object) => void;
 }
 
-let raw = ({ handleSubmit }: Props) => {
+let raw: React.SFC<Props> = ({ handleSubmit }) => {
 
   return (
     <form className="Settings" onSubmit={handleSubmit}>
