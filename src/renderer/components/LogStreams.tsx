@@ -8,12 +8,12 @@ export interface Props {
   lastModified: Date;
   settings: Settings;
   SelectLogStream: (selectedName: string) => void;
+  Now: () => Date;
 }
 
-const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, SelectLogStream }) => {
+const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, SelectLogStream, Now }) => {
   // first & last timestamps.
   let first = Math.min(...logStreams.map(s => s.firstEventTimestamp));
-  let last = Math.max(...logStreams.map(s => s.lastEventTimestamp));
 
   return (
     <ul className="LogStreams list-group">
@@ -27,7 +27,7 @@ const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, S
             <div className="media-body">
               <strong>{s.logStreamName}</strong>
               <p>Last: {new Date(s.lastEventTimestamp).toISOString()}</p>
-              {timeRange(first, last, s)}
+              {timeRange(first, s, Now)}
             </div>
           </li>
         ))}
@@ -35,10 +35,11 @@ const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, S
   );
 }
 
-function timeRange(firstEventTimestamp: number, lastEventTimestamp: number, logStream: LogStream) {
-  let entireSpan = lastEventTimestamp - firstEventTimestamp;
+function timeRange(firstEventTimestamp: number, logStream: LogStream, now: () => Date) {
+  let current = now().getTime();
+  let entireSpan = current - firstEventTimestamp;
   let begginingSpan = logStream.firstEventTimestamp - firstEventTimestamp;
-  let endSpan = lastEventTimestamp - logStream.lastEventTimestamp;
+  let endSpan = current - logStream.lastEventTimestamp;
 
   let marginLeft = Math.max(0, 100.0 * begginingSpan / entireSpan - 2);
   let marginRight = Math.max(0, 100.0 * endSpan / entireSpan - 1);

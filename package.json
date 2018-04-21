@@ -8,8 +8,8 @@
     "build:development": "npx webpack --config webpack.development.js && gulp copy",
     "build:production": "npx webpack --config webpack.production.js && gulp copy",
     "test": "jest",
-    "pack": "npm run build:production && electron-builder --dir",
-    "dist": "npm run build:production && electron-builder"
+    "pack": "npm run test && npm run build:production && electron-builder --dir",
+    "dist": "npm run test && npm run build:production && electron-builder"
   },
   "homepage": ".",
   "repository": "https://github.com/megmogmog1965/cloudwatchlogs-downloader",

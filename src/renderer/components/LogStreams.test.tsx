@@ -23,6 +23,7 @@ describe('components/LogStreams', () => {
       lastModified: new Date(1),
       settings: settings,
       SelectLogStream: mockSelectLogStream,
+      Now: () => new Date(0),
     };
 
     let wrapper = shallow(<LogStreams {...props} />);
@@ -44,6 +45,7 @@ describe('components/LogStreams', () => {
       lastModified: new Date(0),
       settings: settings,
       SelectLogStream: mockSelectLogStream,
+      Now: () => new Date(0),
     };
 
     let wrapper = shallow(<LogStreams {...props} />);
@@ -74,6 +76,7 @@ describe('components/LogStreams', () => {
       lastModified: new Date(0),
       settings: settings,
       SelectLogStream: mockSelectLogStream,
+      Now: () => new Date(0),
     };
 
     let wrapper = shallow(<LogStreams {...props} />);
