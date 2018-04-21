@@ -2,7 +2,11 @@ import * as crypto from 'crypto';
 
 const algorithm = 'aes-256-ctr';
 
-export function random(seed: number, max: number = 0, min: number = 1) {
+export function random(seed: number, min: number = 0, max: number = 1) {
+  if (min >= max) {
+    throw new Error('min >= max');
+  }
+
   let lastseed = (Math.round(seed) * 9301 + 49297) % 233280;
   let rnd = lastseed / 233280;
 

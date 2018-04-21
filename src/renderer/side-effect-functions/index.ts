@@ -15,7 +15,7 @@ const dialog = remote.dialog;
 
 export function applicationPassphrase(): string {
   let seed = utils.hash(os.type() + os.release() + os.hostname() + 'ufQROog1Q8');
-  return utils.random(seed).toString(36).slice(-8);
+  return utils.random(seed).toString(36).slice(-8) + '_xiONGor6G9!';
 }
 
 export function createUuid(): string {
