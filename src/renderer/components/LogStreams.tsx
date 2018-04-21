@@ -16,7 +16,7 @@ const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, S
   let last = Math.max(...logStreams.map(s => s.lastEventTimestamp));
 
   return (
-    <ul className="list-group">
+    <ul className="LogStreams list-group">
       <li className="list-group-header">
         <strong>Log Streams</strong>
       </li>
