@@ -7,13 +7,14 @@ import { connect, Dispatch } from 'react-redux';
 import { Settings } from '../common-interfaces/Settings';
 import { createUuid, getCloudWatchLogsEvents, showSaveDialog } from '../side-effect-functions';
 
-export function mapStateToProps({ logGroups, logStreams, dateRange, settings }: StoreState) {
+export function mapStateToProps({ logGroups, logStreams, dateRange, settings, logText }: StoreState) {
   return {
     settings: settings.settings,
     logGroupName: logGroups.selectedName,
     logStreamName: logStreams.selectedName,
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
+    logText: logText.text,
   };
 }
 

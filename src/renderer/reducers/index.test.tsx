@@ -408,6 +408,51 @@ describe('reducers/index', () => {
     );
   });
 
+  it('logText', () => {
+    // initial state.
+    expect(index.logText(
+      undefined as any,
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: 'line 1\nline 2\n',
+      },
+    )).toEqual(
+      {
+        text: '',
+      },
+    );
+
+    // RECEIVE_LOG_STREAMS - empty.
+    expect(index.logText(
+      {
+        text: '',
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: '',
+      },
+    )).toEqual(
+      {
+        text: '',
+      },
+    );
+
+    // RECEIVE_LOG_STREAMS - 2 lines.
+    expect(index.logText(
+      {
+        text: '',
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: 'line 1\nline 2\n',
+      },
+    )).toEqual(
+      {
+        text: 'line 1\nline 2\n',
+      },
+    );
+  });
+
   it('logEvents', () => {
     // initial state.
     expect(index.logEvents(

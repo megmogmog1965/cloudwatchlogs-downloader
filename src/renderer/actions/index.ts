@@ -54,6 +54,11 @@ export interface SelectLogStream {
   selectedName?: string;
 }
 
+export interface ReceiveLogText {
+  type: ActionTypes.RECEIVE_LOG_TEXT;
+  text: string;
+}
+
 export interface RequestLogEvents {
   type: ActionTypes.REQUEST_LOG_EVENTS;
   id: string;
@@ -94,6 +99,8 @@ export type WindowAction = ShowWindowContent;
 export type LogGroupAction = RequestLogGroups | ReceiveLogGroups | ErrorLogGroups | SelectLogGroup;
 
 export type LogStreamAction = RequestLogStreams | ReceiveLogStreams | ErrorLogStreams | SelectLogStream;
+
+export type LogTextAction = ReceiveLogText;
 
 export type LogEventAction = RequestLogEvents | ReceiveLogEvents | ErrorLogEvents;
 
@@ -219,6 +226,70 @@ export function setDateRange(startDate: Date, endDate: Date): SetDateRange {
   };
 }
 
+const trimmer: (settings: Settings) => (e: AWS.CloudWatchLogs.OutputLogEvent) => string
+  = (settings) => (settings.lineBreak === LineBreak.NO_MODIFICATION) ?
+    e => e.message! : e => voca.trimRight(e.message!, '\r\n');
+
+const separator: (lineBreak: string) => string = (lineBreak) => {
+  switch (lineBreak) {
+    case LineBreak.LF:
+      return '\n';
+    case LineBreak.CRLF:
+      return '\r\n';
+    case LineBreak.NO_MODIFICATION:
+    default:
+      return '';
+  }
+};
+
+export function receiveLogText(text: string): ReceiveLogText {
+  return {
+    type: ActionTypes.RECEIVE_LOG_TEXT,
+    text,
+  };
+}
+
+export function fetchLogText(
+  settings: Settings,
+  getCloudWatchLogsEvents: (
+    callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+    callbackError: (err: AWS.AWSError) => void,
+    callbackEnd: () => void,
+  ) => void,
+): (dispatch: Dispatch<LogGroupAction>) => void {
+
+  let logs = '';
+
+  return (dispatch: Dispatch<LogGroupAction>) => {
+    // callback for receive log chunks.
+    let callbackData = (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => {
+      if (!data.events) {
+        return;
+      }
+
+      let sep = separator(settings.lineBreak);
+      let messages = data.events
+        .filter(e => e.message != null)
+        .map(trimmer(settings))
+        .join(sep);
+
+      logs = logs + messages + sep;
+    };
+
+    // callback for end processing.
+    let callbackError = (err: AWS.AWSError) => 0; // ignore errors.
+
+    // callback for handling errors.
+    let callbackEnd = () => dispatch(receiveLogText(logs));
+
+    getCloudWatchLogsEvents(
+      callbackData,
+      callbackError,
+      callbackEnd,
+    );
+  };
+}
+
 export function requestLogEvents(id: string): RequestLogEvents {
   return {
     type: ActionTypes.REQUEST_LOG_EVENTS,
@@ -269,25 +340,10 @@ export function downloadLogs(
         return;
       }
 
-      let trimmer: (e: AWS.CloudWatchLogs.OutputLogEvent) => string = (settings.lineBreak === LineBreak.NO_MODIFICATION) ?
-        e => e.message! : e => voca.trimRight(e.message!, '\r\n');
-
-      let separator: (lineBreak: string) => string = (lineBreak) => {
-        switch (lineBreak) {
-          case LineBreak.LF:
-            return '\n';
-          case LineBreak.CRLF:
-            return '\r\n';
-          case LineBreak.NO_MODIFICATION:
-          default:
-            return '';
-        }
-      };
-
       let sep = separator(settings.lineBreak);
       let messages = data.events
         .filter(e => e.message != null)
-        .map(trimmer)
+        .map(trimmer(settings))
         .join(sep);
 
       out.write(messages);

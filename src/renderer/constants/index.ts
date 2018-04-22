@@ -31,6 +31,9 @@ export namespace ActionTypes {
   export const SELECT_LOG_STREAM = 'SELECT_LOG_STREAM';
   export type SELECT_LOG_STREAM = typeof SELECT_LOG_STREAM;
 
+  export const RECEIVE_LOG_TEXT = 'RECEIVE_LOG_TEXT';
+  export type RECEIVE_LOG_TEXT = typeof RECEIVE_LOG_TEXT;
+
   export const REQUEST_LOG_EVENTS = 'REQUEST_LOG_EVENTS';
   export type REQUEST_LOG_EVENTS = typeof REQUEST_LOG_EVENTS;
 

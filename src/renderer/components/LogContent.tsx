@@ -15,6 +15,7 @@ export interface Props {
   logStreamName?: string;
   startDate: Date;
   endDate: Date;
+  logText: string;
   SetDateRange: (startDate: Date, endDate: Date) => void;
   DownloadLogs: (settings: Settings, logGroupName: string, logStreamName: string, startDate: Date, endDate: Date) => void;
 }
@@ -62,6 +63,9 @@ class LogContent extends React.Component<Props> {
           {downloadButton(this.props)}
         </div>
         {/* <p>THIS AREA SHOWS SELECTED LOG CONTENTS...</p> */}
+        <div>
+          {this.props.logText}
+        </div>
       </div>
     );
   }

@@ -1,8 +1,8 @@
 // src/reducers/index.tsx
 
 import { combineReducers, Reducer } from 'redux';
-import { LogGroupAction, LogStreamAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
-import { LogGroupsState, LogStreamsState, LogEventsState, WindowState, DateRangeState, SettingsState, initialState } from '../types';
+import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
+import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, initialState } from '../types';
 import { ActionTypes } from '../constants';
 import { reducer as formReducer } from 'redux-form';
 
@@ -52,6 +52,19 @@ export function logStreams(state: LogStreamsState, action: LogStreamAction): Log
       return { ...state, errorMessage: action.errorMessage };
     case ActionTypes.SELECT_LOG_STREAM:
       return { ...state, selectedName: action.selectedName };
+    default:
+      return state;
+  }
+}
+
+export function logText(state: LogTextState, action: LogTextAction): LogTextState {
+  if (!state) {
+    return { ...initialState.logText };
+  }
+
+  switch (action.type) {
+    case ActionTypes.RECEIVE_LOG_TEXT:
+      return { ...state, text: action.text };
     default:
       return state;
   }
@@ -108,6 +121,7 @@ const reducers: Reducer<any> = combineReducers({
   window,
   logGroups,
   logStreams,
+  logText,
   logEvents,
   dateRange,
   settings,

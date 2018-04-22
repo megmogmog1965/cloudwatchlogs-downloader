@@ -7,13 +7,22 @@ export interface Props {
   selectedName?: string;
   lastModified: Date;
   settings: Settings;
+  logGroupName?: string;
   SelectLogStream: (selectedName: string) => void;
+  FetchLogText: (settings: Settings, logGroupName: string, logStreamName: string) => void;
   Now: () => Date;
 }
 
-const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, SelectLogStream, Now }) => {
+const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, settings, logGroupName, SelectLogStream, FetchLogText, Now }) => {
   // first & last timestamps.
   let first = Math.min(...logStreams.map(s => s.firstEventTimestamp));
+
+  const onClick = (logStreamName: string) => {
+    SelectLogStream(logStreamName);
+    if (logGroupName) {
+      FetchLogText(settings, logGroupName, logStreamName);
+    }
+  }
 
   return (
     <ul className="LogStreams list-group">
@@ -23,7 +32,7 @@ const LogGroups: React.SFC<Props> = ({ logStreams, selectedName, lastModified, S
       {logStreams
         .sort((a, b) => b.lastEventTimestamp - a.lastEventTimestamp)
         .map(s => (
-          <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => SelectLogStream(s.logStreamName)}>
+          <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(s.logStreamName)}>
             <div className="media-body">
               <strong>{s.logStreamName}</strong>
               <p>Last: {new Date(s.lastEventTimestamp).toISOString()}</p>
@@ -52,4 +61,4 @@ function timeRange(firstEventTimestamp: number, logStream: LogStream, now: () =>
   )
 }
 
-export default LogGroups;
+export default LogStreams;

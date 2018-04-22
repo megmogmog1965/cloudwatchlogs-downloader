@@ -270,6 +270,146 @@ describe('actions/index', () => {
       });
   });
 
+  it('receiveLogText', () => {
+    expect(index.receiveLogText('line 1\nline 2\n'))
+      .toEqual({
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: 'line 1\nline 2\n',
+      });
+  });
+
+  it('downloadLogs - Start/End without line break', () => {
+    let settings: Settings = {
+      region: 'ap-northeast-1',
+      awsAccessKeyId: 'xxxx',
+      awsSecretAccessKey: 'yyyy',
+      lineBreak: 'NO_MODIFICATION',
+    };
+
+    let getCloudWatchLogsEvents = (
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackError: (err: AWS.AWSError) => void,
+      callbackEnd: () => void,
+    ) => {
+      callbackData({
+        events: [
+          {
+            timestamp: new Date(1).getTime(),
+            message: 'log line 1',
+          },
+          {
+            timestamp: new Date(2).getTime(),
+            message: 'log line 2',
+          },
+        ],
+      });
+      callbackEnd();
+    };
+
+    let store = mockStore({});
+
+    // dispatch.
+    store.dispatch(index.fetchLogText(settings, getCloudWatchLogsEvents));
+
+    setTimeout(() => {
+      expect(store.getActions())
+        .toEqual([
+          {
+            type: ActionTypes.RECEIVE_LOG_TEXT,
+            text: 'log line 1log line 2',
+          },
+        ]);
+    }, 100);
+  });
+
+  it('downloadLogs - Start/End with LF', () => {
+    let settings: Settings = {
+      region: 'ap-northeast-1',
+      awsAccessKeyId: 'xxxx',
+      awsSecretAccessKey: 'yyyy',
+      lineBreak: 'LF',
+    };
+
+    let getCloudWatchLogsEvents = (
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackError: (err: AWS.AWSError) => void,
+      callbackEnd: () => void,
+    ) => {
+      callbackData({
+        events: [
+          {
+            timestamp: new Date(1).getTime(),
+            message: 'log line 1',
+          },
+          {
+            timestamp: new Date(2).getTime(),
+            message: 'log line 2',
+          },
+        ],
+      });
+      callbackEnd();
+    };
+
+    let store = mockStore({});
+
+    // dispatch.
+    store.dispatch(index.fetchLogText(settings, getCloudWatchLogsEvents));
+
+    setTimeout(() => {
+      expect(store.getActions())
+        .toEqual([
+          {
+            type: ActionTypes.RECEIVE_LOG_TEXT,
+            text: 'log line 1\nlog line 2\n',
+          },
+        ]);
+    }, 100);
+  });
+
+  it('downloadLogs - Start/End with CRLF', () => {
+    let settings: Settings = {
+      region: 'ap-northeast-1',
+      awsAccessKeyId: 'xxxx',
+      awsSecretAccessKey: 'yyyy',
+      lineBreak: 'CRLF',
+    };
+
+    let getCloudWatchLogsEvents = (
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackError: (err: AWS.AWSError) => void,
+      callbackEnd: () => void,
+    ) => {
+      callbackData({
+        events: [
+          {
+            timestamp: new Date(1).getTime(),
+            message: 'log line 1',
+          },
+          {
+            timestamp: new Date(2).getTime(),
+            message: 'log line 2',
+          },
+        ],
+      });
+      callbackEnd();
+    };
+
+    let store = mockStore({});
+
+    // dispatch.
+    store.dispatch(index.fetchLogText(settings, getCloudWatchLogsEvents));
+
+    setTimeout(() => {
+      expect(store.getActions())
+        .toEqual([
+          {
+            type: ActionTypes.RECEIVE_LOG_TEXT,
+            text: 'log line 1\r\nlog line 2\r\n',
+          },
+        ]);
+    }, 100);
+  });
+
   it('requestLogEvents', () => {
     expect(index.requestLogEvents('xxxx'))
       .toEqual({

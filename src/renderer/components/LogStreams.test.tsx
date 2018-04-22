@@ -16,13 +16,16 @@ let settings: types.Settings = {
 describe('components/LogStreams', () => {
   it('render NO <li> without logStreams.', () => {
     let mockSelectLogStream = jest.fn();
+    let mockFetchLogText = jest.fn();
 
     let props = {
       logStreams: [],
       selectedName: undefined,
       lastModified: new Date(1),
       settings: settings,
+      logGroupName: 'loggroup',
       SelectLogStream: mockSelectLogStream,
+      FetchLogText: mockFetchLogText,
       Now: () => new Date(0),
     };
 
@@ -33,6 +36,7 @@ describe('components/LogStreams', () => {
 
   it('render <li> with logStreams.', () => {
     let mockSelectLogStream = jest.fn();
+    let mockFetchLogText = jest.fn();
 
     let logStreams = [
       { arn: 'xxxx', logStreamName: 'yyyy', creationTime: new Date(1).getTime(), firstEventTimestamp: new Date(2).getTime(), lastEventTimestamp: new Date(3).getTime(), storedBytes: 300 },
@@ -44,7 +48,9 @@ describe('components/LogStreams', () => {
       selectedName: undefined,
       lastModified: new Date(0),
       settings: settings,
+      logGroupName: 'loggroup',
       SelectLogStream: mockSelectLogStream,
+      FetchLogText: mockFetchLogText,
       Now: () => new Date(0),
     };
 
@@ -64,6 +70,7 @@ describe('components/LogStreams', () => {
 
   it('called SelectLogStream on click list items.', () => {
     let mockSelectLogStream = jest.fn();
+    let mockFetchLogText = jest.fn();
 
     let logStreams = [
       { arn: 'xxxx', logStreamName: 'yyyy', creationTime: new Date(1).getTime(), firstEventTimestamp: new Date(2).getTime(), lastEventTimestamp: new Date(3).getTime(), storedBytes: 300 },
@@ -75,7 +82,9 @@ describe('components/LogStreams', () => {
       selectedName: undefined,
       lastModified: new Date(0),
       settings: settings,
+      logGroupName: 'loggroup',
       SelectLogStream: mockSelectLogStream,
+      FetchLogText: mockFetchLogText,
       Now: () => new Date(0),
     };
 
@@ -87,11 +96,18 @@ describe('components/LogStreams', () => {
     // descending order
     expect(mockSelectLogStream.mock.calls.length).toBe(1);
     expect(mockSelectLogStream.mock.calls[0][0]).toBe('wwww');
+    expect(mockFetchLogText.mock.calls.length).toBe(1);
+    expect(mockFetchLogText.mock.calls[0][0]).toEqual(settings);
+    expect(mockFetchLogText.mock.calls[0][1]).toBe('loggroup');
+    expect(mockFetchLogText.mock.calls[0][2]).toBe('wwww');
 
     wrapper.find('li.list-group-item').at(1).simulate('click'); // simulate second <li> element clicked.
 
     // descending order
     expect(mockSelectLogStream.mock.calls.length).toBe(2);
     expect(mockSelectLogStream.mock.calls[1][0]).toBe('yyyy');
+    expect(mockFetchLogText.mock.calls[1][0]).toEqual(settings);
+    expect(mockFetchLogText.mock.calls[1][1]).toBe('loggroup');
+    expect(mockFetchLogText.mock.calls[1][2]).toBe('yyyy');
   });
 });

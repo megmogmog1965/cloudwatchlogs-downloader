@@ -206,6 +206,7 @@ export function getCloudWatchLogsEvents(
   callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
   callbackError: (err: AWS.AWSError) => void,
   callbackEnd: () => void,
+  startFromHead = true,
   limit?: number): void {
 
   // authorization for aws-sdk.
@@ -219,7 +220,7 @@ export function getCloudWatchLogsEvents(
       endTime: endDate.getTime(),
       limit: limit,
       nextToken: nextToken,
-      startFromHead: true,
+      startFromHead: startFromHead,
     };
   };
 
