@@ -63,6 +63,7 @@ class LogContent extends React.Component<Props> {
           {downloadButton(this.props)}
         </div>
         {/* @see https://stackoverflow.com/questions/37847885/formatting-code-with-pre-tag-in-react-and-jsx */}
+        <span><strong>Latest Messages</strong></span>
         <pre className="log-text">
           {`${this.props.logText}`}
         </pre>
