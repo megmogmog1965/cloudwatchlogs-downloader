@@ -10,7 +10,7 @@ import Settings from '../containers/Settings';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import { load, currentDate, getCloudWatchLogGroups, getCloudWatchLogStreams } from '../side-effect-functions';
+import { load, currentDate, getCloudWatchLogGroups, getCloudWatchLogStreams, getCloudWatchLogsEvents } from '../side-effect-functions';
 import * as awstypes from '../common-interfaces/Aws';
 import * as types from '../common-interfaces/Settings';
 
@@ -67,6 +67,22 @@ function reloadAll(
       callbackError: (time: Date, err: AWS.AWSError) => void,
       callbackEnd: (time: Date, logStreams: awstypes.LogStream[]) => void,
     ) => getCloudWatchLogStreams(settings, logGroupName, callbackStart, callbackError, callbackEnd), // currying.
+  ));
+
+  if (!logStreamName) {
+    return;
+  }
+
+  const endDate = new Date();
+  const startDate = new Date(endDate.getTime() - 10 * 365 * 24 * 60 * 60 * 1000); // 10 years.
+  const limit = 100; // only 100 lines.
+  dispatch(actions.fetchLogText(
+    settings,
+    (
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackError: (err: AWS.AWSError) => void,
+      callbackEnd: () => void,
+    ) => getCloudWatchLogsEvents(settings, logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
   ));
 }
 
