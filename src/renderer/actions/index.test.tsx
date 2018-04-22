@@ -278,7 +278,7 @@ describe('actions/index', () => {
       });
   });
 
-  it('downloadLogs - Start/End without line break', () => {
+  it('fetchLogText - Start/End without line break', () => {
     let settings: Settings = {
       region: 'ap-northeast-1',
       awsAccessKeyId: 'xxxx',
@@ -295,11 +295,11 @@ describe('actions/index', () => {
         events: [
           {
             timestamp: new Date(1).getTime(),
-            message: 'log line 1',
+            message: 'log line 1\n',
           },
           {
             timestamp: new Date(2).getTime(),
-            message: 'log line 2',
+            message: 'log line 2\r\n',
           },
         ],
       });
@@ -316,13 +316,13 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.RECEIVE_LOG_TEXT,
-            text: 'log line 1log line 2',
+            text: 'log line 1\nlog line 2\r\n',
           },
         ]);
     }, 100);
   });
 
-  it('downloadLogs - Start/End with LF', () => {
+  it('fetchLogText - Start/End with LF', () => {
     let settings: Settings = {
       region: 'ap-northeast-1',
       awsAccessKeyId: 'xxxx',
@@ -339,11 +339,11 @@ describe('actions/index', () => {
         events: [
           {
             timestamp: new Date(1).getTime(),
-            message: 'log line 1',
+            message: 'log line 1\n',
           },
           {
             timestamp: new Date(2).getTime(),
-            message: 'log line 2',
+            message: 'log line 2\r\n',
           },
         ],
       });
@@ -366,7 +366,7 @@ describe('actions/index', () => {
     }, 100);
   });
 
-  it('downloadLogs - Start/End with CRLF', () => {
+  it('fetchLogText - Start/End with CRLF', () => {
     let settings: Settings = {
       region: 'ap-northeast-1',
       awsAccessKeyId: 'xxxx',
@@ -383,11 +383,11 @@ describe('actions/index', () => {
         events: [
           {
             timestamp: new Date(1).getTime(),
-            message: 'log line 1',
+            message: 'log line 1\n',
           },
           {
             timestamp: new Date(2).getTime(),
-            message: 'log line 2',
+            message: 'log line 2\r\n',
           },
         ],
       });
@@ -490,7 +490,7 @@ describe('actions/index', () => {
           },
           {
             timestamp: new Date(2).getTime(),
-            message: 'log line 2',
+            message: 'log line 2\n',
           },
         ],
       });
@@ -498,7 +498,7 @@ describe('actions/index', () => {
         events: [
           {
             timestamp: new Date(3).getTime(),
-            message: 'log line 3',
+            message: 'log line 3\r\n',
           },
         ],
       });
@@ -526,9 +526,9 @@ describe('actions/index', () => {
       expect(mockWrite.mock.calls.length).toBe(4); // message chunk + linefeed ==> 2 writes.
       expect(mockEnd.mock.calls.length).toBe(1);
 
-      expect(mockWrite.mock.calls[0][0]).toBe('log line 1log line 2');
+      expect(mockWrite.mock.calls[0][0]).toBe('log line 1log line 2\n');
       expect(mockWrite.mock.calls[1][0]).toBe('');
-      expect(mockWrite.mock.calls[2][0]).toBe('log line 3');
+      expect(mockWrite.mock.calls[2][0]).toBe('log line 3\r\n');
       expect(mockWrite.mock.calls[3][0]).toBe('');
     }, 100);
   });
@@ -560,7 +560,7 @@ describe('actions/index', () => {
           },
           {
             timestamp: new Date(2).getTime(),
-            message: 'log line 2',
+            message: 'log line 2\n',
           },
         ],
       });
@@ -568,7 +568,7 @@ describe('actions/index', () => {
         events: [
           {
             timestamp: new Date(3).getTime(),
-            message: 'log line 3',
+            message: 'log line 3\r\n',
           },
         ],
       });
@@ -630,7 +630,7 @@ describe('actions/index', () => {
           },
           {
             timestamp: new Date(2).getTime(),
-            message: 'log line 2',
+            message: 'log line 2\n',
           },
         ],
       });
@@ -638,7 +638,7 @@ describe('actions/index', () => {
         events: [
           {
             timestamp: new Date(3).getTime(),
-            message: 'log line 3',
+            message: 'log line 3\r\n',
           },
         ],
       });
@@ -700,7 +700,7 @@ describe('actions/index', () => {
           },
           {
             timestamp: new Date(2).getTime(),
-            message: 'log line 2',
+            message: 'log line 2\n',
           },
         ],
       });
