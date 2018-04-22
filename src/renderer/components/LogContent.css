@@ -1,6 +1,9 @@
 .LogContent {
   position: relative;
+  height: 100%;
   padding: 1em;
+  display: flex;
+  flex-direction: column;
 }
 
 #daterange-picker {
@@ -18,4 +21,13 @@
 
 .clearfix {
   display: block;
+}
+
+.log-text {
+  border: 1px solid rgba(255, 99, 71, 0.5);
+  margin-top: 1em;
+  margin-bottom: 0;
+  padding: 0.5em;
+  flex-grow: 1;
+  overflow: auto;
 }

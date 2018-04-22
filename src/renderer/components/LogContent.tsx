@@ -62,10 +62,10 @@ class LogContent extends React.Component<Props> {
         <div className="clearfix">
           {downloadButton(this.props)}
         </div>
-        {/* <p>THIS AREA SHOWS SELECTED LOG CONTENTS...</p> */}
-        <div>
-          {this.props.logText}
-        </div>
+        {/* @see https://stackoverflow.com/questions/37847885/formatting-code-with-pre-tag-in-react-and-jsx */}
+        <pre className="log-text">
+          {`${this.props.logText}`}
+        </pre>
       </div>
     );
   }

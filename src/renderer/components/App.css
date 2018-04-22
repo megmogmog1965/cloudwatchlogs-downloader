@@ -1,8 +1,33 @@
-.App {
-
-}
+.App {}
 
 .errors {
   color: Crimson;
   font-family: 'Arial', sans-serif;
+}
+
+/* Scrollbar styles: https://www.quackit.com/html/codes/html_scrollbars.cfm */
+::-webkit-scrollbar {
+width: 8px;
+height: 8px;
+}
+
+::-webkit-scrollbar-track {
+border-radius: 8px;
+}
+
+::-webkit-scrollbar-track:vertical {
+background: -webkit-linear-gradient(top, white, rgba(255, 99, 71, 0.4));
+}
+
+::-webkit-scrollbar-track:horizontal {
+background: -webkit-linear-gradient(left, white, rgba(255, 99, 71, 0.4));
+}
+
+::-webkit-scrollbar-thumb {
+background: rgba(255, 99, 71, 0.8);
+border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: rgba(255, 99, 71, 1);
 }
