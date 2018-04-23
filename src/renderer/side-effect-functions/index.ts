@@ -74,6 +74,11 @@ export function showSaveDialog(): stream.Writable | undefined {
     ],
   });
 
+  // cancel chosen.
+  if (!fileName) {
+    return undefined;
+  }
+
   // open write stream.
   let out = fs.createWriteStream(fileName);
 
