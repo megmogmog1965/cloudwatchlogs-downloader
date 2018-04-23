@@ -35,3 +35,19 @@ export function decrypt(text: string, passphrase: string): string {
 
   return decrypted + decipher.final('utf8');
 }
+
+/**
+ * @param jsonstr a json formatted string.
+ * @param key a root key of the json object.
+ * @returns a value for `key`, or `jsonstr` itself.
+ */
+export function extractJson(jsonstr: string, key: string): string {
+  try {
+    let val = JSON.parse(jsonstr)[key];
+    return (typeof val === 'string') ? val : jsonstr;
+
+  } catch (e) {
+    // return itself when "jsonstr" is NOT as json format.
+    return jsonstr;
+  }
+}

@@ -3,6 +3,7 @@ import * as enums from '../enums';
 import { ActionTypes } from '../constants';
 import { LogGroup, LogStream } from '../common-interfaces/Aws';
 import { Settings } from '../common-interfaces/Settings';
+import { extractJson } from '../utils';
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store';
 
@@ -62,6 +63,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let getCloudWatchLogGroups = (
@@ -99,6 +101,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let getCloudWatchLogGroups = (
@@ -180,6 +183,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let getCloudWatchLogStreams = (
@@ -217,6 +221,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let getCloudWatchLogStreams = (
@@ -284,6 +289,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'NO_MODIFICATION',
+      jsonKey: '',
     };
 
     let getCloudWatchLogsEvents = (
@@ -328,6 +334,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
+      jsonKey: '',
     };
 
     let getCloudWatchLogsEvents = (
@@ -372,6 +379,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let getCloudWatchLogsEvents = (
@@ -440,6 +448,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let fileChooser = () => undefined; // stream.Writable | undefined
@@ -469,6 +478,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'NO_MODIFICATION',
+      jsonKey: '',
     };
 
     let mockWrite = jest.fn();
@@ -539,6 +549,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
+      jsonKey: '',
     };
 
     let mockWrite = jest.fn();
@@ -609,6 +620,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let mockWrite = jest.fn();
@@ -673,12 +685,86 @@ describe('actions/index', () => {
     }, 100);
   });
 
+  it('downloadLogs - Start/End with transformer function', () => {
+    let settings: Settings = {
+      region: 'ap-northeast-1',
+      awsAccessKeyId: 'xxxx',
+      awsSecretAccessKey: 'yyyy',
+      lineBreak: 'LF',
+      jsonKey: 'log',
+    };
+
+    let mockWrite = jest.fn();
+    let mockEnd = jest.fn();
+    let fileChooser = () => ({ write: mockWrite, end: mockEnd }) as any; // stream.Writable | undefined
+
+    let createJobId = () => 'jobid';
+
+    let transformer = (line: string) => extractJson(line, settings.jsonKey);
+
+    let getCloudWatchLogsEvents = (
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackError: (err: AWS.AWSError) => void,
+      callbackEnd: () => void,
+    ) => {
+      callbackData({
+        events: [
+          {
+            timestamp: new Date(1).getTime(),
+            message: '{ "log": "log line 1" }',
+          },
+          {
+            timestamp: new Date(2).getTime(),
+            message: '{ "log": "log line 2\\r\\n" }\n',
+          },
+        ],
+      });
+      callbackData({
+        events: [
+          {
+            timestamp: new Date(3).getTime(),
+            message: '{ "log": "log line 3\\n" }\r\n',
+          },
+        ],
+      });
+      callbackEnd();
+    };
+
+    let store = mockStore({});
+
+    // dispatch.
+    store.dispatch(index.downloadLogs(settings, fileChooser, createJobId, getCloudWatchLogsEvents, transformer));
+
+    setTimeout(() => {
+      expect(store.getActions())
+        .toEqual([
+          {
+            type: ActionTypes.REQUEST_LOG_EVENTS,
+            id: 'jobid',
+          },
+          {
+            type: ActionTypes.RECEIVE_LOG_EVENTS,
+            id: 'jobid',
+          },
+        ]);
+
+      expect(mockWrite.mock.calls.length).toBe(4); // message chunk + linefeed ==> 2 writes.
+      expect(mockEnd.mock.calls.length).toBe(1);
+
+      expect(mockWrite.mock.calls[0][0]).toBe('log line 1\nlog line 2');
+      expect(mockWrite.mock.calls[1][0]).toBe('\n');
+      expect(mockWrite.mock.calls[2][0]).toBe('log line 3');
+      expect(mockWrite.mock.calls[3][0]).toBe('\n');
+    }, 100);
+  });
+
   it('downloadLogs - Start/Error', () => {
     let settings: Settings = {
       region: 'ap-northeast-1',
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let mockWrite = jest.fn();
@@ -739,6 +825,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let mockSave = jest.fn();
@@ -763,6 +850,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     let load = () => {
@@ -798,6 +886,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
+      jsonKey: '',
     };
 
     expect(index.receiveSettings(
