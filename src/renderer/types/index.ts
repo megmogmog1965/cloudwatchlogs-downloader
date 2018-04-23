@@ -79,6 +79,7 @@ export const initialState: StoreState = {
       awsAccessKeyId: '',
       awsSecretAccessKey: '',
       lineBreak: LineBreak.LF,
+      jsonKey: '',
     },
     lastModified: new Date(0),
   },

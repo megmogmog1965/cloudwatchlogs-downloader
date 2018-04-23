@@ -13,6 +13,7 @@ let settings: types.Settings = {
   awsAccessKeyId: 'xxxxxxxx',
   awsSecretAccessKey: 'yyyyyyyy',
   lineBreak: 'CRLF',
+  jsonKey: '',
 };
 
 describe('components/App', () => {

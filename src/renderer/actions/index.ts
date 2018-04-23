@@ -226,9 +226,9 @@ export function setDateRange(startDate: Date, endDate: Date): SetDateRange {
   };
 }
 
-const trimmer: (settings: Settings) => (e: AWS.CloudWatchLogs.OutputLogEvent) => string
+const trimmer: (settings: Settings) => (line: string) => string
   = (settings) => (settings.lineBreak === LineBreak.NO_MODIFICATION) ?
-    e => e.message! : e => voca.trimRight(e.message!, '\r\n');
+    line => line : line => voca.trimRight(line, '\r\n');
 
 const separator: (lineBreak: string) => string = (lineBreak) => {
   switch (lineBreak) {
@@ -270,6 +270,7 @@ export function fetchLogText(
       let sep = separator(settings.lineBreak);
       let messages = data.events
         .filter(e => e.message != null)
+        .map(e => e.message!)
         .map(trimmer(settings))
         .join(sep);
 
@@ -320,6 +321,7 @@ export function downloadLogs(
     callbackError: (err: AWS.AWSError) => void,
     callbackEnd: () => void,
   ) => void,
+  transformer = (line: string) => line,
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
@@ -343,6 +345,8 @@ export function downloadLogs(
       let sep = separator(settings.lineBreak);
       let messages = data.events
         .filter(e => e.message != null)
+        .map(e => e.message!)
+        .map(transformer)
         .map(trimmer(settings))
         .join(sep);
 

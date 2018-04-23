@@ -18,6 +18,7 @@ export function mapStateToProps({ settings }: StoreState): Props {
       awsAccessKeyId: settings.settings.awsAccessKeyId,
       awsSecretAccessKey: settings.settings.awsSecretAccessKey,
       lineBreak: settings.settings.lineBreak,
+      jsonKey: settings.settings.jsonKey,
     },
   };
 }
@@ -31,6 +32,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.SettingsAction>) {
           awsAccessKeyId: values.awsAccessKeyId,
           awsSecretAccessKey: values.awsSecretAccessKey,
           lineBreak: values.lineBreak,
+          jsonKey: values.jsonKey,
         },
         new Date(),
         save),

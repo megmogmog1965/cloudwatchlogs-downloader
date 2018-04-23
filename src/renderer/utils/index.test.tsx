@@ -63,4 +63,19 @@ describe('utils/index', () => {
     expect(index.decrypt('N3BDTpWF/Uxb01s=', '-111111.2222222_aaaaBBBB!$**')).toBe('hello world');
     expect(index.decrypt('b5Bzl8m5Xh0Vk9A=', '-444444.6666666_aaaaBBBB!$**')).toBe('hello world');
   });
+
+  it('extractJson: successful case', () => {
+    expect(index.extractJson('{ "key": "value", "dummy1": "1", "dummy2": 2, "dummy3": { "dummy4": 4 } }', 'key')).toBe('value');
+  });
+
+  it('extractJson: error case', () => {
+    // invalid json format.
+    expect(index.extractJson('{ "key": "value"', 'key')).toBe('{ "key": "value"');
+
+    // the value is NOT a string.
+    expect(index.extractJson('{ "key": 999 }', 'key')).toBe('{ "key": 999 }');
+    expect(index.extractJson('{ "key": true }', 'key')).toBe('{ "key": true }');
+    expect(index.extractJson('{ "key": { "a": "b" } }', 'key')).toBe('{ "key": { "a": "b" } }');
+    expect(index.extractJson('{ "key": [ "a", "b" ] }', 'key')).toBe('{ "key": [ "a", "b" ] }');
+  });
 });

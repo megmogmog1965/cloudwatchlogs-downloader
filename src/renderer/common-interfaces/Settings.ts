@@ -4,4 +4,5 @@ export interface Settings {
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
   lineBreak: string;
+  jsonKey: string;
 }
