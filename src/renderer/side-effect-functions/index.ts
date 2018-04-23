@@ -99,11 +99,17 @@ export function getCloudWatchLogGroups(
 
   callbackStart(new Date());
 
-  let fetchRecursively = (groups: LogGroup[], nextToken?: string) => {
+  let fetchRecursively = (groups: LogGroup[], nextToken?: string, retry = 3) => {
     cloudwatchlogs.describeLogGroups({ nextToken }, (err, data) => {
       let now = new Date();
 
       if (err) {
+        if (retry > 0) {
+          // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
+          setTimeout(() => fetchRecursively(groups, nextToken, retry - 1), 1000); // wait 1 secs until next try.
+          return;
+        }
+
         callbackError(now, err);
         return;
       }
@@ -152,11 +158,17 @@ export function getCloudWatchLogStreams(
 
   callbackStart(new Date());
 
-  let fetchRecursively = (streams: LogStream[], nextToken?: string) => {
+  let fetchRecursively = (streams: LogStream[], nextToken?: string, retry = 3) => {
     cloudwatchlogs.describeLogStreams({ logGroupName, descending: true, orderBy: 'LastEventTime', nextToken }, (err, data) => {
       let now = new Date();
 
       if (err) {
+        if (retry > 0) {
+          // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
+          setTimeout(() => fetchRecursively(streams, nextToken, retry - 1), 1000); // wait 1 secs until next try.
+          return;
+        }
+
         callbackError(now, err);
         return;
       }
