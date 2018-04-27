@@ -103,55 +103,19 @@ export function getCloudWatchLogGroups(
   callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
 ): void {
 
-  const cloudwatchlogs = connectCloudWatchLogs(settings);
-
+  //////////// stub ////////////
   callbackStart(new Date());
 
-  let fetchRecursively = (groups: LogGroup[], nextToken?: string, retry = 3) => {
-    cloudwatchlogs.describeLogGroups({ nextToken }, (err, data) => {
-      let now = new Date();
-
-      if (err) {
-        if (retry > 0) {
-          // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
-          setTimeout(() => fetchRecursively(groups, nextToken, retry - 1), 1000); // wait 1 secs until next try.
-          return;
-        }
-
-        callbackError(now, err);
-        return;
-      }
-
-      if (!data.logGroups) {
-        callbackEnd(now, groups);
-        return;
-      }
-
-      let part: LogGroup[] = data.logGroups
-        .filter(g => g.arn != null)
-        .filter(g => g.logGroupName != null)
-        .filter(g => g.creationTime != null)
-        .filter(g => g.storedBytes != null)
-        .map(g => ({
-          arn: g.arn!,
-          logGroupName: g.logGroupName!,
-          creationTime: g.creationTime!,
-          storedBytes: g.storedBytes!,
-        }));
-
-      let merged = groups.concat(part);
-
-      if (!data.nextToken) {
-        callbackEnd(now, merged);
-        return;
-      }
-
-      // call recursively.
-      fetchRecursively(merged, data.nextToken);
-    });
-  };
-
-  fetchRecursively([]);
+  callbackEnd(
+    new Date(),
+    [
+      { arn: 'arn1', logGroupName: 'Log group 1', creationTime: 1524520727000, storedBytes: 52428800 },
+      { arn: 'arn2', logGroupName: 'Log group 2', creationTime: 1524530727000, storedBytes: 52428800 },
+      { arn: 'arn3', logGroupName: 'Log group 3', creationTime: 1524540727000, storedBytes: 52428800 },
+      { arn: 'arn4', logGroupName: 'Log group 4', creationTime: 1524550727000, storedBytes: 52428800 },
+    ],
+  );
+  //////////// stub ////////////
 }
 
 export function getCloudWatchLogStreams(
@@ -162,59 +126,24 @@ export function getCloudWatchLogStreams(
   callbackEnd: (time: Date, logStreams: LogStream[]) => void,
 ): void {
 
-  const cloudwatchlogs = connectCloudWatchLogs(settings);
+  //////////// stub ////////////
+  let now = new Date().getTime();
+  let prev = (t: number, days: number) => t - days * 24 * 60 * 60 * 1000;
 
   callbackStart(new Date());
 
-  let fetchRecursively = (streams: LogStream[], nextToken?: string, retry = 3) => {
-    cloudwatchlogs.describeLogStreams({ logGroupName, descending: true, orderBy: 'LastEventTime', nextToken }, (err, data) => {
-      let now = new Date();
-
-      if (err) {
-        if (retry > 0) {
-          // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
-          setTimeout(() => fetchRecursively(streams, nextToken, retry - 1), 1000); // wait 1 secs until next try.
-          return;
-        }
-
-        callbackError(now, err);
-        return;
-      }
-
-      if (!data.logStreams) {
-        callbackEnd(now, streams);
-        return;
-      }
-
-      let part: LogStream[] = data.logStreams
-        .filter(g => typeof g.arn != null)
-        .filter(g => g.logStreamName != null)
-        .filter(g => g.creationTime != null)
-        .filter(g => g.firstEventTimestamp != null)
-        .filter(g => g.lastEventTimestamp != null)
-        .filter(g => g.storedBytes != null)
-        .map(g => ({
-          arn: g.arn!,
-          logStreamName: g.logStreamName!,
-          creationTime: g.creationTime!,
-          firstEventTimestamp: g.firstEventTimestamp!,
-          lastEventTimestamp: g.lastEventTimestamp!,
-          storedBytes: g.storedBytes!,
-        }));
-
-      let merged = streams.concat(part);
-
-      if (!data.nextToken) {
-        callbackEnd(now, merged);
-        return;
-      }
-
-      // call recursively.
-      fetchRecursively(merged, data.nextToken);
-    });
-  };
-
-  fetchRecursively([]);
+  callbackEnd(
+    new Date(),
+    [
+      { arn: 'arn1', logStreamName: 'Log stream 1', creationTime: 1524520727000, firstEventTimestamp: prev(now, 1), lastEventTimestamp: now, storedBytes: 52428800 },
+      { arn: 'arn2', logStreamName: 'Log stream 2', creationTime: 1524520727000, firstEventTimestamp: prev(now, 1), lastEventTimestamp: now, storedBytes: 52428800 },
+      { arn: 'arn3', logStreamName: 'Log stream 3', creationTime: 1524520727000, firstEventTimestamp: prev(now, 2), lastEventTimestamp: prev(now, 1), storedBytes: 52428800 },
+      { arn: 'arn4', logStreamName: 'Log stream 4', creationTime: 1524520727000, firstEventTimestamp: prev(now, 3), lastEventTimestamp: prev(now, 1), storedBytes: 52428800 },
+      { arn: 'arn5', logStreamName: 'Log stream 5', creationTime: 1524520727000, firstEventTimestamp: prev(now, 3), lastEventTimestamp: prev(now, 2), storedBytes: 52428800 },
+      { arn: 'arn6', logStreamName: 'Log stream 6', creationTime: 1524520727000, firstEventTimestamp: prev(now, 3), lastEventTimestamp: prev(now, 2), storedBytes: 52428800 },
+    ],
+  );
+  //////////// stub ////////////
 }
 
 export function getCloudWatchLogsEvents(
@@ -229,59 +158,25 @@ export function getCloudWatchLogsEvents(
   startFromHead = true,
   limit?: number): void {
 
-  // authorization for aws-sdk.
-  const cloudwatchlogs = connectCloudWatchLogs(settings);
-
-  let createParams = (nextToken?: string) => {
-    return {
-      logGroupName: logGroupName,
-      logStreamName: logStreamName,
-      startTime: startDate.getTime(),
-      endTime: endDate.getTime(),
-      limit: limit,
-      nextToken: nextToken,
-      startFromHead: startFromHead,
-    };
+  //////////// stub ////////////
+  let now = new Date().getTime();
+  let events = (lines: number) => {
+    return Array.from(Array(20).keys())
+      .map(i => now - i * 1000)
+      .map(t => ({
+        timestamp: t,
+        message: new Date(t).toISOString() + ' INFO .......................',
+      }));
   };
 
-  let fetchRecursively = (nextToken?: string, retry = 3) => {
-    cloudwatchlogs.getLogEvents(
-      createParams(nextToken),
-      (err, data) => {
-        // error.
-        if (err) {
-          if (retry > 0) {
-            // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
-            setTimeout(() => fetchRecursively(nextToken, retry - 1), 2000); // wait 2 secs until next try.
-            return;
-          }
+  callbackData(
+    {
+      events: events(100),
+    } as any,
+  );
 
-          callbackError(err);
-          return;
-        }
-
-        // end of recursive calls.
-        let latestToken = data.nextForwardToken;
-        if (!latestToken || nextToken === latestToken) {
-          callbackEnd();
-          return;
-        }
-
-        // something to be done on callback.
-        callbackData(data);
-
-        // one time call by limit.
-        if (limit) {
-          callbackEnd();
-          return;
-        }
-
-        // call itself recursively.
-        fetchRecursively(latestToken);
-      });
-  };
-
-  fetchRecursively();
+  callbackEnd();
+  //////////// stub ////////////
 }
 
 function connectCloudWatchLogs(settings: Settings): AWS.CloudWatchLogs {
