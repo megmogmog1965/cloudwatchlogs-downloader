@@ -130,7 +130,7 @@ describe('components/App', () => {
     };
 
     let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('div.Loading').exists()).toBe(false);
+    expect(wrapper.find('progress.Progress').exists()).toBe(false);
   });
 
   it('renders "DOWNLOADING" text with runningJobs', () => {
@@ -152,6 +152,6 @@ describe('components/App', () => {
     };
 
     let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('div.Loading').exists()).toBe(true);
+    expect(wrapper.find('progress.Progress').exists()).toBe(true);
   });
 });
