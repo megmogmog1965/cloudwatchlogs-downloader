@@ -1,5 +1,7 @@
 # cloudwatchlogs-downloader
 
+![DownloadLogs pane](https://raw.githubusercontent.com/megmogmog1965/cloudwatchlogs-downloader/feature/demo-images/_demo_images/DownloadLogs.png)
+
 ## About app
 
 Cross-platform application to download logs from [Amazon CloudWatch Logs].
