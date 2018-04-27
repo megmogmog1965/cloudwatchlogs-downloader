@@ -51,3 +51,12 @@ export function extractJson(jsonstr: string, key: string): string {
     return jsonstr;
   }
 }
+
+/**
+ * @returns percentage: 0 to 1.0
+ */
+export function progressAt(t: Date, startTime: Date, endTime: Date): number {
+  let progress = (t.getTime() - startTime.getTime()) / (endTime.getTime() - startTime.getTime());
+
+  return Math.min(Math.max(0, progress), 1.0);
+}

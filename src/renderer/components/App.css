@@ -1,4 +1,6 @@
-.App {}
+.App .toolbar-actions > div {
+  line-height: 0;
+}
 
 .errors {
   color: Crimson;

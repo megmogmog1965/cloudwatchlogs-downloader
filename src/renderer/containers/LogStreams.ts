@@ -4,7 +4,7 @@ import LogStreams from '../components/LogStreams';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { currentDate, getCloudWatchLogsEvents } from '../side-effect-functions';
-import { Settings } from '../common-interfaces/Settings';
+import { Settings } from '../common-interfaces';
 import { connect, Dispatch } from 'react-redux';
 
 export function mapStateToProps({ logStreams, settings, logGroups }: StoreState) {

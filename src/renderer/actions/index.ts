@@ -3,8 +3,7 @@ import * as enums from '../enums';
 import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
 import * as voca from 'voca';
 
 //////////// Action object interfaces ////////////
@@ -61,17 +60,22 @@ export interface ReceiveLogText {
 
 export interface RequestLogEvents {
   type: ActionTypes.REQUEST_LOG_EVENTS;
-  id: string;
+  job: DownloadJob;
+}
+
+export interface ProgressLogEvents {
+  type: ActionTypes.PROGRESS_LOG_EVENTS;
+  job: DownloadJob;
 }
 
 export interface ReceiveLogEvents {
   type: ActionTypes.RECEIVE_LOG_EVENTS;
-  id: string;
+  job: DownloadJob;
 }
 
 export interface ErrorLogEvents {
   type: ActionTypes.ERROR_LOG_EVENTS;
-  id: string;
+  job: DownloadJob;
 }
 
 export interface SetDateRange {
@@ -102,7 +106,7 @@ export type LogStreamAction = RequestLogStreams | ReceiveLogStreams | ErrorLogSt
 
 export type LogTextAction = ReceiveLogText;
 
-export type LogEventAction = RequestLogEvents | ReceiveLogEvents | ErrorLogEvents;
+export type LogEventAction = RequestLogEvents | ProgressLogEvents | ReceiveLogEvents | ErrorLogEvents;
 
 export type DateRangeAction = SetDateRange;
 
@@ -291,24 +295,31 @@ export function fetchLogText(
   };
 }
 
-export function requestLogEvents(id: string): RequestLogEvents {
+export function requestLogEvents(job: DownloadJob): RequestLogEvents {
   return {
     type: ActionTypes.REQUEST_LOG_EVENTS,
-    id,
+    job,
   };
 }
 
-export function receiveLogEvents(id: string): ReceiveLogEvents {
+export function progressLogEvents(job: DownloadJob): ProgressLogEvents {
+  return {
+    type: ActionTypes.PROGRESS_LOG_EVENTS,
+    job,
+  };
+}
+
+export function receiveLogEvents(job: DownloadJob): ReceiveLogEvents {
   return {
     type: ActionTypes.RECEIVE_LOG_EVENTS,
-    id,
+    job,
   };
 }
 
-export function errorLogEvents(id: string): ErrorLogEvents {
+export function errorLogEvents(job: DownloadJob): ErrorLogEvents {
   return {
     type: ActionTypes.ERROR_LOG_EVENTS,
-    id,
+    job,
   };
 }
 
@@ -317,7 +328,7 @@ export function downloadLogs(
   fileChooser: () => stream.Writable | undefined,
   createJobId: () => string,
   getCloudWatchLogsEvents: (
-    callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+    callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
     callbackError: (err: AWS.AWSError) => void,
     callbackEnd: () => void,
   ) => void,
@@ -333,11 +344,14 @@ export function downloadLogs(
     const out = choosed;
 
     // create job id.
-    const id = createJobId();
-    dispatch(requestLogEvents(id));
+    let job = {
+      id: createJobId(),
+      progress: 0,
+    };
+    dispatch(requestLogEvents(job));
 
     // callback for receive log chunks.
-    let callbackData = (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => {
+    let callbackData = (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => {
       if (!data.events) {
         return;
       }
@@ -352,18 +366,21 @@ export function downloadLogs(
 
       out.write(messages);
       out.write(sep);
+
+      job = { ...job, progress: progress };
+      dispatch(progressLogEvents(job));
     };
 
     // callback for end processing.
     let callbackError = (err: AWS.AWSError) => {
       out.end();
-      dispatch(errorLogEvents(id));
+      dispatch(errorLogEvents(job));
     };
 
     // callback for handling errors.
     let callbackEnd = () => {
       out.end();
-      dispatch(receiveLogEvents(id));
+      dispatch(receiveLogEvents(job));
     };
 
     getCloudWatchLogsEvents(

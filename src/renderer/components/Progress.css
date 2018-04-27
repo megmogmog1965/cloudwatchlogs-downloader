@@ -1,0 +1,61 @@
+progress {
+  animation: blink 5s linear infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+progress:not(value) {
+  /* Add your styles here. As part of this walkthrough we will focus only on determinate progress bars. */
+}
+
+progress[value] {
+  appearance: none;
+  border: none;
+  width: 200px;
+  height: 20px;
+  background-color: whiteSmoke;
+  border-radius: 3px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .5) inset;
+  position: relative;
+  margin: 2px 0;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: whiteSmoke;
+  border-radius: 3px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .5) inset;
+}
+
+progress[value]::-webkit-progress-value {
+  position: relative;
+  background-size: 35px 20px, 100% 100%, 100% 100%;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient( 135deg, transparent, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0, 0, 0, .1) 66%, transparent 66%), -webkit-linear-gradient( top, rgba(255, 255, 255, .25), rgba(0, 0, 0, .2)), -webkit-linear-gradient( left, #09c, #f44);
+  /* animation: animate-stripes 5s linear infinite; */
+}
+
+/* @keyframes animate-stripes {
+  100% {
+    background-position: -100px 0;
+  }
+} */
+
+.progress-bar {
+  background-color: whiteSmoke;
+  border-radius: 3px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .5) inset;
+  /* Dimensions should be similar to the parent progress element. */
+  width: 100%;
+  height: 20px;
+}
+
+.progress-bar span {
+  background-color: royalblue;
+  border-radius: 3px;
+  display: block;
+  text-indent: -9999px;
+}

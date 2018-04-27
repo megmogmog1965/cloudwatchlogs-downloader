@@ -4,7 +4,7 @@ import LogContent from '../components/LogContent';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import { Settings } from '../common-interfaces/Settings';
+import { Settings } from '../common-interfaces';
 import { extractJson } from '../utils';
 import { createUuid, getCloudWatchLogsEvents, showSaveDialog } from '../side-effect-functions';
 
@@ -33,7 +33,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
         showSaveDialog,
         createUuid,
         (
-          callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+          callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
           callbackError: (err: AWS.AWSError) => void,
           callbackEnd: () => void,
         ) => getCloudWatchLogsEvents(settings, logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd), // currying.

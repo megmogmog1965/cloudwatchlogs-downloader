@@ -1,8 +1,8 @@
 import * as React from 'react';
 import './App.css';
 import * as enums from '../enums';
-import Loading from '../components/Loading';
-import * as types from '../common-interfaces/Settings';
+import Progress from '../components/Progress';
+import * as types from '../common-interfaces';
 
 export interface Props {
   LogGroups: React.ComponentClass<any> | React.SFC<any>;
@@ -13,8 +13,8 @@ export interface Props {
   settings: types.Settings;
   logGroupName: string;
   logStreamName: string;
-  runningIds: string[];
-  errorIds: string[];
+  runningJobs: types.DownloadJob[];
+  errorJobs: types.DownloadJob[];
   ShowWindowContent: (windowContent: enums.WindowContent) => void;
   LoadSettings: () => void;
   ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => void;
@@ -56,15 +56,15 @@ class App extends React.Component<Props> {
               <span className="icon icon-github" />
             </button>
 
-            {this.props.errorIds.length !== 0 ?
+            {this.props.errorJobs.length > 0 ?
               <div className="pull-right">
-                <span className="errors">Errors: {this.props.errorIds.length}</span>
+                <span className="errors">Errors: {this.props.errorJobs.length}</span>
               </div>
               : null}
 
-            {this.props.runningIds.length !== 0 ?
+            {this.props.runningJobs.length > 0 ?
               <div className="pull-right">
-                <Loading text="DOWNLOADING" />
+                <Progress progress={meanOfProgress(this.props.runningJobs)} />
               </div>
               : null}
           </div>
@@ -109,6 +109,14 @@ function createWindowContent(windowContent: enums.WindowContent, props: Props) {
     default:
       throw new Error('Undefined WindowContent: ' + windowContent);
   }
+}
+
+function meanOfProgress(runningJobs: types.DownloadJob[]): number {
+  let sum = runningJobs
+    .map(j => j.progress)
+    .reduce((p, c) => p + c, 0)
+
+  return runningJobs.length > 0 ? sum / runningJobs.length : 0;
 }
 
 export default App;

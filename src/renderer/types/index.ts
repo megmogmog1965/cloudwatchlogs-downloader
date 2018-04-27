@@ -2,8 +2,7 @@
 
 import * as enums from '../enums';
 import { Region, LineBreak } from '../constants';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
 
 export interface StoreState {
   window: WindowState;
@@ -38,9 +37,9 @@ export interface LogTextState {
 }
 
 export interface LogEventsState {
-  runningIds: string[];
-  finishedIds: string[];
-  errorIds: string[];
+  runningJobs: DownloadJob[];
+  finishedJobs: DownloadJob[];
+  errorJobs: DownloadJob[];
 }
 
 export interface SettingsState {
@@ -69,9 +68,9 @@ export const initialState: StoreState = {
     text: '',
   },
   logEvents: {
-    runningIds: [],
-    finishedIds: [],
-    errorIds: [],
+    runningJobs: [ { id: 'xxxx', progress: 0.7 } ],
+    finishedJobs: [],
+    errorJobs: [],
   },
   settings: {
     settings: {

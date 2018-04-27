@@ -2,7 +2,7 @@ import * as React from 'react';
 import App from './App';
 import MockComponent from '../../_mocks/MockComponent';
 import * as enums from '../enums';
-import * as types from '../common-interfaces/Settings';
+import * as types from '../common-interfaces';
 import Enzyme, { shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
@@ -27,8 +27,8 @@ describe('components/App', () => {
       settings: settings,
       logGroupName: '',
       logStreamName: '',
-      runningIds: [],
-      errorIds: [],
+      runningJobs: [],
+      errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
       ReloadAll: () => 0,
@@ -52,8 +52,8 @@ describe('components/App', () => {
       settings: settings,
       logGroupName: '',
       logStreamName: '',
-      runningIds: [],
-      errorIds: [],
+      runningJobs: [],
+      errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
       ReloadAll: () => 0,
@@ -67,7 +67,7 @@ describe('components/App', () => {
     expect(wrapper.find('div.Settings').exists()).toBe(true);
   });
 
-  it('renders NO "errors" text without errorIds', () => {
+  it('renders NO "errors" text without errorJobs', () => {
     let props = {
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
@@ -77,8 +77,8 @@ describe('components/App', () => {
       settings: settings,
       logGroupName: '',
       logStreamName: '',
-      runningIds: [],
-      errorIds: [],
+      runningJobs: [],
+      errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
       ReloadAll: () => 0,
@@ -89,7 +89,7 @@ describe('components/App', () => {
     expect(wrapper.find('span.errors').exists()).toBe(false);
   });
 
-  it('renders "errors" text with errorIds', () => {
+  it('renders "errors" text with errorJobs', () => {
     let props = {
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
@@ -99,8 +99,8 @@ describe('components/App', () => {
       settings: settings,
       logGroupName: '',
       logStreamName: '',
-      runningIds: [],
-      errorIds: ['0000'],
+      runningJobs: [],
+      errorJobs: [{id: '0000', progress: 0}],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
       ReloadAll: () => 0,
@@ -111,7 +111,7 @@ describe('components/App', () => {
     expect(wrapper.find('span.errors').exists()).toBe(true);
   });
 
-  it('renders NO "DOWNLOADING" text without runningIds', () => {
+  it('renders NO "DOWNLOADING" text without runningJobs', () => {
     let props = {
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
@@ -121,8 +121,8 @@ describe('components/App', () => {
       settings: settings,
       logGroupName: '',
       logStreamName: '',
-      runningIds: [],
-      errorIds: [],
+      runningJobs: [],
+      errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
       ReloadAll: () => 0,
@@ -130,10 +130,10 @@ describe('components/App', () => {
     };
 
     let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('div.Loading').exists()).toBe(false);
+    expect(wrapper.find('progress.Progress').exists()).toBe(false);
   });
 
-  it('renders "DOWNLOADING" text with runningIds', () => {
+  it('renders "DOWNLOADING" text with runningJobs', () => {
     let props = {
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
@@ -143,8 +143,8 @@ describe('components/App', () => {
       settings: settings,
       logGroupName: '',
       logStreamName: '',
-      runningIds: ['0000'],
-      errorIds: [],
+      runningJobs: [{id: '0000', progress: 0}],
+      errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
       ReloadAll: () => 0,
@@ -152,6 +152,6 @@ describe('components/App', () => {
     };
 
     let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('div.Loading').exists()).toBe(true);
+    expect(wrapper.find('progress.Progress').exists()).toBe(true);
   });
 });
