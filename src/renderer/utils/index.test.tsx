@@ -78,4 +78,18 @@ describe('utils/index', () => {
     expect(index.extractJson('{ "key": { "a": "b" } }', 'key')).toBe('{ "key": { "a": "b" } }');
     expect(index.extractJson('{ "key": [ "a", "b" ] }', 'key')).toBe('{ "key": [ "a", "b" ] }');
   });
+
+  it('progressAt: successful case', () => {
+    expect(index.progressAt(new Date (5), new Date(0), new Date(10))).toBeCloseTo(0.5);
+    expect(index.progressAt(new Date (5), new Date(0), new Date(20))).toBeCloseTo(0.25);
+    expect(index.progressAt(new Date (5), new Date(0), new Date(40))).toBeCloseTo(0.125);
+    expect(index.progressAt(new Date (15), new Date(10), new Date(20))).toBeCloseTo(0.5);
+    expect(index.progressAt(new Date (25), new Date(20), new Date(40))).toBeCloseTo(0.25);
+    expect(index.progressAt(new Date (35), new Date(30), new Date(70))).toBeCloseTo(0.125);
+  });
+
+  it('progressAt: error case', () => {
+    expect(index.progressAt(new Date (5), new Date(10), new Date(20))).toBeCloseTo(0);
+    expect(index.progressAt(new Date (30), new Date(10), new Date(20))).toBeCloseTo(1);
+  });
 });

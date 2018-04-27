@@ -33,7 +33,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
         showSaveDialog,
         createUuid,
         (
-          callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+          callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
           callbackError: (err: AWS.AWSError) => void,
           callbackEnd: () => void,
         ) => getCloudWatchLogsEvents(settings, logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd), // currying.

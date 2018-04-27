@@ -23,8 +23,8 @@ export function mapStateToProps({ window, settings, logGroups, logStreams, logEv
     settings: settings.settings,
     logGroupName: logGroups.selectedName,
     logStreamName: logStreams.selectedName,
-    runningIds: logEvents.runningIds,
-    errorIds: logEvents.errorIds,
+    runningJobs: logEvents.runningJobs,
+    errorJobs: logEvents.errorJobs,
   };
 }
 

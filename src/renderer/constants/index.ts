@@ -37,6 +37,9 @@ export namespace ActionTypes {
   export const REQUEST_LOG_EVENTS = 'REQUEST_LOG_EVENTS';
   export type REQUEST_LOG_EVENTS = typeof REQUEST_LOG_EVENTS;
 
+  export const PROGRESS_LOG_EVENTS = 'PROGRESS_LOG_EVENTS';
+  export type PROGRESS_LOG_EVENTS = typeof PROGRESS_LOG_EVENTS;
+
   export const RECEIVE_LOG_EVENTS = 'RECEIVE_LOG_EVENTS';
   export type RECEIVE_LOG_EVENTS = typeof RECEIVE_LOG_EVENTS;
 

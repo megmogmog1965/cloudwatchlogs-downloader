@@ -13,8 +13,8 @@ export interface Props {
   settings: types.Settings;
   logGroupName: string;
   logStreamName: string;
-  runningIds: string[];
-  errorIds: string[];
+  runningJobs: types.DownloadJob[];
+  errorJobs: types.DownloadJob[];
   ShowWindowContent: (windowContent: enums.WindowContent) => void;
   LoadSettings: () => void;
   ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => void;
@@ -56,13 +56,13 @@ class App extends React.Component<Props> {
               <span className="icon icon-github" />
             </button>
 
-            {this.props.errorIds.length !== 0 ?
+            {this.props.errorJobs.length !== 0 ?
               <div className="pull-right">
-                <span className="errors">Errors: {this.props.errorIds.length}</span>
+                <span className="errors">Errors: {this.props.errorJobs.length}</span>
               </div>
               : null}
 
-            {this.props.runningIds.length !== 0 ?
+            {this.props.runningJobs.length !== 0 ?
               <div className="pull-right">
                 <Loading text="DOWNLOADING" />
               </div>

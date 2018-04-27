@@ -459,146 +459,165 @@ describe('reducers/index', () => {
       undefined as any,
       {
         type: ActionTypes.REQUEST_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: [],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [],
+        finishedJobs: [],
+        errorJobs: [],
       },
     );
 
     // REQUEST_LOG_STREAMS.
     expect(index.logEvents(
       {
-        runningIds: [],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [],
+        finishedJobs: [],
+        errorJobs: [],
       },
       {
         type: ActionTypes.REQUEST_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: ['xxxx'],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [{ id: 'xxxx', progress: 0}],
+        finishedJobs: [],
+        errorJobs: [],
+      },
+    );
+
+    // PROGRESS_LOG_EVENTS.
+    expect(index.logEvents(
+      {
+        runningJobs: [],
+        finishedJobs: [],
+        errorJobs: [],
+      },
+      {
+        type: ActionTypes.PROGRESS_LOG_EVENTS,
+        job: { id: 'xxxx', progress: 0.5},
+      },
+    )).toEqual(
+      {
+        runningJobs: [{ id: 'xxxx', progress: 0.5}],
+        finishedJobs: [],
+        errorJobs: [],
       },
     );
 
     // ERROR_LOG_STREAMS - empty.
     expect(index.logEvents(
       {
-        runningIds: [],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [],
+        finishedJobs: [],
+        errorJobs: [],
       },
       {
         type: ActionTypes.ERROR_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: [],
-        finishedIds: [],
-        errorIds: ['xxxx'],
+        runningJobs: [],
+        finishedJobs: [],
+        errorJobs: [{ id: 'xxxx', progress: 0}],
       },
     );
 
     // ERROR_LOG_STREAMS - 1 running.
     expect(index.logEvents(
       {
-        runningIds: ['xxxx'],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [{ id: 'xxxx', progress: 0}],
+        finishedJobs: [],
+        errorJobs: [],
       },
       {
         type: ActionTypes.ERROR_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: [],
-        finishedIds: [],
-        errorIds: ['xxxx'],
+        runningJobs: [],
+        finishedJobs: [],
+        errorJobs: [{ id: 'xxxx', progress: 0}],
       },
     );
 
     // ERROR_LOG_STREAMS - 2 running.
     expect(index.logEvents(
       {
-        runningIds: ['xxxx', 'yyyy'],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [{ id: 'xxxx', progress: 0}, { id: 'yyyy', progress: 0}],
+        finishedJobs: [],
+        errorJobs: [],
       },
       {
         type: ActionTypes.ERROR_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: ['yyyy'],
-        finishedIds: [],
-        errorIds: ['xxxx'],
+        runningJobs: [{ id: 'yyyy', progress: 0}],
+        finishedJobs: [],
+        errorJobs: [{ id: 'xxxx', progress: 0}],
       },
     );
 
     // RECEIVE_LOG_STREAMS - empty.
     expect(index.logEvents(
       {
-        runningIds: [],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [],
+        finishedJobs: [],
+        errorJobs: [],
       },
       {
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: [],
-        finishedIds: ['xxxx'],
-        errorIds: [],
+        runningJobs: [],
+        finishedJobs: [{ id: 'xxxx', progress: 0}],
+        errorJobs: [],
       },
     );
 
     // RECEIVE_LOG_STREAMS - 1 running.
     expect(index.logEvents(
       {
-        runningIds: ['xxxx'],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [{ id: 'xxxx', progress: 0}],
+        finishedJobs: [],
+        errorJobs: [],
       },
       {
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: [],
-        finishedIds: ['xxxx'],
-        errorIds: [],
+        runningJobs: [],
+        finishedJobs: [{ id: 'xxxx', progress: 0}],
+        errorJobs: [],
       },
     );
 
     // RECEIVE_LOG_STREAMS - 2 running.
     expect(index.logEvents(
       {
-        runningIds: ['xxxx', 'yyyy'],
-        finishedIds: [],
-        errorIds: [],
+        runningJobs: [{ id: 'xxxx', progress: 0}, { id: 'yyyy', progress: 0}],
+        finishedJobs: [],
+        errorJobs: [],
       },
       {
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        id: 'xxxx',
+        job: { id: 'xxxx', progress: 0},
       },
     )).toEqual(
       {
-        runningIds: ['yyyy'],
-        finishedIds: ['xxxx'],
-        errorIds: [],
+        runningJobs: [{ id: 'yyyy', progress: 0}],
+        finishedJobs: [{ id: 'xxxx', progress: 0}],
+        errorJobs: [],
       },
     );
   });

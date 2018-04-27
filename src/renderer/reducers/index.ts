@@ -4,6 +4,7 @@ import { combineReducers, Reducer } from 'redux';
 import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
 import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, initialState } from '../types';
 import { ActionTypes } from '../constants';
+import { DownloadJob } from '../common-interfaces';
 import { reducer as formReducer } from 'redux-form';
 
 export function window(state: WindowState, action: WindowAction): WindowState {
@@ -75,15 +76,17 @@ export function logEvents(state: LogEventsState, action: LogEventAction): LogEve
     return { ...initialState.logEvents };
   }
 
-  let filteredRunningIds = (id: string) => state.runningIds.filter(i => i !== id);
+  let filteredRunningJobs = (job: DownloadJob) => state.runningJobs.filter(j => j.id !== job.id);
 
   switch (action.type) {
     case ActionTypes.REQUEST_LOG_EVENTS:
-      return { ...state, runningIds: state.runningIds.concat(action.id) };
+      return { ...state, runningJobs: state.runningJobs.concat(action.job) };
+    case ActionTypes.PROGRESS_LOG_EVENTS:
+      return { ...state, runningJobs: filteredRunningJobs(action.job).concat(action.job) };
     case ActionTypes.RECEIVE_LOG_EVENTS:
-      return { ...state, runningIds: filteredRunningIds(action.id), finishedIds: state.finishedIds.concat(action.id) };
+      return { ...state, runningJobs: filteredRunningJobs(action.job), finishedJobs: state.finishedJobs.concat(action.job) };
     case ActionTypes.ERROR_LOG_EVENTS:
-      return { ...state, runningIds: filteredRunningIds(action.id), errorIds: state.errorIds.concat(action.id) };
+      return { ...state, runningJobs: filteredRunningJobs(action.job), errorJobs: state.errorJobs.concat(action.job) };
     default:
       return state;
   }

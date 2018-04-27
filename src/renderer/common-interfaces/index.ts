@@ -9,6 +9,11 @@ export interface Settings {
   jsonKey: string;
 }
 
+export interface DownloadJob {
+  id: string;
+  progress: number;
+}
+
 export interface LogGroup {
   arn: string;
   logGroupName: string;

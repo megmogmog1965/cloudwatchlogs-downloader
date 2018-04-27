@@ -222,7 +222,7 @@ export function getCloudWatchLogsEvents(
   logStreamName: string,
   startDate: Date,
   endDate: Date,
-  callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+  callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
   callbackError: (err: AWS.AWSError) => void,
   callbackEnd: () => void,
   startFromHead = true,
@@ -267,7 +267,11 @@ export function getCloudWatchLogsEvents(
         }
 
         // something to be done on callback.
-        callbackData(data);
+        if (data.events && data.events.length > 0) {
+          let latestTimestamp = data.events[data.events.length - 1].timestamp;
+          let progress = latestTimestamp ? utils.progressAt(new Date(latestTimestamp), startDate, endDate) : 0;
+          callbackData(data, progress);
+        }
 
         // one time call by limit.
         if (limit) {

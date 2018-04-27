@@ -2,7 +2,7 @@
 
 import * as enums from '../enums';
 import { Region, LineBreak } from '../constants';
-import { LogGroup, LogStream, Settings } from '../common-interfaces';
+import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
 
 export interface StoreState {
   window: WindowState;
@@ -37,9 +37,9 @@ export interface LogTextState {
 }
 
 export interface LogEventsState {
-  runningIds: string[];
-  finishedIds: string[];
-  errorIds: string[];
+  runningJobs: DownloadJob[];
+  finishedJobs: DownloadJob[];
+  errorJobs: DownloadJob[];
 }
 
 export interface SettingsState {
@@ -68,9 +68,9 @@ export const initialState: StoreState = {
     text: '',
   },
   logEvents: {
-    runningIds: [],
-    finishedIds: [],
-    errorIds: [],
+    runningJobs: [],
+    finishedJobs: [],
+    errorJobs: [],
   },
   settings: {
     settings: {

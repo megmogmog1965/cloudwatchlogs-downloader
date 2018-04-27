@@ -418,26 +418,26 @@ describe('actions/index', () => {
   });
 
   it('requestLogEvents', () => {
-    expect(index.requestLogEvents('xxxx'))
+    expect(index.requestLogEvents({id: 'xxxx', progress: 0}))
       .toEqual({
         type: ActionTypes.REQUEST_LOG_EVENTS,
-        id: 'xxxx',
+        job: {id: 'xxxx', progress: 0},
       });
   });
 
   it('receiveLogEvents', () => {
-    expect(index.receiveLogEvents('xxxx'))
+    expect(index.receiveLogEvents({id: 'xxxx', progress: 0}))
       .toEqual({
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        id: 'xxxx',
+        job: {id: 'xxxx', progress: 0},
       });
   });
 
   it('errorLogEvents', () => {
-    expect(index.errorLogEvents('xxxx'))
+    expect(index.errorLogEvents({id: 'xxxx', progress: 0}))
       .toEqual({
         type: ActionTypes.ERROR_LOG_EVENTS,
-        id: 'xxxx',
+        job: {id: 'xxxx', progress: 0},
       });
   });
 
@@ -455,7 +455,7 @@ describe('actions/index', () => {
     let createJobId = () => 'jobid';
 
     let getCloudWatchLogsEvents = (
-      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
     ) => 0;
@@ -487,7 +487,7 @@ describe('actions/index', () => {
     let createJobId = () => 'jobid';
 
     let getCloudWatchLogsEvents = (
-      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
     ) => {
@@ -502,7 +502,7 @@ describe('actions/index', () => {
             message: 'log line 2\n',
           },
         ],
-      });
+      }, 0.5);
       callbackData({
         events: [
           {
@@ -510,7 +510,7 @@ describe('actions/index', () => {
             message: 'log line 3\r\n',
           },
         ],
-      });
+      }, 1.0);
       callbackEnd();
     };
 
@@ -524,11 +524,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 0},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 0.5},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 1.0},
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 1.0},
           },
         ]);
 
@@ -558,7 +566,7 @@ describe('actions/index', () => {
     let createJobId = () => 'jobid';
 
     let getCloudWatchLogsEvents = (
-      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
     ) => {
@@ -573,7 +581,7 @@ describe('actions/index', () => {
             message: 'log line 2\n',
           },
         ],
-      });
+      }, 0.5);
       callbackData({
         events: [
           {
@@ -581,7 +589,7 @@ describe('actions/index', () => {
             message: 'log line 3\r\n',
           },
         ],
-      });
+      }, 1.0);
       callbackEnd();
     };
 
@@ -595,11 +603,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 0},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 0.5},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 1.0},
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 1.0},
           },
         ]);
 
@@ -629,7 +645,7 @@ describe('actions/index', () => {
     let createJobId = () => 'jobid';
 
     let getCloudWatchLogsEvents = (
-      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
     ) => {
@@ -644,7 +660,7 @@ describe('actions/index', () => {
             message: 'log line 2\n',
           },
         ],
-      });
+      }, 0.5);
       callbackData({
         events: [
           {
@@ -652,7 +668,7 @@ describe('actions/index', () => {
             message: 'log line 3\r\n',
           },
         ],
-      });
+      }, 1.0);
       callbackEnd();
     };
 
@@ -666,11 +682,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 0},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 0.5},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 1.0},
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 1.0},
           },
         ]);
 
@@ -702,7 +726,7 @@ describe('actions/index', () => {
     let transformer = (line: string) => extractJson(line, settings.jsonKey);
 
     let getCloudWatchLogsEvents = (
-      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
     ) => {
@@ -717,7 +741,7 @@ describe('actions/index', () => {
             message: '{ "log": "log line 2\\r\\n" }\n',
           },
         ],
-      });
+      }, 0.5);
       callbackData({
         events: [
           {
@@ -725,7 +749,7 @@ describe('actions/index', () => {
             message: '{ "log": "log line 3\\n" }\r\n',
           },
         ],
-      });
+      }, 1.0);
       callbackEnd();
     };
 
@@ -739,11 +763,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 0},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 0.5},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 1.0},
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 1.0},
           },
         ]);
 
@@ -773,7 +805,7 @@ describe('actions/index', () => {
     let createJobId = () => 'jobid';
 
     let getCloudWatchLogsEvents = (
-      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
     ) => {
@@ -788,7 +820,7 @@ describe('actions/index', () => {
             message: 'log line 2\n',
           },
         ],
-      });
+      }, 0.5);
       callbackError({ message: 'message' } as any);
     };
 
@@ -802,11 +834,15 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 0},
+          },
+          {
+            type: ActionTypes.PROGRESS_LOG_EVENTS,
+            job: {id: 'jobid', progress: 0.5},
           },
           {
             type: ActionTypes.ERROR_LOG_EVENTS,
-            id: 'jobid',
+            job: {id: 'jobid', progress: 0.5},
           },
         ]);
 
