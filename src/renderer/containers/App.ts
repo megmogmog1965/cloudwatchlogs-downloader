@@ -11,8 +11,7 @@ import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
 import { load, currentDate, getCloudWatchLogGroups, getCloudWatchLogStreams, getCloudWatchLogsEvents } from '../side-effect-functions';
-import * as awstypes from '../common-interfaces/Aws';
-import * as types from '../common-interfaces/Settings';
+import * as types from '../common-interfaces';
 
 export function mapStateToProps({ window, settings, logGroups, logStreams, logEvents }: StoreState) {
   return {
@@ -50,7 +49,7 @@ function reloadAll(
     (
       callbackStart: (time: Date) => void,
       callbackError: (time: Date, err: AWS.AWSError) => void,
-      callbackEnd: (time: Date, logGroups: awstypes.LogGroup[]) => void,
+      callbackEnd: (time: Date, logGroups: types.LogGroup[]) => void,
     ) => getCloudWatchLogGroups(settings, callbackStart, callbackError, callbackEnd), // currying.
   ));
 
@@ -65,7 +64,7 @@ function reloadAll(
     (
       callbackStart: (time: Date) => void,
       callbackError: (time: Date, err: AWS.AWSError) => void,
-      callbackEnd: (time: Date, logStreams: awstypes.LogStream[]) => void,
+      callbackEnd: (time: Date, logStreams: types.LogStream[]) => void,
     ) => getCloudWatchLogStreams(settings, logGroupName, callbackStart, callbackError, callbackEnd), // currying.
   ));
 

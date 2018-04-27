@@ -4,7 +4,7 @@ import Settings from '../components/Settings';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import * as types from '../common-interfaces/Settings';
+import * as types from '../common-interfaces';
 import { save } from '../side-effect-functions';
 
 interface Props {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import App from './App';
 import MockComponent from '../../_mocks/MockComponent';
 import * as enums from '../enums';
-import * as types from '../common-interfaces/Settings';
+import * as types from '../common-interfaces';
 import Enzyme, { shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 

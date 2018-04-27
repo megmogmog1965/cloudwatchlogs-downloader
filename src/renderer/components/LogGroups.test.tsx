@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LogGroups from './LogGroups';
-import * as types from '../common-interfaces/Settings';
+import * as types from '../common-interfaces';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 

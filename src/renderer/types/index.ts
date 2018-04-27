@@ -2,8 +2,7 @@
 
 import * as enums from '../enums';
 import { Region, LineBreak } from '../constants';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, LogStream, Settings } from '../common-interfaces';
 
 export interface StoreState {
   window: WindowState;

@@ -1,6 +1,14 @@
 
 type Timestamp = number;
 
+export interface Settings {
+  region: string;
+  awsAccessKeyId: string;
+  awsSecretAccessKey: string;
+  lineBreak: string;
+  jsonKey: string;
+}
+
 export interface LogGroup {
   arn: string;
   logGroupName: string;

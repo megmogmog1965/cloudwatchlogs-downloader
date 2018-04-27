@@ -4,7 +4,7 @@ import LogContent from '../components/LogContent';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import { Settings } from '../common-interfaces/Settings';
+import { Settings } from '../common-interfaces';
 import { extractJson } from '../utils';
 import { createUuid, getCloudWatchLogsEvents, showSaveDialog } from '../side-effect-functions';
 

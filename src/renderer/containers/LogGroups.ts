@@ -4,8 +4,7 @@ import LogGroups from '../components/LogGroups';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, LogStream, Settings } from '../common-interfaces';
 import { getCloudWatchLogGroups, getCloudWatchLogStreams } from '../side-effect-functions';
 
 export function mapStateToProps({ logGroups, settings }: StoreState) {

@@ -1,8 +1,7 @@
 import * as index from './index';
 import * as enums from '../enums';
 import { ActionTypes } from '../constants';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, LogStream, Settings } from '../common-interfaces';
 import { extractJson } from '../utils';
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store';

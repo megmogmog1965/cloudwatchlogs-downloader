@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogStream, Settings } from '../common-interfaces';
 
 export interface Props {
   logStreams: LogStream[];

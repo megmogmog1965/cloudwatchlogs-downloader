@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { LogGroup } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, Settings } from '../common-interfaces';
 
 export interface Props {
   logGroups: LogGroup[];

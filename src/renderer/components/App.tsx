@@ -2,7 +2,7 @@ import * as React from 'react';
 import './App.css';
 import * as enums from '../enums';
 import Loading from '../components/Loading';
-import * as types from '../common-interfaces/Settings';
+import * as types from '../common-interfaces';
 
 export interface Props {
   LogGroups: React.ComponentClass<any> | React.SFC<any>;

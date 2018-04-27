@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './LogContent.css';
-import { Settings } from '../common-interfaces/Settings';
+import { Settings } from '../common-interfaces';
 
 // BAD PRACTICE: declare variables for external modules.
 declare var $: any;

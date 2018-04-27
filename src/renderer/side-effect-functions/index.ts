@@ -6,8 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { remote } from 'electron';
 import * as utils from '../utils';
 import * as AWS from 'aws-sdk';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, LogStream, Settings } from '../common-interfaces';
 import * as storage from 'electron-json-storage';
 import * as constants from '../constants';
 

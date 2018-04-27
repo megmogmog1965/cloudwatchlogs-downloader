@@ -3,8 +3,7 @@ import * as enums from '../enums';
 import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
-import { LogGroup, LogStream } from '../common-interfaces/Aws';
-import { Settings } from '../common-interfaces/Settings';
+import { LogGroup, LogStream, Settings } from '../common-interfaces';
 import * as voca from 'voca';
 
 //////////// Action object interfaces ////////////
