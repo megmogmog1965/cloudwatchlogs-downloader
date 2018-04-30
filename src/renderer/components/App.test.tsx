@@ -152,6 +152,6 @@ describe('components/App', () => {
     };
 
     let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('progress.Progress').exists()).toBe(true);
+    expect(wrapper.find('progress').exists()).toBe(true);
   });
 });

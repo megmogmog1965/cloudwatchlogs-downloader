@@ -7,16 +7,15 @@ export interface Props {
 
 const Progress: React.SFC<Props> = ({ progress }) => {
   return (
-    <progress max="1" value={progress} className={className(progress)}>
-      <div className="progress-bar">
-        <span style={{ width: (progress * 100) + '%' }}>{progress}</span>
-      </div>
-    </progress>
+    <div className="Progress">
+      <progress max="1" value={progress} className={className(progress)} />
+      <span className="progress-label" style={{ right: (1.02 - progress) * 100 + '%' }}>{Math.ceil(progress * 100)}%</span>
+    </div>
   );
 };
 
 function className(progress: number): string {
-  return (progress < 1) ? 'Progress active' : 'Progress inactive' ;
+  return (progress < 1) ? 'active' : 'inactive' ;
 }
 
 export default Progress;
