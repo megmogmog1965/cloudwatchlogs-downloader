@@ -111,28 +111,6 @@ describe('components/App', () => {
     expect(wrapper.find('span.errors').exists()).toBe(true);
   });
 
-  it('renders NO "DOWNLOADING" text without runningJobs', () => {
-    let props = {
-      LogGroups: () => <MockComponent name="LogGroups" />,
-      LogStreams: () => <MockComponent name="LogStreams" />,
-      LogContent: () => <MockComponent name="LogContent" />,
-      Settings: () => <MockComponent name="Settings" />,
-      windowContent: enums.WindowContent.LogDownload,
-      settings: settings,
-      logGroupName: '',
-      logStreamName: '',
-      runningJobs: [],
-      errorJobs: [],
-      ShowWindowContent: (windowContent: any) => windowContent,
-      LoadSettings: () => 0,
-      ReloadAll: () => 0,
-      OpenGithub: () => 0,
-    };
-
-    let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('progress.Progress').exists()).toBe(false);
-  });
-
   it('renders "DOWNLOADING" text with runningJobs', () => {
     let props = {
       LogGroups: () => <MockComponent name="LogGroups" />,
