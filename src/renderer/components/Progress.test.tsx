@@ -12,7 +12,7 @@ describe('components/Loading', () => {
     };
 
     let wrapper = shallow(<Progress {...props} />);
-    expect(wrapper.find('progress.Progress > div').text()).toBe('0.92');
+    expect(wrapper.find('.progress-label').text()).toBe('92%');
   });
 
   it('has "active" className when value is NOT 1', () => {
