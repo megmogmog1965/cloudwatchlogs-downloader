@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { remote } from 'electron';
 import * as utils from '../utils';
 import * as AWS from 'aws-sdk';
+import sanitize from 'sanitize-filename';
 import { LogGroup, LogStream, Settings } from '../common-interfaces';
 import * as storage from 'electron-json-storage';
 import * as constants from '../constants';
@@ -68,8 +69,9 @@ export function load(): Promise<Settings> {
   });
 }
 
-export function showSaveDialog(): stream.Writable | undefined {
-  let fileName = dialog.showSaveDialog({
+export function showSaveDialog(fileName?: string): stream.Writable | undefined {
+  let filePath = dialog.showSaveDialog({
+    defaultPath: fileName ? sanitize(fileName) : undefined,
     filters: [
       { name: 'Raw Text', extensions: ['txt'] },
       { name: 'GZip', extensions: ['gz'] },
@@ -77,15 +79,15 @@ export function showSaveDialog(): stream.Writable | undefined {
   });
 
   // cancel chosen.
-  if (!fileName) {
+  if (!filePath) {
     return undefined;
   }
 
   // open write stream.
-  let out = fs.createWriteStream(fileName);
+  let out = fs.createWriteStream(filePath);
 
   // or gzip ?
-  if (fileName.endsWith('.gz')) {
+  if (filePath.endsWith('.gz')) {
     let gzip = zlib.createGzip();
     gzip.pipe(out);
 

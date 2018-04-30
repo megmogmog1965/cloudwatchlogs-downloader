@@ -30,7 +30,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
 
       dispatch(actions.downloadLogs(
         settings,
-        showSaveDialog,
+        () => showSaveDialog(logStreamName),
         createUuid,
         (
           callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
