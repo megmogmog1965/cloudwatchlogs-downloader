@@ -64,7 +64,7 @@ class App extends React.Component<Props> {
 
             {this.props.runningJobs.length > 0 ?
               <div className="pull-right">
-                <Progress progress={meanOfProgress(this.props.runningJobs)} />
+                <Progress progress={slowestProgress(this.props.runningJobs)} />
               </div>
               : null}
           </div>
@@ -111,12 +111,10 @@ function createWindowContent(windowContent: enums.WindowContent, props: Props) {
   }
 }
 
-function meanOfProgress(runningJobs: types.DownloadJob[]): number {
-  let sum = runningJobs
+function slowestProgress(runningJobs: types.DownloadJob[]): number {
+  return runningJobs
     .map(j => j.progress)
-    .reduce((p, c) => p + c, 0)
-
-  return runningJobs.length > 0 ? sum / runningJobs.length : 0;
+    .reduce((p, c) => Math.min(p, c), 1)
 }
 
 export default App;
