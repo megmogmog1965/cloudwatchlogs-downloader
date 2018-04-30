@@ -56,15 +56,13 @@ class App extends React.Component<Props> {
               <span className="icon icon-github" />
             </button>
 
+            <div className="pull-right">
+              <Progress progress={slowestProgress(this.props.runningJobs)} />
+            </div>
+
             {this.props.errorJobs.length > 0 ?
               <div className="pull-right">
                 <span className="errors">Errors: {this.props.errorJobs.length}</span>
-              </div>
-              : null}
-
-            {this.props.runningJobs.length > 0 ?
-              <div className="pull-right">
-                <Progress progress={slowestProgress(this.props.runningJobs)} />
               </div>
               : null}
           </div>

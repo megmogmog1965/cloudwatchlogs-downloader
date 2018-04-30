@@ -1,5 +1,9 @@
-progress {
+progress.active {
   animation: blink 5s linear infinite;
+}
+
+progress.inactive {
+  opacity: 0.4;
 }
 
 @keyframes blink {
