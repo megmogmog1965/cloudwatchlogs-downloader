@@ -60,3 +60,18 @@ export function progressAt(t: Date, startTime: Date, endTime: Date): number {
 
   return Math.min(Math.max(0, progress), 1.0);
 }
+
+/**
+ * @param inner a transformer function.
+ * @return a funtion returns a calculated value or the argument itself without throwing error.
+ */
+export function safeTransformer<T>(inner: (t: T) => T)
+: (t: T) => T {
+  return (t: T) => {
+    try {
+      return inner(t);
+    } catch {
+      return t;
+    }
+  };
+}

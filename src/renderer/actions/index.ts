@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
 import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
+import { safeTransformer } from '../utils';
 import * as voca from 'voca';
 
 //////////// Action object interfaces ////////////
@@ -360,7 +361,7 @@ export function downloadLogs(
       let messages = data.events
         .filter(e => e.message != null)
         .map(e => e.message!)
-        .map(transformer)
+        .map(safeTransformer(transformer))
         .map(trimmer(settings))
         .join(sep);
 

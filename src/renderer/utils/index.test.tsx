@@ -92,4 +92,17 @@ describe('utils/index', () => {
     expect(index.progressAt(new Date (5), new Date(10), new Date(20))).toBeCloseTo(0);
     expect(index.progressAt(new Date (30), new Date(10), new Date(20))).toBeCloseTo(1);
   });
+
+  it('safeTransformer: successful case', () => {
+    // number => nubmer.
+    expect(index.safeTransformer((t: number) => t * 2)(3)).toBe(6);
+    // string => string.
+    expect(index.safeTransformer((t: string) => 'hello ' + t)('world')).toBe('hello world');
+  });
+
+  it('safeTransformer: error case', () => {
+    expect(index.safeTransformer((t: number) => {
+      throw new Error('its a test.');
+    })(3)).toBe(3);
+  });
 });
