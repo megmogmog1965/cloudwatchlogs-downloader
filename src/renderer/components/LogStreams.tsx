@@ -29,7 +29,7 @@ const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, 
         <strong>Log Streams</strong>
       </li>
       {logStreams
-        .sort((a, b) => b.lastEventTimestamp - a.lastEventTimestamp)
+        .sort(descendedCompareFn)
         .map(s => (
           <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(s.logStreamName)}>
             <div className="media-body">
@@ -41,6 +41,14 @@ const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, 
         ))}
     </ul>
   );
+}
+
+/**
+ * First, this function represents descended order by timestamp, then ascended order by log stream name.
+ */
+function descendedCompareFn(a: LogStream, b: LogStream): number {
+  let diff = b.lastEventTimestamp - a.lastEventTimestamp;
+  return diff !== 0 ? diff : a.logStreamName.localeCompare(b.logStreamName);
 }
 
 function timeRange(firstEventTimestamp: number, logStream: LogStream, now: () => Date) {

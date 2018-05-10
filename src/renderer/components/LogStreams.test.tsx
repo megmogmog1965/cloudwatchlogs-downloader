@@ -42,6 +42,7 @@ describe('components/LogStreams', () => {
     let logStreams = [
       { arn: 'xxxx', logStreamName: 'yyyy', creationTime: new Date(1).getTime(), firstEventTimestamp: new Date(2).getTime(), lastEventTimestamp: new Date(3).getTime(), storedBytes: 300 },
       { arn: 'zzzz', logStreamName: 'wwww', creationTime: new Date(101).getTime(), firstEventTimestamp: new Date(102).getTime(), lastEventTimestamp: new Date(103).getTime(), storedBytes: 400 },
+      { arn: 'aaaa', logStreamName: 'bbbb', creationTime: new Date(1).getTime(), firstEventTimestamp: new Date(2).getTime(), lastEventTimestamp: new Date(3).getTime(), storedBytes: 300 },
     ];
 
     let props = {
@@ -58,15 +59,17 @@ describe('components/LogStreams', () => {
     let wrapper = shallow(<LogStreams {...props} />);
 
     expect(wrapper.find('ul.LogStreams').exists()).toBe(true);
-    expect(wrapper.find('li').length).toBe(1 + 2);
+    expect(wrapper.find('li').length).toBe(1 + 3);
 
     // descending order
     expect(wrapper.find('li.list-group-item strong').at(0).text()).toBe('wwww');
     expect(wrapper.find('li.list-group-item p').at(0).text()).toBe('Last: 1970-01-01T00:00:00.103Z');
 
-    // descending order
-    expect(wrapper.find('li.list-group-item strong').at(1).text()).toBe('yyyy');
+    expect(wrapper.find('li.list-group-item strong').at(1).text()).toBe('bbbb');
     expect(wrapper.find('li.list-group-item p').at(1).text()).toBe('Last: 1970-01-01T00:00:00.003Z');
+
+    expect(wrapper.find('li.list-group-item strong').at(2).text()).toBe('yyyy');
+    expect(wrapper.find('li.list-group-item p').at(2).text()).toBe('Last: 1970-01-01T00:00:00.003Z');
   });
 
   it('called SelectLogStream on click list items.', () => {
