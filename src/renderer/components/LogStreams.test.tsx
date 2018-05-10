@@ -39,10 +39,16 @@ describe('components/LogStreams', () => {
     let mockSelectLogStream = jest.fn();
     let mockFetchLogText = jest.fn();
 
+    // ignore locale of test environment.
+    let ignoreTimezone = (date: Date) => {
+      let timezoneOffsetMs = new Date().getTimezoneOffset() * 60 * 1000;
+      return new Date(date.getTime() - timezoneOffsetMs);
+    }
+
     let logStreams = [
-      { arn: 'xxxx', logStreamName: 'yyyy', creationTime: new Date(1).getTime(), firstEventTimestamp: new Date(2).getTime(), lastEventTimestamp: new Date(3).getTime(), storedBytes: 300 },
-      { arn: 'zzzz', logStreamName: 'wwww', creationTime: new Date(101).getTime(), firstEventTimestamp: new Date(102).getTime(), lastEventTimestamp: new Date(103).getTime(), storedBytes: 400 },
-      { arn: 'aaaa', logStreamName: 'bbbb', creationTime: new Date(1).getTime(), firstEventTimestamp: new Date(2).getTime(), lastEventTimestamp: new Date(3).getTime(), storedBytes: 300 },
+      { arn: 'xxxx', logStreamName: 'yyyy', creationTime: new Date(0).getTime(), firstEventTimestamp: ignoreTimezone(new Date('2018/4/1')).getTime(), lastEventTimestamp: ignoreTimezone(new Date('2018/4/3')).getTime(), storedBytes: 300 },
+      { arn: 'zzzz', logStreamName: 'wwww', creationTime: new Date(0).getTime(), firstEventTimestamp: ignoreTimezone(new Date('2018/5/2')).getTime(), lastEventTimestamp: ignoreTimezone(new Date('2018/5/5')).getTime(), storedBytes: 400 },
+      { arn: 'aaaa', logStreamName: 'bbbb', creationTime: new Date(0).getTime(), firstEventTimestamp: ignoreTimezone(new Date('2018/4/1')).getTime(), lastEventTimestamp: ignoreTimezone(new Date('2018/4/3')).getTime(), storedBytes: 300 },
     ];
 
     let props = {
@@ -63,13 +69,16 @@ describe('components/LogStreams', () => {
 
     // descending order
     expect(wrapper.find('li.list-group-item strong').at(0).text()).toBe('wwww');
-    expect(wrapper.find('li.list-group-item p').at(0).text()).toBe('Last: 1970-01-01T00:00:00.103Z');
+    expect(wrapper.find('li.list-group-item p').at(0).text()).toBe('From: 2018/05/02');
+    expect(wrapper.find('li.list-group-item p').at(1).text()).toBe('To: 2018/05/05');
 
     expect(wrapper.find('li.list-group-item strong').at(1).text()).toBe('bbbb');
-    expect(wrapper.find('li.list-group-item p').at(1).text()).toBe('Last: 1970-01-01T00:00:00.003Z');
+    expect(wrapper.find('li.list-group-item p').at(2).text()).toBe('From: 2018/04/01');
+    expect(wrapper.find('li.list-group-item p').at(3).text()).toBe('To: 2018/04/03');
 
     expect(wrapper.find('li.list-group-item strong').at(2).text()).toBe('yyyy');
-    expect(wrapper.find('li.list-group-item p').at(2).text()).toBe('Last: 1970-01-01T00:00:00.003Z');
+    expect(wrapper.find('li.list-group-item p').at(4).text()).toBe('From: 2018/04/01');
+    expect(wrapper.find('li.list-group-item p').at(5).text()).toBe('To: 2018/04/03');
   });
 
   it('called SelectLogStream on click list items.', () => {

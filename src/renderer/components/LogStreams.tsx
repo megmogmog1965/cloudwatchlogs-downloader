@@ -1,4 +1,6 @@
 import * as React from 'react';
+import moment from 'moment';
+import './LogStreams.css';
 import { LogStream, Settings } from '../common-interfaces';
 
 export interface Props {
@@ -34,7 +36,10 @@ const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, 
           <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(s.logStreamName)}>
             <div className="media-body">
               <strong>{s.logStreamName}</strong>
-              <p>Last: {new Date(s.lastEventTimestamp).toISOString()}</p>
+              <div className="clearfix">
+                <p className="left">From: {dateString(new Date(s.firstEventTimestamp))}</p>
+                <p className="right">To: {dateString(new Date(s.lastEventTimestamp))}</p>
+              </div>
               {timeRange(first, s, Now)}
             </div>
           </li>
@@ -49,6 +54,10 @@ const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, 
 function descendedCompareFn(a: LogStream, b: LogStream): number {
   let diff = b.lastEventTimestamp - a.lastEventTimestamp;
   return diff !== 0 ? diff : a.logStreamName.localeCompare(b.logStreamName);
+}
+
+function dateString(date: Date): string {
+  return moment(date).format('YYYY/MM/DD');
 }
 
 function timeRange(firstEventTimestamp: number, logStream: LogStream, now: () => Date) {
