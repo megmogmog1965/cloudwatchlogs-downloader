@@ -112,15 +112,16 @@ describe('components/LogStreams', () => {
     expect(mockFetchLogText.mock.calls.length).toBe(1);
     expect(mockFetchLogText.mock.calls[0][0]).toEqual(settings);
     expect(mockFetchLogText.mock.calls[0][1]).toBe('loggroup');
-    expect(mockFetchLogText.mock.calls[0][2]).toBe('wwww');
+    expect(mockFetchLogText.mock.calls[0][2]).toEqual(logStreams[1]);
 
     wrapper.find('li.list-group-item').at(1).simulate('click'); // simulate second <li> element clicked.
 
     // descending order
     expect(mockSelectLogStream.mock.calls.length).toBe(2);
     expect(mockSelectLogStream.mock.calls[1][0]).toBe('yyyy');
+    expect(mockFetchLogText.mock.calls.length).toBe(2);
     expect(mockFetchLogText.mock.calls[1][0]).toEqual(settings);
     expect(mockFetchLogText.mock.calls[1][1]).toBe('loggroup');
-    expect(mockFetchLogText.mock.calls[1][2]).toBe('yyyy');
+    expect(mockFetchLogText.mock.calls[1][2]).toEqual(logStreams[0]);
   });
 });

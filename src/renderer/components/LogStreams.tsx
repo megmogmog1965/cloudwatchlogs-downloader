@@ -10,7 +10,7 @@ export interface Props {
   settings: Settings;
   logGroupName?: string;
   SelectLogStream: (selectedName: string) => void;
-  FetchLogText: (settings: Settings, logGroupName: string, logStreamName: string) => void;
+  FetchLogText: (settings: Settings, logGroupName: string, logStream: LogStream) => void;
   Now: () => Date;
 }
 
@@ -18,10 +18,10 @@ const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, 
   // first & last timestamps.
   let first = Math.min(...logStreams.map(s => s.firstEventTimestamp));
 
-  const onClick = (logStreamName: string) => {
-    SelectLogStream(logStreamName);
+  const onClick = (logStream: LogStream) => {
+    SelectLogStream(logStream.logStreamName);
     if (logGroupName) {
-      FetchLogText(settings, logGroupName, logStreamName);
+      FetchLogText(settings, logGroupName, logStream);
     }
   }
 
@@ -31,9 +31,10 @@ const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, 
         <strong>Log Streams</strong>
       </li>
       {logStreams
-        .sort(descendedCompareFn)
+        .slice() // clone it before sort.
+        .sort(descendedCompareFn) // mutated by sort().
         .map(s => (
-          <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(s.logStreamName)}>
+          <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(s)}>
             <div className="media-body">
               <strong>{s.logStreamName}</strong>
               <div className="clearfix">

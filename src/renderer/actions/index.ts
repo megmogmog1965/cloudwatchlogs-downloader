@@ -5,7 +5,7 @@ import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
 import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
 import { safeTransformer } from '../utils';
-import * as voca from 'voca';
+import voca from 'voca';
 
 //////////// Action object interfaces ////////////
 
