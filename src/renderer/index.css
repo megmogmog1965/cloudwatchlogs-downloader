@@ -1,2 +1,7 @@
-body {
+* {
+  /* overwrite photon's css */
+  cursor: auto;
+  -webkit-user-drag: auto;
+  -webkit-user-select: auto;
+  user-select: auto;
 }
