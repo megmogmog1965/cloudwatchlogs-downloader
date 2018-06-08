@@ -22,7 +22,7 @@ export function mapStateToProps({ window, settings, logGroups, logStreams, logEv
     windowContent: window.windowContent,
     settings: settings.settings,
     logGroupName: logGroups.selectedName,
-    logStreamName: logStreams.selectedName,
+    logStream: logStreams.logStreams.find(s => s.logStreamName === logStreams.selectedName),
     runningJobs: logEvents.runningJobs,
     errorJobs: logEvents.errorJobs,
   };
@@ -32,7 +32,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.WindowAction>) {
   return {
     ShowWindowContent: (windowContent: enums.WindowContent) => dispatch(actions.showWindowContent(windowContent)),
     LoadSettings: () => dispatch(actions.loadSettings(load, currentDate)),
-    ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => reloadAll(dispatch, settings, logGroupName, logStreamName),
+    ReloadAll: (settings: types.Settings, logGroupName?: string, logStream?: types.LogStream) => reloadAll(dispatch, settings, logGroupName, logStream),
     OpenGithub: () => shell.openExternal('https://github.com/megmogmog1965/cloudwatchlogs-downloader'),
   };
 }
@@ -41,7 +41,7 @@ function reloadAll(
   dispatch: Dispatch<actions.WindowAction>,
   settings: types.Settings,
   logGroupName?: string,
-  logStreamName?: string) {
+  logStream?: types.LogStream) {
 
   // fetch log groups.
   dispatch(actions.fetchLogGroups(
@@ -68,20 +68,21 @@ function reloadAll(
     ) => getCloudWatchLogStreams(settings, logGroupName, callbackStart, callbackError, callbackEnd), // currying.
   ));
 
-  if (!logStreamName) {
+  if (!logStream) {
     return;
   }
 
-  const endDate = new Date();
-  const startDate = new Date(endDate.getTime() - 10 * 365 * 24 * 60 * 60 * 1000); // 10 years.
-  const limit = 100; // only 100 lines.
+  const endDate = new Date(logStream.lastEventTimestamp);
+  const startDate = new Date(logStream.firstEventTimestamp);
+  const limit = 20; // fetch few lines.
+
   dispatch(actions.fetchLogText(
     settings,
     (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
-    ) => getCloudWatchLogsEvents(settings, logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
+    ) => getCloudWatchLogsEvents(settings, logGroupName, logStream.logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
   ));
 }
 
