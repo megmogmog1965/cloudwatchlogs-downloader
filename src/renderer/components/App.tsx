@@ -12,13 +12,13 @@ export interface Props {
   DownloadList: React.ComponentClass<any> | React.SFC<any>;
   windowContent: enums.WindowContent;
   settings: types.Settings;
-  logGroupName: string;
-  logStreamName: string;
+  logGroupName?: string;
+  logStream?: types.LogStream;
   runningJobs: types.DownloadJob[];
   errorJobs: types.DownloadJob[];
   ShowWindowContent: (windowContent: enums.WindowContent) => void;
   LoadSettings: () => void;
-  ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => void;
+  ReloadAll: (settings: types.Settings, logGroupName?: string, logStream?: types.LogStream) => void;
   OpenGithub: () => void;
 }
 
@@ -49,7 +49,7 @@ class App extends React.Component<Props> {
               </button>
             </div>
 
-            <button className="btn btn-default" onClick={() => props.ReloadAll(props.settings, props.logGroupName, props.logStreamName)}>
+            <button className="btn btn-default" onClick={() => props.ReloadAll(props.settings, props.logGroupName, props.logStream)}>
               <span className="icon icon-arrows-ccw icon-text" />Reload
             </button>
 
