@@ -11,6 +11,9 @@ export interface Settings {
 
 export interface DownloadJob {
   id: string;
+  logGroupName: string;
+  logStreamName: string;
+  startTime: Timestamp;
   progress: number;
 }
 
