@@ -24,7 +24,9 @@ describe('components/DownloadList', () => {
 
     let wrapper = shallow(<DownloadList {...props} />);
     expect(wrapper.find('div.DownloadList').exists()).toBe(true);
-    expect(wrapper.find('div.DownloadList ul li').exists()).toBe(false);
+    expect(wrapper.find('div.DownloadList ul li').length).toBe(1);
+
+    expect(wrapper.find('div.DownloadList ul li strong').at(0).text()).toBe('Logs you download appear here');
   });
 
   it('render with 1 job', () => {
