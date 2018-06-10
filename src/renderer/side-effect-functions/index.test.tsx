@@ -9,7 +9,7 @@ jest.mock('electron', () => ({
 
 describe('utils/index', () => {
   it('applicationPassphrase: characters.', () => {
-    expect(/^[0-9a-z]+_.+$/.test(index.applicationPassphrase())).toBe(true);
+    expect(/^[-+.0-9a-z]+_.+$/.test(index.applicationPassphrase())).toBe(true);
   });
 
   it('createUuid: characters.', () => {

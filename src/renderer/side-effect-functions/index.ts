@@ -14,7 +14,7 @@ import * as constants from '../constants';
 const dialog = remote.dialog;
 
 export function applicationPassphrase(): string {
-  let seed = utils.hash(os.type() + os.release() + os.hostname() + 'ufQROog1Q8');
+  let seed = utils.hash(os.type() + os.hostname() + 'ufQROog1Q8');
   return utils.random(seed, 100000000000, 1000000000000).toString(36).slice(0, 8) + '_xiONGor6G9!';
 }
 
