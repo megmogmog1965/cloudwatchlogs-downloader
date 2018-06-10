@@ -12,19 +12,21 @@ const DownloadList: React.SFC<Props> = ({ settings, jobs }) => {
   return (
     <div className="DownloadList pane">
       <ul className="list-group">
-        {jobs.map(j => (
-          <li className="list-group-item" onClick={() => undefined}>
-            <div className="media-body">
-              <strong>{j.logGroupName}</strong>
-              <div>
-                <span>{j.logStreamName}</span>
+        {(jobs.length <= 0) ?
+          <li className="list-group-item"><strong>Logs you download appear here</strong></li> :
+          jobs.map(j => (
+            <li className="list-group-item" onClick={() => undefined}>
+              <div className="media-body">
+                <strong>{j.logGroupName}</strong>
+                <div>
+                  <span>{j.logStreamName}</span>
+                </div>
+                <div className="">
+                  <Progress progress={j.progress} />
+                </div>
               </div>
-              <div className="">
-                <Progress progress={j.progress} />
-              </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))}
       </ul>
     </div>
   );
