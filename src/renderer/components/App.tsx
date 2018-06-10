@@ -10,6 +10,7 @@ export interface Props {
   LogContent: React.ComponentClass<any> | React.SFC<any>;
   Settings: React.ComponentClass<any> | React.SFC<any>;
   DownloadList: React.ComponentClass<any> | React.SFC<any>;
+  DownloadBadge: React.ComponentClass<any> | React.SFC<any>;
   windowContent: enums.WindowContent;
   settings: types.Settings;
   logGroupName?: string;
@@ -57,7 +58,8 @@ class App extends React.Component<Props> {
               <span className="icon icon-github" />
             </button>
 
-            <div className="pull-right relative">
+            <div className="pull-right relative float-left-container">
+              <props.DownloadBadge />
               <Progress progress={slowestProgress(this.props.runningJobs)} />
               <props.DownloadList />
             </div>

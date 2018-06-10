@@ -1,14 +1,13 @@
 import * as React from 'react';
 import './DownloadList.css';
 import Progress from './Progress';
-import { Settings, DownloadJob } from '../common-interfaces';
+import { DownloadJob } from '../common-interfaces';
 
 export interface Props {
-  settings: Settings;
   jobs: DownloadJob[];
 }
 
-const DownloadList: React.SFC<Props> = ({ settings, jobs }) => {
+const DownloadList: React.SFC<Props> = ({ jobs }) => {
   return (
     <div className="DownloadList pane">
       <ul className="list-group">

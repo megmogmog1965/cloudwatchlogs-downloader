@@ -8,6 +8,7 @@ import LogStreams from '../containers/LogStreams';
 import LogContent from '../containers/LogContent';
 import Settings from '../containers/Settings';
 import DownloadList from '../containers/DownloadList';
+import DownloadBadge from '../containers/DownloadBadge';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
@@ -21,6 +22,7 @@ export function mapStateToProps({ window, settings, logGroups, logStreams, logEv
     LogContent: LogContent,
     Settings: Settings,
     DownloadList: DownloadList,
+    DownloadBadge: DownloadBadge,
     windowContent: window.windowContent,
     settings: settings.settings,
     logGroupName: logGroups.selectedName,

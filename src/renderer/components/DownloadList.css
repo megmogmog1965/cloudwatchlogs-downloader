@@ -15,7 +15,7 @@
   box-shadow: 2px 3px 5px #999;
 }
 
-.Progress:hover + .DownloadList {
+*:hover ~ .DownloadList {
   display: block;
 }
 
