@@ -76,8 +76,9 @@ function reloadAll(
     return;
   }
 
-  const endDate = new Date(logStream.lastEventTimestamp);
-  const startDate = new Date(logStream.firstEventTimestamp);
+  const margin = 5 * 60 * 1000; // "start" timestamp can be same value with "end". It cause getting empty logs.
+  const endDate = new Date(logStream.lastEventTimestamp + margin);
+  const startDate = new Date(logStream.firstEventTimestamp - margin);
   const limit = 20; // fetch few lines.
 
   dispatch(actions.fetchLogText(
