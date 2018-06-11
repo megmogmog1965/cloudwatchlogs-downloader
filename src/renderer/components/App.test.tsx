@@ -23,10 +23,12 @@ describe('components/App', () => {
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
       Settings: () => <MockComponent name="Settings" />,
+      DownloadList: () => <MockComponent name="DownloadList" />,
+      DownloadBadge: () => <MockComponent name="DownloadBadge" />,
       windowContent: enums.WindowContent.LogDownload,
       settings: settings,
       logGroupName: '',
-      logStreamName: '',
+      logStream: undefined,
       runningJobs: [],
       errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
@@ -48,10 +50,12 @@ describe('components/App', () => {
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
       Settings: () => <MockComponent name="Settings" />,
+      DownloadList: () => <MockComponent name="DownloadList" />,
+      DownloadBadge: () => <MockComponent name="DownloadBadge" />,
       windowContent: enums.WindowContent.Settings,
       settings: settings,
       logGroupName: '',
-      logStreamName: '',
+      logStream: undefined,
       runningJobs: [],
       errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
@@ -73,10 +77,12 @@ describe('components/App', () => {
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
       Settings: () => <MockComponent name="Settings" />,
+      DownloadList: () => <MockComponent name="DownloadList" />,
+      DownloadBadge: () => <MockComponent name="DownloadBadge" />,
       windowContent: enums.WindowContent.LogDownload,
       settings: settings,
       logGroupName: '',
-      logStreamName: '',
+      logStream: undefined,
       runningJobs: [],
       errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
@@ -95,12 +101,14 @@ describe('components/App', () => {
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
       Settings: () => <MockComponent name="Settings" />,
+      DownloadList: () => <MockComponent name="DownloadList" />,
+      DownloadBadge: () => <MockComponent name="DownloadBadge" />,
       windowContent: enums.WindowContent.LogDownload,
       settings: settings,
       logGroupName: '',
-      logStreamName: '',
+      logStream: undefined,
       runningJobs: [],
-      errorJobs: [{id: '0000', progress: 0}],
+      errorJobs: [{id: '0000', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
       ReloadAll: () => 0,
@@ -111,39 +119,19 @@ describe('components/App', () => {
     expect(wrapper.find('span.errors').exists()).toBe(true);
   });
 
-  it('renders NO "DOWNLOADING" text without runningJobs', () => {
-    let props = {
-      LogGroups: () => <MockComponent name="LogGroups" />,
-      LogStreams: () => <MockComponent name="LogStreams" />,
-      LogContent: () => <MockComponent name="LogContent" />,
-      Settings: () => <MockComponent name="Settings" />,
-      windowContent: enums.WindowContent.LogDownload,
-      settings: settings,
-      logGroupName: '',
-      logStreamName: '',
-      runningJobs: [],
-      errorJobs: [],
-      ShowWindowContent: (windowContent: any) => windowContent,
-      LoadSettings: () => 0,
-      ReloadAll: () => 0,
-      OpenGithub: () => 0,
-    };
-
-    let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('progress.Progress').exists()).toBe(false);
-  });
-
   it('renders "DOWNLOADING" text with runningJobs', () => {
     let props = {
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
       Settings: () => <MockComponent name="Settings" />,
+      DownloadList: () => <MockComponent name="DownloadList" />,
+      DownloadBadge: () => <MockComponent name="DownloadBadge" />,
       windowContent: enums.WindowContent.LogDownload,
       settings: settings,
       logGroupName: '',
-      logStreamName: '',
-      runningJobs: [{id: '0000', progress: 0}],
+      logStream: undefined,
+      runningJobs: [{id: '0000', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
       errorJobs: [],
       ShowWindowContent: (windowContent: any) => windowContent,
       LoadSettings: () => 0,
@@ -152,6 +140,6 @@ describe('components/App', () => {
     };
 
     let wrapper = mount(<App {...props} />);
-    expect(wrapper.find('progress.Progress').exists()).toBe(true);
+    expect(wrapper.find('progress').exists()).toBe(true);
   });
 });

@@ -7,6 +7,18 @@
   font-family: 'Arial', sans-serif;
 }
 
+.relative {
+  position: relative;
+}
+
+.float-left-container {
+  display: block;
+}
+
+.float-left-container > * {
+  float: left;
+}
+
 /* Scrollbar styles: https://www.quackit.com/html/codes/html_scrollbars.cfm */
 ::-webkit-scrollbar {
 width: 8px;

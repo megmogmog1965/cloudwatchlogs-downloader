@@ -1,6 +1,6 @@
 {
   "name": "cloudwatchlogs-downloader",
-  "version": "1.1.1",
+  "version": "1.2.2",
   "private": true,
   "description": "Cross-platform App to download logs from CloudWatch Logs.",
   "scripts": {
@@ -47,12 +47,14 @@
     "@types/enzyme": "^3.1.9",
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/jest": "^22.2.3",
+    "@types/moment": "^2.13.0",
     "@types/node": "^9.6.5",
     "@types/react": "^16.3.10",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.15",
     "@types/redux": "^3.6.0",
     "@types/redux-form": "^7.2.2",
+    "@types/sanitize-filename": "^1.1.28",
     "@types/uuid": "^3.4.3",
     "@types/voca": "^1.3.0",
     "babel-preset-react": "^6.24.1",
@@ -81,12 +83,14 @@
     "aws-sdk": "^2.218.1",
     "electron-default-menu": "^1.0.1",
     "electron-json-storage": "^4.0.3",
+    "moment": "^2.22.1",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-form": "^7.3.0",
     "redux-thunk": "^2.2.0",
+    "sanitize-filename": "^1.6.1",
     "uuid": "^3.2.1",
     "voca": "^1.4.0"
   }

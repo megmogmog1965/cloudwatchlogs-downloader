@@ -4,9 +4,9 @@ import LogContent from '../components/LogContent';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import { Settings } from '../common-interfaces';
+import { Settings, DownloadJob } from '../common-interfaces';
 import { extractJson } from '../utils';
-import { createUuid, getCloudWatchLogsEvents, showSaveDialog } from '../side-effect-functions';
+import { createUuid, currentDate, getCloudWatchLogsEvents, showSaveDialog } from '../side-effect-functions';
 
 export function mapStateToProps({ logGroups, logStreams, dateRange, settings, logText }: StoreState) {
   return {
@@ -28,10 +28,19 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
         line => extractJson(line, settings.jsonKey)
         : line => line;
 
+      // create a job.
+      let job: DownloadJob = {
+        id: createUuid(),
+        logGroupName: logGroupName,
+        logStreamName: logStreamName,
+        startTime: currentDate().getTime(),
+        progress: 0,
+      };
+
       dispatch(actions.downloadLogs(
         settings,
-        showSaveDialog,
-        createUuid,
+        () => showSaveDialog(logStreamName),
+        job,
         (
           callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
           callbackError: (err: AWS.AWSError) => void,

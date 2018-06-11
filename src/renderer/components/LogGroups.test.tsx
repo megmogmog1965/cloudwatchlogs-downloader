@@ -40,9 +40,15 @@ describe('components/LogGroups', () => {
     let mockSelectLogGroup = jest.fn();
     let mockFetchLogStreams = jest.fn();
 
+    // ignore locale of test environment.
+    let ignoreTimezone = (date: Date) => {
+      let timezoneOffsetMs = new Date().getTimezoneOffset() * 60 * 1000;
+      return new Date(date.getTime() - timezoneOffsetMs);
+    }
+
     let logGroups = [
-      { arn: 'xxxx', logGroupName: 'yyyy', creationTime: new Date(1).getTime(), storedBytes: 300 },
-      { arn: 'zzzz', logGroupName: 'wwww', creationTime: new Date(101).getTime(), storedBytes: 400 },
+      { arn: 'xxxx', logGroupName: 'yyyy', creationTime: ignoreTimezone(new Date('2018/4/1')).getTime(), storedBytes: 300 },
+      { arn: 'zzzz', logGroupName: 'wwww', creationTime: ignoreTimezone(new Date('2018/5/3')).getTime(), storedBytes: 400 },
     ];
 
     let props = {
@@ -61,10 +67,10 @@ describe('components/LogGroups', () => {
     expect(wrapper.find('li').length).toBe(1 + 2);
 
     expect(wrapper.find('li.list-group-item strong').at(0).text()).toBe('yyyy');
-    expect(wrapper.find('li.list-group-item p').at(0).text()).toBe('Created: 1970-01-01T00:00:00.001Z');
+    expect(wrapper.find('li.list-group-item p').at(0).text()).toBe('From: 2018/04/01');
 
     expect(wrapper.find('li.list-group-item strong').at(1).text()).toBe('wwww');
-    expect(wrapper.find('li.list-group-item p').at(1).text()).toBe('Created: 1970-01-01T00:00:00.101Z');
+    expect(wrapper.find('li.list-group-item p').at(1).text()).toBe('From: 2018/05/03');
   });
 
   it('called SelectLogGroup, FetchLogStreams on click list items.', () => {

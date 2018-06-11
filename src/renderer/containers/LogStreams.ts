@@ -4,7 +4,7 @@ import LogStreams from '../components/LogStreams';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { currentDate, getCloudWatchLogsEvents } from '../side-effect-functions';
-import { Settings } from '../common-interfaces';
+import { Settings, LogStream } from '../common-interfaces';
 import { connect, Dispatch } from 'react-redux';
 
 export function mapStateToProps({ logStreams, settings, logGroups }: StoreState) {
@@ -20,10 +20,11 @@ export function mapStateToProps({ logStreams, settings, logGroups }: StoreState)
 export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
   return {
     SelectLogStream: (selectedName: string) => dispatch(actions.selectLogStream(selectedName)),
-    FetchLogText: (settings: Settings, logGroupName: string, logStreamName: string) => {
-      const endDate = new Date();
-      const startDate = new Date(endDate.getTime() - 10 * 365 * 24 * 60 * 60 * 1000); // 10 years.
-      const limit = 100; // only 100 lines.
+    FetchLogText: (settings: Settings, logGroupName: string, logStream: LogStream) => {
+      const margin = 5 * 60 * 1000; // "start" timestamp can be same value with "end". It cause getting empty logs.
+      const endDate = new Date(logStream.lastEventTimestamp + margin);
+      const startDate = new Date(logStream.firstEventTimestamp - margin);
+      const limit = 20; // fetch few lines.
 
       dispatch(actions.fetchLogText(
         settings,
@@ -31,7 +32,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
           callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
           callbackError: (err: AWS.AWSError) => void,
           callbackEnd: () => void,
-        ) => getCloudWatchLogsEvents(settings, logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
+        ) => getCloudWatchLogsEvents(settings, logGroupName, logStream.logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
       ));
     },
     Now: currentDate,

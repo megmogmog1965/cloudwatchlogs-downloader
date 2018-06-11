@@ -1,0 +1,13 @@
+.DownloadBadge .badge {
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  margin: 2px 6px;
+
+  background: CornflowerBlue;
+  border-radius: 50%;
+  box-shadow: 0 0 2px #333;
+  color: white;
+  font-size: .8em;
+  text-align: center;
+}

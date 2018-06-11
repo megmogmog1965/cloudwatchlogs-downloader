@@ -1,4 +1,6 @@
 import * as React from 'react';
+import moment from 'moment';
+import './LogStreams.css';
 import { LogGroup, Settings } from '../common-interfaces';
 
 export interface Props {
@@ -43,13 +45,19 @@ class LogGroups extends React.Component<Props> {
           <li className={(props.selectedName === g.logGroupName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(g.logGroupName)}>
             <div className="media-body">
               <strong>{g.logGroupName}</strong>
-              <p>Created: {new Date(g.creationTime).toISOString()}</p>
+              <div className="clearfix">
+                <p className="left">From: {dateString(new Date(g.creationTime))}</p>
+              </div>
             </div>
           </li>
         ))}
       </ul>
     );
   }
+}
+
+function dateString(date: Date): string {
+  return moment(date).format('YYYY/MM/DD');
 }
 
 export default LogGroups;

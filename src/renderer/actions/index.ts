@@ -4,7 +4,8 @@ import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
 import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
-import * as voca from 'voca';
+import { safeTransformer } from '../utils';
+import voca from 'voca';
 
 //////////// Action object interfaces ////////////
 
@@ -326,7 +327,7 @@ export function errorLogEvents(job: DownloadJob): ErrorLogEvents {
 export function downloadLogs(
   settings: Settings,
   fileChooser: () => stream.Writable | undefined,
-  createJobId: () => string,
+  job: DownloadJob,
   getCloudWatchLogsEvents: (
     callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
     callbackError: (err: AWS.AWSError) => void,
@@ -343,11 +344,7 @@ export function downloadLogs(
     }
     const out = choosed;
 
-    // create job id.
-    let job = {
-      id: createJobId(),
-      progress: 0,
-    };
+    // accept the job.
     dispatch(requestLogEvents(job));
 
     // callback for receive log chunks.
@@ -360,7 +357,7 @@ export function downloadLogs(
       let messages = data.events
         .filter(e => e.message != null)
         .map(e => e.message!)
-        .map(transformer)
+        .map(safeTransformer(transformer))
         .map(trimmer(settings))
         .join(sep);
 
@@ -371,15 +368,16 @@ export function downloadLogs(
       dispatch(progressLogEvents(job));
     };
 
-    // callback for end processing.
+    // callback for handling errors.
     let callbackError = (err: AWS.AWSError) => {
       out.end();
       dispatch(errorLogEvents(job));
     };
 
-    // callback for handling errors.
+    // callback for end processing.
     let callbackEnd = () => {
       out.end();
+      job = { ...job, progress: 1.0 };
       dispatch(receiveLogEvents(job));
     };
 

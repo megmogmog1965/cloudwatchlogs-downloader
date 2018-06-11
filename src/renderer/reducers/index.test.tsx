@@ -283,6 +283,27 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+
+    // SELECT_LOG_GROUP (log group action affects log stream state).
+    expect(index.logStreams(
+      {
+        logStreams: [],
+        selectedName: 'name',
+        errorMessage: undefined,
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.SELECT_LOG_GROUP,
+        selectedName: 'name',
+      },
+    )).toEqual(
+      {
+        logStreams: [],
+        selectedName: undefined,
+        errorMessage: undefined,
+        lastModified: new Date(0),
+      },
+    );
   });
 
   it('logGroups', () => {
@@ -459,7 +480,7 @@ describe('reducers/index', () => {
       undefined as any,
       {
         type: ActionTypes.REQUEST_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
@@ -478,11 +499,11 @@ describe('reducers/index', () => {
       },
       {
         type: ActionTypes.REQUEST_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
-        runningJobs: [{ id: 'xxxx', progress: 0}],
+        runningJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
         finishedJobs: [],
         errorJobs: [],
       },
@@ -497,11 +518,11 @@ describe('reducers/index', () => {
       },
       {
         type: ActionTypes.PROGRESS_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0.5},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5},
       },
     )).toEqual(
       {
-        runningJobs: [{ id: 'xxxx', progress: 0.5}],
+        runningJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5}],
         finishedJobs: [],
         errorJobs: [],
       },
@@ -516,51 +537,54 @@ describe('reducers/index', () => {
       },
       {
         type: ActionTypes.ERROR_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
         runningJobs: [],
         finishedJobs: [],
-        errorJobs: [{ id: 'xxxx', progress: 0}],
+        errorJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
       },
     );
 
     // ERROR_LOG_STREAMS - 1 running.
     expect(index.logEvents(
       {
-        runningJobs: [{ id: 'xxxx', progress: 0}],
+        runningJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
         finishedJobs: [],
         errorJobs: [],
       },
       {
         type: ActionTypes.ERROR_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
         runningJobs: [],
         finishedJobs: [],
-        errorJobs: [{ id: 'xxxx', progress: 0}],
+        errorJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
       },
     );
 
     // ERROR_LOG_STREAMS - 2 running.
     expect(index.logEvents(
       {
-        runningJobs: [{ id: 'xxxx', progress: 0}, { id: 'yyyy', progress: 0}],
+        runningJobs: [
+          { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+          { id: 'yyyy', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+        ],
         finishedJobs: [],
         errorJobs: [],
       },
       {
         type: ActionTypes.ERROR_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
-        runningJobs: [{ id: 'yyyy', progress: 0}],
+        runningJobs: [{ id: 'yyyy', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
         finishedJobs: [],
-        errorJobs: [{ id: 'xxxx', progress: 0}],
+        errorJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
       },
     );
 
@@ -573,12 +597,12 @@ describe('reducers/index', () => {
       },
       {
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
         runningJobs: [],
-        finishedJobs: [{ id: 'xxxx', progress: 0}],
+        finishedJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
         errorJobs: [],
       },
     );
@@ -586,18 +610,18 @@ describe('reducers/index', () => {
     // RECEIVE_LOG_STREAMS - 1 running.
     expect(index.logEvents(
       {
-        runningJobs: [{ id: 'xxxx', progress: 0}],
+        runningJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
         finishedJobs: [],
         errorJobs: [],
       },
       {
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
         runningJobs: [],
-        finishedJobs: [{ id: 'xxxx', progress: 0}],
+        finishedJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
         errorJobs: [],
       },
     );
@@ -605,18 +629,21 @@ describe('reducers/index', () => {
     // RECEIVE_LOG_STREAMS - 2 running.
     expect(index.logEvents(
       {
-        runningJobs: [{ id: 'xxxx', progress: 0}, { id: 'yyyy', progress: 0}],
+        runningJobs: [
+          { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+          { id: 'yyyy', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+        ],
         finishedJobs: [],
         errorJobs: [],
       },
       {
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        job: { id: 'xxxx', progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
       },
     )).toEqual(
       {
-        runningJobs: [{ id: 'yyyy', progress: 0}],
-        finishedJobs: [{ id: 'xxxx', progress: 0}],
+        runningJobs: [{ id: 'yyyy', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
+        finishedJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
         errorJobs: [],
       },
     );

@@ -9,15 +9,17 @@ export interface Props {
   LogStreams: React.ComponentClass<any> | React.SFC<any>;
   LogContent: React.ComponentClass<any> | React.SFC<any>;
   Settings: React.ComponentClass<any> | React.SFC<any>;
+  DownloadList: React.ComponentClass<any> | React.SFC<any>;
+  DownloadBadge: React.ComponentClass<any> | React.SFC<any>;
   windowContent: enums.WindowContent;
   settings: types.Settings;
-  logGroupName: string;
-  logStreamName: string;
+  logGroupName?: string;
+  logStream?: types.LogStream;
   runningJobs: types.DownloadJob[];
   errorJobs: types.DownloadJob[];
   ShowWindowContent: (windowContent: enums.WindowContent) => void;
   LoadSettings: () => void;
-  ReloadAll: (settings: types.Settings, logGroupName?: string, logStreamName?: string) => void;
+  ReloadAll: (settings: types.Settings, logGroupName?: string, logStream?: types.LogStream) => void;
   OpenGithub: () => void;
 }
 
@@ -48,7 +50,7 @@ class App extends React.Component<Props> {
               </button>
             </div>
 
-            <button className="btn btn-default" onClick={() => props.ReloadAll(props.settings, props.logGroupName, props.logStreamName)}>
+            <button className="btn btn-default" onClick={() => props.ReloadAll(props.settings, props.logGroupName, props.logStream)}>
               <span className="icon icon-arrows-ccw icon-text" />Reload
             </button>
 
@@ -56,15 +58,15 @@ class App extends React.Component<Props> {
               <span className="icon icon-github" />
             </button>
 
+            <div className="pull-right relative float-left-container">
+              <props.DownloadBadge />
+              <Progress progress={slowestProgress(this.props.runningJobs)} />
+              <props.DownloadList />
+            </div>
+
             {this.props.errorJobs.length > 0 ?
               <div className="pull-right">
                 <span className="errors">Errors: {this.props.errorJobs.length}</span>
-              </div>
-              : null}
-
-            {this.props.runningJobs.length > 0 ?
-              <div className="pull-right">
-                <Progress progress={meanOfProgress(this.props.runningJobs)} />
               </div>
               : null}
           </div>
@@ -111,12 +113,10 @@ function createWindowContent(windowContent: enums.WindowContent, props: Props) {
   }
 }
 
-function meanOfProgress(runningJobs: types.DownloadJob[]): number {
-  let sum = runningJobs
+function slowestProgress(runningJobs: types.DownloadJob[]): number {
+  return runningJobs
     .map(j => j.progress)
-    .reduce((p, c) => p + c, 0)
-
-  return runningJobs.length > 0 ? sum / runningJobs.length : 0;
+    .reduce((p, c) => Math.min(p, c), 1)
 }
 
 export default App;
