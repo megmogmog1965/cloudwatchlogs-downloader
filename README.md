@@ -16,6 +16,8 @@ Just run the application. The application requests [AWS access key ID and secret
 
 * ``CloudWatchLogsReadOnlyAccess``
 
+> AWS access keys are encrypted with your machine depended key by AES-256 and stored in your local application data directory.
+
 ## How to manually build
 
 Require [Node 8.11.x] or Higher.
