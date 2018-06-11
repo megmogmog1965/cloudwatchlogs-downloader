@@ -68,8 +68,13 @@ export const initialState: StoreState = {
     text: '',
   },
   logEvents: {
-    runningJobs: [ { id: 'xxxx', progress: 0.7 } ],
-    finishedJobs: [],
+    runningJobs: [
+      { id: 'xxxx', logGroupName: 'Log group 3', logStreamName: 'Log stream 3', startTime: 0, progress: 0.3 },
+      { id: 'xxxx', logGroupName: 'Log group 2', logStreamName: 'Log stream 2', startTime: 0, progress: 0.7 },
+    ],
+    finishedJobs: [
+      { id: 'xxxx', logGroupName: 'Log group 1', logStreamName: 'Log stream 1', startTime: 0, progress: 1.0 },
+    ],
     errorJobs: [],
   },
   settings: {

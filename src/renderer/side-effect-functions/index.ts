@@ -105,15 +105,18 @@ export function getCloudWatchLogGroups(
 ): void {
 
   //////////// stub ////////////
+  let now = new Date().getTime();
+  let prev = (t: number, days: number) => t - days * 24 * 60 * 60 * 1000;
+
   callbackStart(new Date());
 
   callbackEnd(
     new Date(),
     [
-      { arn: 'arn1', logGroupName: 'Log group 1', creationTime: 1524520727000, storedBytes: 52428800 },
-      { arn: 'arn2', logGroupName: 'Log group 2', creationTime: 1524530727000, storedBytes: 52428800 },
-      { arn: 'arn3', logGroupName: 'Log group 3', creationTime: 1524540727000, storedBytes: 52428800 },
-      { arn: 'arn4', logGroupName: 'Log group 4', creationTime: 1524550727000, storedBytes: 52428800 },
+      { arn: 'arn1', logGroupName: 'Log group 1', creationTime: prev(now, 3), storedBytes: 52428800 },
+      { arn: 'arn2', logGroupName: 'Log group 2', creationTime: prev(now, 3), storedBytes: 52428800 },
+      { arn: 'arn3', logGroupName: 'Log group 3', creationTime: prev(now, 3), storedBytes: 52428800 },
+      { arn: 'arn4', logGroupName: 'Log group 4', creationTime: prev(now, 3), storedBytes: 52428800 },
     ],
   );
   //////////// stub ////////////
