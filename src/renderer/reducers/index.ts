@@ -39,7 +39,7 @@ export function logGroups(state: LogGroupsState, action: LogGroupAction): LogGro
   }
 }
 
-export function logStreams(state: LogStreamsState, action: LogStreamAction): LogStreamsState {
+export function logStreams(state: LogStreamsState, action: LogStreamAction | LogGroupAction): LogStreamsState {
   if (!state) {
     return { ...initialState.logStreams };
   }
@@ -53,6 +53,9 @@ export function logStreams(state: LogStreamsState, action: LogStreamAction): Log
       return { ...state, errorMessage: action.errorMessage };
     case ActionTypes.SELECT_LOG_STREAM:
       return { ...state, selectedName: action.selectedName };
+    // SHOULD respond to LogGroupAction.
+    case ActionTypes.SELECT_LOG_GROUP:
+      return { ...state, selectedName: undefined }; // clear log stream state when log group is updated.
     default:
       return state;
   }

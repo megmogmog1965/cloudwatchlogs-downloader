@@ -283,6 +283,27 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+
+    // SELECT_LOG_GROUP (log group action affects log stream state).
+    expect(index.logStreams(
+      {
+        logStreams: [],
+        selectedName: 'name',
+        errorMessage: undefined,
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.SELECT_LOG_GROUP,
+        selectedName: 'name',
+      },
+    )).toEqual(
+      {
+        logStreams: [],
+        selectedName: undefined,
+        errorMessage: undefined,
+        lastModified: new Date(0),
+      },
+    );
   });
 
   it('logGroups', () => {
