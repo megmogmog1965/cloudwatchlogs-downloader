@@ -21,8 +21,9 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
   return {
     SelectLogStream: (selectedName: string) => dispatch(actions.selectLogStream(selectedName)),
     FetchLogText: (settings: Settings, logGroupName: string, logStream: LogStream) => {
-      const endDate = new Date(logStream.lastEventTimestamp);
-      const startDate = new Date(logStream.firstEventTimestamp);
+      const margin = 5 * 60 * 1000; // "start" timestamp can be same value with "end". It cause getting empty logs.
+      const endDate = new Date(logStream.lastEventTimestamp + margin);
+      const startDate = new Date(logStream.firstEventTimestamp - margin);
       const limit = 20; // fetch few lines.
 
       dispatch(actions.fetchLogText(
