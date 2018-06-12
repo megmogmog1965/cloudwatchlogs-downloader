@@ -131,11 +131,11 @@ export function asyncCalls(state: AsyncCallState, action: LogGroupAction | LogSt
   switch (action.type) {
     case ActionTypes.REQUEST_LOG_GROUPS:
     case ActionTypes.REQUEST_LOG_STREAMS:
-    case ActionTypes.REQUEST_LOG_EVENTS:
       return { ...state, active: state.active + 1 }; // increment count.
     case ActionTypes.RECEIVE_LOG_GROUPS:
     case ActionTypes.RECEIVE_LOG_STREAMS:
-    case ActionTypes.RECEIVE_LOG_EVENTS:
+    case ActionTypes.ERROR_LOG_GROUPS:
+    case ActionTypes.ERROR_LOG_STREAMS:
       return { ...state, active: (state.active > 0) ? state.active - 1 : 0 }; // decrement count.
     default:
       return state;

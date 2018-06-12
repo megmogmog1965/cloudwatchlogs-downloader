@@ -5,6 +5,7 @@ import Progress from '../components/Progress';
 import * as types from '../common-interfaces';
 
 export interface Props {
+  LoadingOverlay: React.ComponentClass<any> | React.SFC<any>;
   LogGroups: React.ComponentClass<any> | React.SFC<any>;
   LogStreams: React.ComponentClass<any> | React.SFC<any>;
   LogContent: React.ComponentClass<any> | React.SFC<any>;
@@ -72,7 +73,7 @@ class App extends React.Component<Props> {
           </div>
         </header>
 
-        <div className="window-content">
+        <div className="window-content relative">
           {createWindowContent(props.windowContent, this.props)}
         </div>
       </div>
@@ -91,6 +92,7 @@ function createWindowContent(windowContent: enums.WindowContent, props: Props) {
     case enums.WindowContent.LogDownload:
       return (
         <div className="pane-group">
+          <props.LoadingOverlay />
           <div className="pane pane-group">
             <div className="pane">
               <LogGroups />

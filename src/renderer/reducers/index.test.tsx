@@ -920,6 +920,21 @@ describe('reducers/index', () => {
       },
     );
 
+    // ERROR_LOG_GROUPS.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_GROUPS,
+        errorMessage: '',
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+
     // REQUEST_LOG_STREAMS.
     expect(index.asyncCalls(
       {
@@ -950,34 +965,20 @@ describe('reducers/index', () => {
       },
     );
 
-    // REQUEST_LOG_EVENTS.
+    // ERROR_LOG_STREAMS.
     expect(index.asyncCalls(
       {
         active: 2,
       },
       {
-        type: ActionTypes.REQUEST_LOG_EVENTS,
-        job: { id: 'xxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
+        type: ActionTypes.ERROR_LOG_STREAMS,
+        errorMessage: '',
       },
     )).toEqual(
       {
-        active: 3,
+        active: 1,
       },
     );
 
-    // RECEIVE_LOG_EVENTS.
-    expect(index.asyncCalls(
-      {
-        active: 3,
-      },
-      {
-        type: ActionTypes.RECEIVE_LOG_EVENTS,
-        job: { id: 'xxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
-      },
-    )).toEqual(
-      {
-        active: 2,
-      },
-    );
   });
 });

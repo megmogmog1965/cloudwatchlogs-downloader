@@ -3,6 +3,7 @@
 import { shell } from 'electron';
 import * as enums from '../enums';
 import App from '../components/App';
+import LoadingOverlay from '../containers/LoadingOverlay';
 import LogGroups from '../containers/LogGroups';
 import LogStreams from '../containers/LogStreams';
 import LogContent from '../containers/LogContent';
@@ -17,6 +18,7 @@ import * as types from '../common-interfaces';
 
 export function mapStateToProps({ window, settings, logGroups, logStreams, logEvents }: StoreState) {
   return {
+    LoadingOverlay: LoadingOverlay,
     LogGroups: LogGroups,
     LogStreams: LogStreams,
     LogContent: LogContent,
