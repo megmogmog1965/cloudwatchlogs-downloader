@@ -860,4 +860,124 @@ describe('reducers/index', () => {
       },
     );
   });
+
+  it('asyncCalls', () => {
+    // initial state.
+    expect(index.asyncCalls(
+      undefined as any,
+      {
+        type: ActionTypes.REQUEST_LOG_GROUPS,
+      },
+    )).toEqual(
+      {
+        active: 0,
+      },
+    );
+
+    // negative value is forbidden.
+    expect(index.asyncCalls(
+      {
+        active: 0,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_GROUPS,
+        logGroups: [],
+        lastModified: new Date(0),
+      },
+    )).toEqual(
+      {
+        active: 0,
+      },
+    );
+
+    // REQUEST_LOG_GROUPS.
+    expect(index.asyncCalls(
+      {
+        active: 0,
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_GROUPS,
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+
+    // RECEIVE_LOG_GROUPS.
+    expect(index.asyncCalls(
+      {
+        active: 1,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_GROUPS,
+        logGroups: [],
+        lastModified: new Date(0),
+      },
+    )).toEqual(
+      {
+        active: 0,
+      },
+    );
+
+    // REQUEST_LOG_STREAMS.
+    expect(index.asyncCalls(
+      {
+        active: 1,
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_STREAMS,
+      },
+    )).toEqual(
+      {
+        active: 2,
+      },
+    );
+
+    // RECEIVE_LOG_STREAMS.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_STREAMS,
+        logStreams: [],
+        lastModified: new Date(0),
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+
+    // REQUEST_LOG_EVENTS.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_EVENTS,
+        job: { id: 'xxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
+      },
+    )).toEqual(
+      {
+        active: 3,
+      },
+    );
+
+    // RECEIVE_LOG_EVENTS.
+    expect(index.asyncCalls(
+      {
+        active: 3,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_EVENTS,
+        job: { id: 'xxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
+      },
+    )).toEqual(
+      {
+        active: 2,
+      },
+    );
+  });
 });

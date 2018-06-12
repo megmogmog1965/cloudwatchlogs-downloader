@@ -12,6 +12,7 @@ export interface StoreState {
   logEvents: LogEventsState;
   dateRange: DateRangeState;
   settings: SettingsState;
+  asyncCalls: AsyncCallState;
 }
 
 export interface WindowState {
@@ -52,6 +53,10 @@ export interface DateRangeState {
   endDate: Date;
 }
 
+export interface AsyncCallState {
+  active: number;
+}
+
 export const initialState: StoreState = {
   window: {
     windowContent: enums.WindowContent.LogDownload,
@@ -85,5 +90,8 @@ export const initialState: StoreState = {
   dateRange: {
     startDate: new Date(),
     endDate: new Date(new Date().getTime() - 60 * 60 * 1000),
+  },
+  asyncCalls: {
+    active: 0,
   },
 };

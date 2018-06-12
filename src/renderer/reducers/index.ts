@@ -2,7 +2,7 @@
 
 import { combineReducers, Reducer } from 'redux';
 import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
-import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, initialState } from '../types';
+import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, AsyncCallState, initialState } from '../types';
 import { ActionTypes } from '../constants';
 import { DownloadJob } from '../common-interfaces';
 import { reducer as formReducer } from 'redux-form';
@@ -123,6 +123,25 @@ export function settings(state: SettingsState, action: SettingsAction): Settings
   }
 }
 
+export function asyncCalls(state: AsyncCallState, action: LogGroupAction | LogStreamAction | LogEventAction): AsyncCallState {
+  if (!state) {
+    return { ...initialState.asyncCalls };
+  }
+
+  switch (action.type) {
+    case ActionTypes.REQUEST_LOG_GROUPS:
+    case ActionTypes.REQUEST_LOG_STREAMS:
+    case ActionTypes.REQUEST_LOG_EVENTS:
+      return { ...state, active: state.active + 1 }; // increment count.
+    case ActionTypes.RECEIVE_LOG_GROUPS:
+    case ActionTypes.RECEIVE_LOG_STREAMS:
+    case ActionTypes.RECEIVE_LOG_EVENTS:
+      return { ...state, active: (state.active > 0) ? state.active - 1 : 0 }; // decrement count.
+    default:
+      return state;
+  }
+}
+
 const reducers: Reducer<any> = combineReducers({
   window,
   logGroups,
@@ -131,6 +150,7 @@ const reducers: Reducer<any> = combineReducers({
   logEvents,
   dateRange,
   settings,
+  asyncCalls,
   form: formReducer,
 });
 
