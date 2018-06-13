@@ -443,7 +443,21 @@ describe('reducers/index', () => {
       },
     );
 
-    // RECEIVE_LOG_STREAMS - empty.
+    // REQUEST_LOG_TEXT.
+    expect(index.logText(
+      {
+        text: 'old',
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_TEXT,
+      },
+    )).toEqual(
+      {
+        text: 'old',
+      },
+    );
+
+    // RECEIVE_LOG_TEXT - empty.
     expect(index.logText(
       {
         text: '',
@@ -458,7 +472,7 @@ describe('reducers/index', () => {
       },
     );
 
-    // RECEIVE_LOG_STREAMS - 2 lines.
+    // RECEIVE_LOG_TEXT - 2 lines.
     expect(index.logText(
       {
         text: '',
@@ -470,6 +484,36 @@ describe('reducers/index', () => {
     )).toEqual(
       {
         text: 'line 1\nline 2\n',
+      },
+    );
+
+    // RECEIVE_LOG_TEXT - overwrite old text.
+    expect(index.logText(
+      {
+        text: 'old',
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: 'new',
+      },
+    )).toEqual(
+      {
+        text: 'new',
+      },
+    );
+
+    // ERROR_LOG_TEXT.
+    expect(index.logText(
+      {
+        text: 'old',
+      },
+      {
+        type: ActionTypes.ERROR_LOG_TEXT,
+        errorMessage: 'error messages',
+      },
+    )).toEqual(
+      {
+        text: '', // clear.
       },
     );
 
@@ -987,6 +1031,50 @@ describe('reducers/index', () => {
       },
       {
         type: ActionTypes.ERROR_LOG_STREAMS,
+        errorMessage: '',
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+
+    // REQUEST_LOG_TEXT.
+    expect(index.asyncCalls(
+      {
+        active: 1,
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_TEXT,
+      },
+    )).toEqual(
+      {
+        active: 2,
+      },
+    );
+
+    // RECEIVE_LOG_TEXT.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: '',
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+
+    // ERROR_LOG_TEXT.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_TEXT,
         errorMessage: '',
       },
     )).toEqual(
