@@ -61,7 +61,7 @@ export function logStreams(state: LogStreamsState, action: LogStreamAction | Log
   }
 }
 
-export function logText(state: LogTextState, action: LogTextAction): LogTextState {
+export function logText(state: LogTextState, action: LogTextAction | LogGroupAction): LogTextState {
   if (!state) {
     return { ...initialState.logText };
   }
@@ -69,6 +69,9 @@ export function logText(state: LogTextState, action: LogTextAction): LogTextStat
   switch (action.type) {
     case ActionTypes.RECEIVE_LOG_TEXT:
       return { ...state, text: action.text };
+    // SHOULD respond to LogGroupAction.
+    case ActionTypes.SELECT_LOG_GROUP:
+      return { ...state, text: '' }; // clear log text state when log group is updated.
     default:
       return state;
   }

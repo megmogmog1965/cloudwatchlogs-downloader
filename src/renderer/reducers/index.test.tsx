@@ -472,6 +472,21 @@ describe('reducers/index', () => {
         text: 'line 1\nline 2\n',
       },
     );
+
+    // SELECT_LOG_GROUP (log group action affects log text state).
+    expect(index.logText(
+      {
+        text: 'line 1\nline 2\n',
+      },
+      {
+        type: ActionTypes.SELECT_LOG_GROUP,
+        selectedName: 'name',
+      },
+    )).toEqual(
+      {
+        text: '',
+      },
+    );
   });
 
   it('logEvents', () => {
