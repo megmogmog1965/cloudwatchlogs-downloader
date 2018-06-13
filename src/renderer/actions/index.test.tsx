@@ -274,11 +274,26 @@ describe('actions/index', () => {
       });
   });
 
+  it('requestLogText', () => {
+    expect(index.requestLogText())
+      .toEqual({
+        type: ActionTypes.REQUEST_LOG_TEXT,
+      });
+  });
+
   it('receiveLogText', () => {
     expect(index.receiveLogText('line 1\nline 2\n'))
       .toEqual({
         type: ActionTypes.RECEIVE_LOG_TEXT,
         text: 'line 1\nline 2\n',
+      });
+  });
+
+  it('errorLogText', () => {
+    expect(index.errorLogText('error messages'))
+      .toEqual({
+        type: ActionTypes.ERROR_LOG_TEXT,
+        errorMessage: 'error messages',
       });
   });
 
@@ -319,6 +334,9 @@ describe('actions/index', () => {
     setTimeout(() => {
       expect(store.getActions())
         .toEqual([
+          {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
           {
             type: ActionTypes.RECEIVE_LOG_TEXT,
             text: 'log line 1\nlog line 2\r\n',
@@ -365,6 +383,9 @@ describe('actions/index', () => {
       expect(store.getActions())
         .toEqual([
           {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
+          {
             type: ActionTypes.RECEIVE_LOG_TEXT,
             text: 'log line 1\nlog line 2\n',
           },
@@ -410,8 +431,55 @@ describe('actions/index', () => {
       expect(store.getActions())
         .toEqual([
           {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
+          {
             type: ActionTypes.RECEIVE_LOG_TEXT,
             text: 'log line 1\r\nlog line 2\r\n',
+          },
+        ]);
+    }, 100);
+  });
+
+  it('fetchLogText - Start/Error', () => {
+    let settings: Settings = {
+      region: 'ap-northeast-1',
+      awsAccessKeyId: 'xxxx',
+      awsSecretAccessKey: 'yyyy',
+      lineBreak: 'CRLF',
+      jsonKey: '',
+    };
+
+    let getCloudWatchLogsEvents = (
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackError: (err: AWS.AWSError) => void,
+      callbackEnd: () => void,
+    ) => {
+      callbackData({
+        events: [
+          {
+            timestamp: new Date(1).getTime(),
+            message: 'log line 1\n',
+          },
+        ],
+      });
+      callbackError({ message: 'error message' } as any);
+    };
+
+    let store = mockStore({});
+
+    // dispatch.
+    store.dispatch(index.fetchLogText(settings, getCloudWatchLogsEvents));
+
+    setTimeout(() => {
+      expect(store.getActions())
+        .toEqual([
+          {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
+          {
+            type: ActionTypes.ERROR_LOG_TEXT,
+            errorMessage: 'error message',
           },
         ]);
     }, 100);

@@ -54,9 +54,18 @@ export interface SelectLogStream {
   selectedName?: string;
 }
 
+export interface RequestLogText {
+  type: ActionTypes.REQUEST_LOG_TEXT;
+}
+
 export interface ReceiveLogText {
   type: ActionTypes.RECEIVE_LOG_TEXT;
   text: string;
+}
+
+export interface ErrorLogText {
+  type: ActionTypes.ERROR_LOG_TEXT;
+  errorMessage: string;
 }
 
 export interface RequestLogEvents {
@@ -105,7 +114,7 @@ export type LogGroupAction = RequestLogGroups | ReceiveLogGroups | ErrorLogGroup
 
 export type LogStreamAction = RequestLogStreams | ReceiveLogStreams | ErrorLogStreams | SelectLogStream;
 
-export type LogTextAction = ReceiveLogText;
+export type LogTextAction = RequestLogText | ReceiveLogText | ErrorLogText;
 
 export type LogEventAction = RequestLogEvents | ProgressLogEvents | ReceiveLogEvents | ErrorLogEvents;
 
@@ -247,10 +256,23 @@ const separator: (lineBreak: string) => string = (lineBreak) => {
   }
 };
 
+export function requestLogText(): RequestLogText {
+  return {
+    type: ActionTypes.REQUEST_LOG_TEXT,
+  };
+}
+
 export function receiveLogText(text: string): ReceiveLogText {
   return {
     type: ActionTypes.RECEIVE_LOG_TEXT,
     text,
+  };
+}
+
+export function errorLogText(errorMessage: string): ErrorLogText {
+  return {
+    type: ActionTypes.ERROR_LOG_TEXT,
+    errorMessage,
   };
 }
 
@@ -266,6 +288,9 @@ export function fetchLogText(
   let logs = '';
 
   return (dispatch: Dispatch<LogGroupAction>) => {
+    // start fetching.
+    dispatch(requestLogText());
+
     // callback for receive log chunks.
     let callbackData = (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => {
       if (!data.events) {
@@ -283,7 +308,7 @@ export function fetchLogText(
     };
 
     // callback for end processing.
-    let callbackError = (err: AWS.AWSError) => 0; // ignore errors.
+    let callbackError = (err: AWS.AWSError) => dispatch(errorLogText(err.message));
 
     // callback for handling errors.
     let callbackEnd = () => dispatch(receiveLogText(logs));
