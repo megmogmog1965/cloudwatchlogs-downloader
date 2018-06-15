@@ -27,7 +27,14 @@ npm install
 npm run dist
 ```
 
+## See also
+
+* [CloudWatch Logs Limits]
+* [Export Log Data to Amazon S3 Using the Console]
+
 
 [Node 8.11.x]:https://nodejs.org/en/
 [Amazon CloudWatch Logs]:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
 [AWS access key ID and secret access key]:https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html
+[CloudWatch Logs Limits]:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
+[Export Log Data to Amazon S3 Using the Console]:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/S3ExportTasksConsole.html
