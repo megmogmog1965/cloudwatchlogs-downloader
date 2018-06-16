@@ -3,7 +3,7 @@
 import LogStreams from '../components/LogStreams';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
-import { currentDate, getCloudWatchLogsEvents } from '../side-effect-functions';
+import { currentDate, connectCloudWatchLogs, getCloudWatchLogsEvents } from '../side-effect-functions';
 import { Settings, LogStream } from '../common-interfaces';
 import { connect, Dispatch } from 'react-redux';
 
@@ -32,7 +32,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
           callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
           callbackError: (err: AWS.AWSError) => void,
           callbackEnd: () => void,
-        ) => getCloudWatchLogsEvents(settings, logGroupName, logStream.logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
+        ) => getCloudWatchLogsEvents(connectCloudWatchLogs(settings), logGroupName, logStream.logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
       ));
     },
     Now: currentDate,

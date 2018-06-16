@@ -6,7 +6,7 @@ import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
 import { Settings, DownloadJob } from '../common-interfaces';
 import { extractJson } from '../utils';
-import { createUuid, currentDate, getCloudWatchLogsEvents, showSaveDialog } from '../side-effect-functions';
+import { createUuid, currentDate, connectCloudWatchLogs, getCloudWatchLogsEvents, showSaveDialog } from '../side-effect-functions';
 
 export function mapStateToProps({ logGroups, logStreams, dateRange, settings, logText }: StoreState) {
   return {
@@ -45,7 +45,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
           callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
           callbackError: (err: AWS.AWSError) => void,
           callbackEnd: () => void,
-        ) => getCloudWatchLogsEvents(settings, logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd), // currying.
+        ) => getCloudWatchLogsEvents(connectCloudWatchLogs(settings), logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd), // currying.
         transformer,
       ));
     },

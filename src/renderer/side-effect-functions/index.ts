@@ -98,13 +98,11 @@ export function showSaveDialog(fileName?: string): stream.Writable | undefined {
 }
 
 export function getCloudWatchLogGroups(
-  settings: Settings,
+  cloudwatchlogs: AWS.CloudWatchLogs,
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
   callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
 ): void {
-
-  const cloudwatchlogs = connectCloudWatchLogs(settings);
 
   callbackStart(new Date());
 
@@ -156,14 +154,12 @@ export function getCloudWatchLogGroups(
 }
 
 export function getCloudWatchLogStreams(
-  settings: Settings,
+  cloudwatchlogs: AWS.CloudWatchLogs,
   logGroupName: string,
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
   callbackEnd: (time: Date, logStreams: LogStream[]) => void,
 ): void {
-
-  const cloudwatchlogs = connectCloudWatchLogs(settings);
 
   callbackStart(new Date());
 
@@ -219,7 +215,7 @@ export function getCloudWatchLogStreams(
 }
 
 export function getCloudWatchLogsEvents(
-  settings: Settings,
+  cloudwatchlogs: AWS.CloudWatchLogs,
   logGroupName: string,
   logStreamName: string,
   startDate: Date,
@@ -229,9 +225,6 @@ export function getCloudWatchLogsEvents(
   callbackEnd: () => void,
   startFromHead = true,
   limit?: number): void {
-
-  // authorization for aws-sdk.
-  const cloudwatchlogs = connectCloudWatchLogs(settings);
 
   let createParams = (nextToken?: string) => {
     return {
@@ -289,7 +282,7 @@ export function getCloudWatchLogsEvents(
   fetchRecursively();
 }
 
-function connectCloudWatchLogs(settings: Settings): AWS.CloudWatchLogs {
+export function connectCloudWatchLogs(settings: Settings): AWS.CloudWatchLogs {
   return new AWS.CloudWatchLogs({
     region: settings.region,
     accessKeyId: settings.awsAccessKeyId,

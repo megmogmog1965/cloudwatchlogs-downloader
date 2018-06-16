@@ -13,7 +13,7 @@ import DownloadBadge from '../containers/DownloadBadge';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
-import { load, currentDate, getCloudWatchLogGroups, getCloudWatchLogStreams, getCloudWatchLogsEvents } from '../side-effect-functions';
+import { load, currentDate, connectCloudWatchLogs, getCloudWatchLogGroups, getCloudWatchLogStreams, getCloudWatchLogsEvents } from '../side-effect-functions';
 import * as types from '../common-interfaces';
 
 export function mapStateToProps({ window, settings, logGroups, logStreams, logEvents }: StoreState) {
@@ -56,7 +56,7 @@ function reloadAll(
       callbackStart: (time: Date) => void,
       callbackError: (time: Date, err: AWS.AWSError) => void,
       callbackEnd: (time: Date, logGroups: types.LogGroup[]) => void,
-    ) => getCloudWatchLogGroups(settings, callbackStart, callbackError, callbackEnd), // currying.
+    ) => getCloudWatchLogGroups(connectCloudWatchLogs(settings), callbackStart, callbackError, callbackEnd), // currying.
   ));
 
   if (!logGroupName) {
@@ -71,7 +71,7 @@ function reloadAll(
       callbackStart: (time: Date) => void,
       callbackError: (time: Date, err: AWS.AWSError) => void,
       callbackEnd: (time: Date, logStreams: types.LogStream[]) => void,
-    ) => getCloudWatchLogStreams(settings, logGroupName, callbackStart, callbackError, callbackEnd), // currying.
+    ) => getCloudWatchLogStreams(connectCloudWatchLogs(settings), logGroupName, callbackStart, callbackError, callbackEnd), // currying.
   ));
 
   if (!logStream) {
@@ -89,7 +89,7 @@ function reloadAll(
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
       callbackError: (err: AWS.AWSError) => void,
       callbackEnd: () => void,
-    ) => getCloudWatchLogsEvents(settings, logGroupName, logStream.logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
+    ) => getCloudWatchLogsEvents(connectCloudWatchLogs(settings), logGroupName, logStream.logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
   ));
 }
 
