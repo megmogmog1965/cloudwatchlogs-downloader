@@ -7,6 +7,10 @@ jest.mock('electron', () => ({
   },
 }));
 
+function range(begin: number, end: number): number[] {
+  return Array.from({length: end}, (v, k) => begin + k);
+}
+
 describe('utils/index', () => {
   it('applicationPassphrase: characters.', () => {
     expect(/^[-+.0-9a-z]+_.+$/.test(index.applicationPassphrase())).toBe(true);
@@ -80,7 +84,7 @@ describe('utils/index', () => {
     // call inside callback.
     let callback = mockDescribeLogGroups.mock.calls[0][1];
     callback(undefined, { logGroups:
-      [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ].map(i => ({ arn: '' + i, logGroupName: 'group ' + i, creationTime: 0, storedBytes: 0 })),
+      range(0, 10).map(i => ({ arn: '' + i, logGroupName: 'group ' + i, creationTime: 0, storedBytes: 0 })),
     });
 
     // CallbackStart.
@@ -98,7 +102,7 @@ describe('utils/index', () => {
     expect(mockCallbackEnd.mock.calls[0][0].getTime()).toBeGreaterThanOrEqual(new Date().getTime() - 5000);
     expect(mockCallbackEnd.mock.calls[0][0].getTime()).toBeLessThanOrEqual(new Date().getTime());
     expect(mockCallbackEnd.mock.calls[0][1]).toEqual(
-      [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ].map(i => ({ arn: '' + i, logGroupName: 'group ' + i, creationTime: 0, storedBytes: 0 })),
+      range(0, 10).map(i => ({ arn: '' + i, logGroupName: 'group ' + i, creationTime: 0, storedBytes: 0 })),
     );
   });
 });
