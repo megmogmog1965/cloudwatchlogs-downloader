@@ -10,7 +10,7 @@ Cross-platform application to download logs from [Amazon CloudWatch Logs].
 
 Click following link to download application binary for Windows and Mac OS.
 
-* [Releases for Windowns / Mac OS X](https://github.com/megmogmog1965/cloudwatchlogs-downloader/releases)
+* [Releases for Windows / Mac OS X](https://github.com/megmogmog1965/cloudwatchlogs-downloader/releases)
 
 ## How to use
 
