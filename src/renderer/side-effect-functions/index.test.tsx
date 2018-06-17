@@ -8,7 +8,7 @@ jest.mock('electron', () => ({
 }));
 
 function range(begin: number, end: number): number[] {
-  return Array.from({length: end}, (v, k) => begin + k);
+  return Array.from({ length: end }, (v, k) => begin + k);
 }
 
 describe('utils/index', () => {
@@ -83,8 +83,9 @@ describe('utils/index', () => {
 
     // call inside callback.
     let callback = mockDescribeLogGroups.mock.calls[0][1];
-    callback(undefined, { logGroups:
-      range(0, 10).map(i => ({ arn: '' + i, logGroupName: 'group ' + i, creationTime: 0, storedBytes: 0 })),
+    callback(undefined, {
+      logGroups:
+        range(0, 10).map(i => ({ arn: '' + i, logGroupName: 'group ' + i, creationTime: 0, storedBytes: 0 })),
     });
 
     // CallbackStart.
@@ -105,4 +106,62 @@ describe('utils/index', () => {
       range(0, 10).map(i => ({ arn: '' + i, logGroupName: 'group ' + i, creationTime: 0, storedBytes: 0 })),
     );
   });
+
+  it('getCloudWatchLogGroups: 50 -> 13 logs.', () => {
+    let mockDescribeLogGroups = jest.fn();
+    let mockCallbackStart = jest.fn();
+    let mockCallbackError = jest.fn();
+    let mockCallbackEnd = jest.fn();
+
+    // call test target.
+    index.getCloudWatchLogGroups(
+      { describeLogGroups: mockDescribeLogGroups } as any,
+      mockCallbackStart,
+      mockCallbackError,
+      mockCallbackEnd,
+    );
+
+    // call inside callback (1st).
+    let callback = mockDescribeLogGroups.mock.calls[0][1];
+    callback(undefined, {
+      logGroups:
+        range(0, 50).map(i => ({ arn: '1-' + i, logGroupName: 'group 1-' + i, creationTime: 0, storedBytes: 0 })),
+      nextToken: '1st-token',
+    });
+
+    // call inside callback (2nd).
+    callback = mockDescribeLogGroups.mock.calls[1][1];
+    callback(undefined, {
+      logGroups:
+        range(0, 13).map(i => ({ arn: '2-' + i, logGroupName: 'group 2-' + i, creationTime: 0, storedBytes: 0 })),
+    });
+
+    expect(mockDescribeLogGroups.mock.calls.length).toBe(2);
+    expect(mockDescribeLogGroups.mock.calls[0].length).toBe(2);
+    expect(mockDescribeLogGroups.mock.calls[1].length).toBe(2);
+    expect(mockDescribeLogGroups.mock.calls[0][0]).toEqual({ nextToken: undefined });
+    expect(mockDescribeLogGroups.mock.calls[1][0]).toEqual({ nextToken: '1st-token' });
+
+    // CallbackStart.
+    expect(mockCallbackStart.mock.calls.length).toBe(1);
+    expect(mockCallbackStart.mock.calls[0].length).toBe(1);
+    expect(mockCallbackStart.mock.calls[0][0].getTime()).toBeGreaterThanOrEqual(new Date().getTime() - 5000);
+    expect(mockCallbackStart.mock.calls[0][0].getTime()).toBeLessThanOrEqual(new Date().getTime());
+
+    // CallbackError.
+    expect(mockCallbackError.mock.calls.length).toBe(0);
+
+    // CallbackEnd.
+    expect(mockCallbackEnd.mock.calls.length).toBe(1);
+    expect(mockCallbackEnd.mock.calls[0].length).toBe(2);
+    expect(mockCallbackEnd.mock.calls[0][0].getTime()).toBeGreaterThanOrEqual(new Date().getTime() - 5000);
+    expect(mockCallbackEnd.mock.calls[0][0].getTime()).toBeLessThanOrEqual(new Date().getTime());
+    expect(mockCallbackEnd.mock.calls[0][1]).toEqual(
+      range(0, 50).map(i => ({ arn: '1-' + i, logGroupName: 'group 1-' + i, creationTime: 0, storedBytes: 0 }))
+        .concat(
+          range(0, 13).map(i => ({ arn: '2-' + i, logGroupName: 'group 2-' + i, creationTime: 0, storedBytes: 0 })),
+      ),
+    );
+  });
+
 });
