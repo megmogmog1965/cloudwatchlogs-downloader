@@ -19,5 +19,5 @@ before_script:
   - brew install makensis
 script:
   - npm test
-  - npm run dist -- --mac
-  - npm run dist -- --win
+  - npm run dist -- --mac --publish always
+  - npm run dist -- --win --publish always
