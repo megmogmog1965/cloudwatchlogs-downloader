@@ -102,6 +102,7 @@ export function getCloudWatchLogGroups(
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
   callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
+  retryDelay = 1000,
 ): void {
 
   callbackStart(new Date());
@@ -113,7 +114,7 @@ export function getCloudWatchLogGroups(
       if (err) {
         if (retry > 0) {
           // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
-          setTimeout(() => fetchRecursively(groups, nextToken, retry - 1), 1000); // wait 1 secs until next try.
+          setTimeout(() => fetchRecursively(groups, nextToken, retry - 1), retryDelay); // wait 1 secs until next try.
           return;
         }
 
@@ -159,6 +160,7 @@ export function getCloudWatchLogStreams(
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
   callbackEnd: (time: Date, logStreams: LogStream[]) => void,
+  retryDelay = 1000,
 ): void {
 
   callbackStart(new Date());
@@ -170,7 +172,7 @@ export function getCloudWatchLogStreams(
       if (err) {
         if (retry > 0) {
           // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
-          setTimeout(() => fetchRecursively(streams, nextToken, retry - 1), 1000); // wait 1 secs until next try.
+          setTimeout(() => fetchRecursively(streams, nextToken, retry - 1), retryDelay); // wait 1 secs until next try.
           return;
         }
 
@@ -224,7 +226,9 @@ export function getCloudWatchLogsEvents(
   callbackError: (err: AWS.AWSError) => void,
   callbackEnd: () => void,
   startFromHead = true,
-  limit?: number): void {
+  limit?: number,
+  retryDelay = 2000,
+): void {
 
   let createParams = (nextToken?: string) => {
     return {
@@ -246,7 +250,7 @@ export function getCloudWatchLogsEvents(
         if (err) {
           if (retry > 0) {
             // @see https://docs.amazonaws.cn/en_us/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
-            setTimeout(() => fetchRecursively(nextToken, retry - 1), 2000); // wait 2 secs until next try.
+            setTimeout(() => fetchRecursively(nextToken, retry - 1), retryDelay); // wait 2 secs until next try.
             return;
           }
 
