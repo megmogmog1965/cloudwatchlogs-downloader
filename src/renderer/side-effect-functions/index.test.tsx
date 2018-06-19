@@ -40,6 +40,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -79,6 +80,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -123,6 +125,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -142,7 +145,7 @@ describe('utils/index', () => {
     // call inside callback (2nd).
     callback = mockDescribeLogGroups.mock.calls[1][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (3rd).
     callback = mockDescribeLogGroups.mock.calls[2][1];
@@ -187,6 +190,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -206,22 +210,22 @@ describe('utils/index', () => {
     // call inside callback (2nd).
     callback = mockDescribeLogGroups.mock.calls[1][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (3rd).
     callback = mockDescribeLogGroups.mock.calls[2][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (4th).
     callback = mockDescribeLogGroups.mock.calls[3][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (5th).
     callback = mockDescribeLogGroups.mock.calls[4][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     expect(mockDescribeLogGroups.mock.calls.length).toBe(5);
     expect(mockDescribeLogGroups.mock.calls[0].length).toBe(2);
@@ -259,6 +263,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -299,6 +304,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -344,6 +350,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -363,7 +370,7 @@ describe('utils/index', () => {
     // call inside callback (2nd).
     callback = mockDescribeLogStreams.mock.calls[1][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (3rd).
     callback = mockDescribeLogStreams.mock.calls[2][1];
@@ -409,6 +416,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      10,
     );
 
     // CallbackStart.
@@ -428,22 +436,22 @@ describe('utils/index', () => {
     // call inside callback (2nd).
     callback = mockDescribeLogStreams.mock.calls[1][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (3rd).
     callback = mockDescribeLogStreams.mock.calls[2][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (4th).
     callback = mockDescribeLogStreams.mock.calls[3][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     // call inside callback (5th).
     callback = mockDescribeLogStreams.mock.calls[4][1];
     callback({ message: 'error messages.' }, undefined);
-    await timeout(1100);
+    await timeout(100);
 
     expect(mockDescribeLogStreams.mock.calls.length).toBe(5);
     expect(mockDescribeLogStreams.mock.calls[0].length).toBe(2);
@@ -463,6 +471,433 @@ describe('utils/index', () => {
     expect(mockCallbackError.mock.calls[0][0].getTime()).toBeGreaterThanOrEqual(new Date().getTime() - 5000);
     expect(mockCallbackError.mock.calls[0][0].getTime()).toBeLessThanOrEqual(new Date().getTime());
     expect(mockCallbackError.mock.calls[0][1]).toEqual({ message: 'error messages.' });
+
+    // CallbackEnd.
+    expect(mockCallbackEnd.mock.calls.length).toBe(0);
+  });
+
+  it('getCloudWatchLogsEvents: 0 events.', () => {
+    let mockGetLogEvents = jest.fn();
+    let mockCallbackData = jest.fn();
+    let mockCallbackError = jest.fn();
+    let mockCallbackEnd = jest.fn();
+
+    let params = (token?: string) => ({
+      logGroupName: 'log group',
+      logStreamName: 'log stream',
+      startTime: new Date(0).getTime(),
+      endTime: new Date(100).getTime(),
+      limit: undefined,
+      nextToken: token,
+      startFromHead: true,
+    });
+
+    // call test target.
+    index.getCloudWatchLogsEvents(
+      { getLogEvents: mockGetLogEvents } as any,
+      'log group',
+      'log stream',
+      new Date(0),
+      new Date(100),
+      mockCallbackData,
+      mockCallbackError,
+      mockCallbackEnd,
+      true,
+      undefined,
+      10,
+    );
+
+    // 1st call inside callback.
+    let callback = mockGetLogEvents.mock.calls[0][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: [],
+    });
+
+    // 2nd call inside callback.
+    callback = mockGetLogEvents.mock.calls[1][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: [],
+    });
+
+    expect(mockGetLogEvents.mock.calls.length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[0].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[0][0]).toEqual(params(undefined));
+    expect(mockGetLogEvents.mock.calls[1].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[1][0]).toEqual(params('last-token'));
+
+    // CallbackData.
+    expect(mockCallbackData.mock.calls.length).toBe(0);
+
+    // CallbackError.
+    expect(mockCallbackError.mock.calls.length).toBe(0);
+
+    // CallbackEnd.
+    expect(mockCallbackEnd.mock.calls.length).toBe(1);
+    expect(mockCallbackEnd.mock.calls[0].length).toBe(0);
+  });
+
+  it('getCloudWatchLogsEvents: 10 events.', () => {
+    let mockGetLogEvents = jest.fn();
+    let mockCallbackData = jest.fn();
+    let mockCallbackError = jest.fn();
+    let mockCallbackEnd = jest.fn();
+
+    let params = (token?: string) => ({
+      logGroupName: 'log group',
+      logStreamName: 'log stream',
+      startTime: new Date(0).getTime(),
+      endTime: new Date(100).getTime(),
+      limit: undefined,
+      nextToken: token,
+      startFromHead: true,
+    });
+
+    // call test target.
+    index.getCloudWatchLogsEvents(
+      { getLogEvents: mockGetLogEvents } as any,
+      'log group',
+      'log stream',
+      new Date(0),
+      new Date(100),
+      mockCallbackData,
+      mockCallbackError,
+      mockCallbackEnd,
+      true,
+      undefined,
+      10,
+    );
+
+    // 1st call inside callback.
+    let callback = mockGetLogEvents.mock.calls[0][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: range(0, 10).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+
+    // 2nd call inside callback.
+    callback = mockGetLogEvents.mock.calls[1][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: [],
+    });
+
+    expect(mockGetLogEvents.mock.calls.length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[0].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[0][0]).toEqual(params(undefined));
+    expect(mockGetLogEvents.mock.calls[1].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[1][0]).toEqual(params('last-token'));
+
+    // CallbackData.
+    expect(mockCallbackData.mock.calls.length).toBe(1);
+    expect(mockCallbackData.mock.calls[0].length).toBe(2);
+    expect(mockCallbackData.mock.calls[0][0]).toEqual({
+      nextForwardToken: 'last-token',
+      events: range(0, 10).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+    expect(mockCallbackData.mock.calls[0][1]).toBeCloseTo(0.1);
+
+    // CallbackError.
+    expect(mockCallbackError.mock.calls.length).toBe(0);
+
+    // CallbackEnd.
+    expect(mockCallbackEnd.mock.calls.length).toBe(1);
+    expect(mockCallbackEnd.mock.calls[0].length).toBe(0);
+  });
+
+  it('getCloudWatchLogsEvents: 50 -> 13 events.', () => {
+    let mockGetLogEvents = jest.fn();
+    let mockCallbackData = jest.fn();
+    let mockCallbackError = jest.fn();
+    let mockCallbackEnd = jest.fn();
+
+    let params = (token?: string) => ({
+      logGroupName: 'log group',
+      logStreamName: 'log stream',
+      startTime: new Date(0).getTime(),
+      endTime: new Date(100).getTime(),
+      limit: undefined,
+      nextToken: token,
+      startFromHead: true,
+    });
+
+    // call test target.
+    index.getCloudWatchLogsEvents(
+      { getLogEvents: mockGetLogEvents } as any,
+      'log group',
+      'log stream',
+      new Date(0),
+      new Date(100),
+      mockCallbackData,
+      mockCallbackError,
+      mockCallbackEnd,
+      true,
+      undefined,
+      10,
+    );
+
+    // 1st call inside callback.
+    let callback = mockGetLogEvents.mock.calls[0][1];
+    callback(undefined, {
+      nextForwardToken: '1st-token',
+      events: range(0, 50).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+
+    // 2nd call inside callback.
+    callback = mockGetLogEvents.mock.calls[1][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: range(50, 100).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+
+    // 3rd call inside callback.
+    callback = mockGetLogEvents.mock.calls[2][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: [],
+    });
+
+    expect(mockGetLogEvents.mock.calls.length).toBe(3);
+    expect(mockGetLogEvents.mock.calls[0].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[0][0]).toEqual(params(undefined));
+    expect(mockGetLogEvents.mock.calls[1].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[1][0]).toEqual(params('1st-token'));
+    expect(mockGetLogEvents.mock.calls[2].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[2][0]).toEqual(params('last-token'));
+
+    // CallbackData.
+    expect(mockCallbackData.mock.calls.length).toBe(2);
+    expect(mockCallbackData.mock.calls[0].length).toBe(2);
+    expect(mockCallbackData.mock.calls[0][0]).toEqual({
+      nextForwardToken: '1st-token',
+      events: range(0, 50).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+    expect(mockCallbackData.mock.calls[0][1]).toBeCloseTo(0.5);
+    expect(mockCallbackData.mock.calls[1].length).toBe(2);
+    expect(mockCallbackData.mock.calls[1][0]).toEqual({
+      nextForwardToken: 'last-token',
+      events: range(50, 100).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+    expect(mockCallbackData.mock.calls[1][1]).toBeCloseTo(1.0);
+
+    // CallbackError.
+    expect(mockCallbackError.mock.calls.length).toBe(0);
+
+    // CallbackEnd.
+    expect(mockCallbackEnd.mock.calls.length).toBe(1);
+    expect(mockCallbackEnd.mock.calls[0].length).toBe(0);
+  });
+
+  it('getCloudWatchLogsEvents: 50 -> Error -> 13 events.', async () => {
+    let mockGetLogEvents = jest.fn();
+    let mockCallbackData = jest.fn();
+    let mockCallbackError = jest.fn();
+    let mockCallbackEnd = jest.fn();
+
+    let params = (token?: string) => ({
+      logGroupName: 'log group',
+      logStreamName: 'log stream',
+      startTime: new Date(0).getTime(),
+      endTime: new Date(100).getTime(),
+      limit: undefined,
+      nextToken: token,
+      startFromHead: true,
+    });
+
+    // call test target.
+    index.getCloudWatchLogsEvents(
+      { getLogEvents: mockGetLogEvents } as any,
+      'log group',
+      'log stream',
+      new Date(0),
+      new Date(100),
+      mockCallbackData,
+      mockCallbackError,
+      mockCallbackEnd,
+      true,
+      undefined,
+      10,
+    );
+
+    // 1st call inside callback.
+    let callback = mockGetLogEvents.mock.calls[0][1];
+    callback(undefined, {
+      nextForwardToken: '1st-token',
+      events: range(0, 50).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+
+    // 2nd call inside callback.
+    callback = mockGetLogEvents.mock.calls[1][1];
+    callback({ message: 'error messages.' }, undefined);
+    await timeout(100);
+
+    // 3rd call inside callback.
+    callback = mockGetLogEvents.mock.calls[2][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: range(50, 100).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+
+    // 4th call inside callback.
+    callback = mockGetLogEvents.mock.calls[3][1];
+    callback(undefined, {
+      nextForwardToken: 'last-token',
+      events: [],
+    });
+
+    expect(mockGetLogEvents.mock.calls.length).toBe(4);
+    expect(mockGetLogEvents.mock.calls[0].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[0][0]).toEqual(params(undefined));
+    expect(mockGetLogEvents.mock.calls[1].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[1][0]).toEqual(params('1st-token'));
+    expect(mockGetLogEvents.mock.calls[2].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[2][0]).toEqual(params('1st-token'));
+    expect(mockGetLogEvents.mock.calls[3].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[3][0]).toEqual(params('last-token'));
+
+    // CallbackData.
+    expect(mockCallbackData.mock.calls.length).toBe(2);
+    expect(mockCallbackData.mock.calls[0].length).toBe(2);
+    expect(mockCallbackData.mock.calls[0][0]).toEqual({
+      nextForwardToken: '1st-token',
+      events: range(0, 50).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+    expect(mockCallbackData.mock.calls[0][1]).toBeCloseTo(0.5);
+    expect(mockCallbackData.mock.calls[1].length).toBe(2);
+    expect(mockCallbackData.mock.calls[1][0]).toEqual({
+      nextForwardToken: 'last-token',
+      events: range(50, 100).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+    expect(mockCallbackData.mock.calls[1][1]).toBeCloseTo(1.0);
+
+    // CallbackError.
+    expect(mockCallbackError.mock.calls.length).toBe(0);
+
+    // CallbackEnd.
+    expect(mockCallbackEnd.mock.calls.length).toBe(1);
+    expect(mockCallbackEnd.mock.calls[0].length).toBe(0);
+  });
+
+  it('getCloudWatchLogsEvents: 50 -> Error -> Error -> Error.', async () => {
+    let mockGetLogEvents = jest.fn();
+    let mockCallbackData = jest.fn();
+    let mockCallbackError = jest.fn();
+    let mockCallbackEnd = jest.fn();
+
+    let params = (token?: string) => ({
+      logGroupName: 'log group',
+      logStreamName: 'log stream',
+      startTime: new Date(0).getTime(),
+      endTime: new Date(100).getTime(),
+      limit: undefined,
+      nextToken: token,
+      startFromHead: true,
+    });
+
+    // call test target.
+    index.getCloudWatchLogsEvents(
+      { getLogEvents: mockGetLogEvents } as any,
+      'log group',
+      'log stream',
+      new Date(0),
+      new Date(100),
+      mockCallbackData,
+      mockCallbackError,
+      mockCallbackEnd,
+      true,
+      undefined,
+      10,
+    );
+
+    // 1st call inside callback.
+    let callback = mockGetLogEvents.mock.calls[0][1];
+    callback(undefined, {
+      nextForwardToken: '1st-token',
+      events: range(0, 50).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+
+    // 2nd call inside callback.
+    callback = mockGetLogEvents.mock.calls[1][1];
+    callback({ message: 'error messages.' }, undefined);
+    await timeout(100);
+
+    // 3rd call inside callback.
+    callback = mockGetLogEvents.mock.calls[2][1];
+    callback({ message: 'error messages.' }, undefined);
+    await timeout(100);
+
+    // 4th call inside callback.
+    callback = mockGetLogEvents.mock.calls[3][1];
+    callback({ message: 'error messages.' }, undefined);
+    await timeout(100);
+
+    // 5th call inside callback.
+    callback = mockGetLogEvents.mock.calls[4][1];
+    callback({ message: 'error messages.' }, undefined);
+    await timeout(100);
+
+    expect(mockGetLogEvents.mock.calls.length).toBe(5);
+    expect(mockGetLogEvents.mock.calls[0].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[0][0]).toEqual(params(undefined));
+    expect(mockGetLogEvents.mock.calls[1].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[1][0]).toEqual(params('1st-token'));
+    expect(mockGetLogEvents.mock.calls[2].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[2][0]).toEqual(params('1st-token'));
+    expect(mockGetLogEvents.mock.calls[3].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[3][0]).toEqual(params('1st-token'));
+    expect(mockGetLogEvents.mock.calls[4].length).toBe(2);
+    expect(mockGetLogEvents.mock.calls[4][0]).toEqual(params('1st-token'));
+
+    // CallbackData.
+    expect(mockCallbackData.mock.calls.length).toBe(1);
+    expect(mockCallbackData.mock.calls[0].length).toBe(2);
+    expect(mockCallbackData.mock.calls[0][0]).toEqual({
+      nextForwardToken: '1st-token',
+      events: range(0, 50).map(i => ({
+        timestamp: i + 1,
+        message: 'message ' + i,
+      })),
+    });
+    expect(mockCallbackData.mock.calls[0][1]).toBeCloseTo(0.5);
+
+    // CallbackError.
+    expect(mockCallbackError.mock.calls.length).toBe(1);
+    expect(mockCallbackError.mock.calls[0].length).toBe(1);
+    expect(mockCallbackError.mock.calls[0][0]).toEqual({ message: 'error messages.' });
 
     // CallbackEnd.
     expect(mockCallbackEnd.mock.calls.length).toBe(0);
