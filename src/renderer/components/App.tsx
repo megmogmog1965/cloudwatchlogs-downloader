@@ -9,6 +9,7 @@ export interface Props {
   LogGroups: React.ComponentClass<any> | React.SFC<any>;
   LogStreams: React.ComponentClass<any> | React.SFC<any>;
   LogContent: React.ComponentClass<any> | React.SFC<any>;
+  Filters: React.ComponentClass<any> | React.SFC<any>;
   Settings: React.ComponentClass<any> | React.SFC<any>;
   DownloadList: React.ComponentClass<any> | React.SFC<any>;
   DownloadBadge: React.ComponentClass<any> | React.SFC<any>;
@@ -45,6 +46,9 @@ class App extends React.Component<Props> {
             <div className="btn-group">
               <button className={'btn btn-default ' + buttonState(enums.WindowContent.LogDownload, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.LogDownload)}>
                 <span className="icon icon-install icon-text" />Download Logs
+              </button>
+              <button className={'btn btn-default ' + buttonState(enums.WindowContent.Filters, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.Filters)}>
+                <span className="icon icon-shuffle icon-text" />Filters
               </button>
               <button className={'btn btn-default ' + buttonState(enums.WindowContent.Settings, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.Settings)}>
                 <span className="icon icon-cog icon-text" />Settings
@@ -86,7 +90,7 @@ function buttonState(target: enums.WindowContent, current: enums.WindowContent):
 }
 
 function createWindowContent(windowContent: enums.WindowContent, props: Props) {
-  let { LogGroups, LogStreams, LogContent, Settings } = props;
+  let { LogGroups, LogStreams, LogContent, Settings, Filters } = props;
 
   switch (windowContent) {
     case enums.WindowContent.LogDownload:
@@ -105,6 +109,10 @@ function createWindowContent(windowContent: enums.WindowContent, props: Props) {
             <LogContent />
           </div>
         </div>
+      );
+    case enums.WindowContent.Filters:
+      return (
+        <Filters />
       );
     case enums.WindowContent.Settings:
       return (

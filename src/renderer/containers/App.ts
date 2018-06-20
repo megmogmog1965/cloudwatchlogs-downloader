@@ -7,6 +7,7 @@ import LoadingOverlay from '../containers/LoadingOverlay';
 import LogGroups from '../containers/LogGroups';
 import LogStreams from '../containers/LogStreams';
 import LogContent from '../containers/LogContent';
+import Filters from '../containers/Filters';
 import Settings from '../containers/Settings';
 import DownloadList from '../containers/DownloadList';
 import DownloadBadge from '../containers/DownloadBadge';
@@ -22,6 +23,7 @@ export function mapStateToProps({ window, settings, logGroups, logStreams, logEv
     LogGroups: LogGroups,
     LogStreams: LogStreams,
     LogContent: LogContent,
+    Filters: Filters,
     Settings: Settings,
     DownloadList: DownloadList,
     DownloadBadge: DownloadBadge,

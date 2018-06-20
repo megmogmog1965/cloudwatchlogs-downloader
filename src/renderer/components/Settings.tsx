@@ -50,8 +50,7 @@ let raw: React.SFC<Props> = ({ handleSubmit }) => {
         </Field>
       </div>
       <div className="form-group">
-        <label><strong>[Optional] Root object key for json formatted logs</strong></label>
-        <Field name="jsonKey" component="input" type="text" className="form-control" placeholder="Enter root object key to extract json value as a log." />
+        <Field name="jsonKey" component="input" type="hidden" className="form-control" />
       </div>
       <div className="form-actions">
         <button type="submit" className="btn btn-form btn-primary">Save</button>
