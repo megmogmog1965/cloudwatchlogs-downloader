@@ -829,6 +829,42 @@ describe('reducers/index', () => {
       },
     );
 
+    // SAVE_SETTINGS - jsonKey.
+    expect(index.settings(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.SAVE_SETTINGS,
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        lastModified: new Date(100),
+      },
+    )).toEqual(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        lastModified: new Date(100),
+      },
+    );
+
+    // SAVE_SETTINGS - merged partial settings.
+    expect(index.settings(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.SAVE_SETTINGS,
+        settings: { jsonKey: 'key' } as any,
+        lastModified: new Date(100),
+      },
+    )).toEqual(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        lastModified: new Date(100),
+      },
+    );
+
     // RECEIVE_SETTINGS - region.
     expect(index.settings(
       {
@@ -910,6 +946,24 @@ describe('reducers/index', () => {
       {
         type: ActionTypes.RECEIVE_SETTINGS,
         settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        lastModified: new Date(100),
+      },
+    )).toEqual(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        lastModified: new Date(100),
+      },
+    );
+
+    // RECEIVE_SETTINGS - merged partial settings.
+    expect(index.settings(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.RECEIVE_SETTINGS,
+        settings: { jsonKey: 'key' } as any,
         lastModified: new Date(100),
       },
     )).toEqual(

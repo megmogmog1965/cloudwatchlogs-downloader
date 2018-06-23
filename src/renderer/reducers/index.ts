@@ -122,9 +122,9 @@ export function settings(state: SettingsState, action: SettingsAction): Settings
 
   switch (action.type) {
     case ActionTypes.SAVE_SETTINGS:
-      return { ...state, settings: action.settings, lastModified: action.lastModified };
+      return { ...state, settings: { ...state.settings, ...action.settings }, lastModified: action.lastModified };
     case ActionTypes.RECEIVE_SETTINGS:
-      return { ...state, settings: action.settings, lastModified: action.lastModified };
+      return { ...state, settings: { ...state.settings, ...action.settings }, lastModified: action.lastModified };
     default:
       return state;
   }
