@@ -1,4 +1,5 @@
 import * as index from './index';
+import { range } from '../utils';
 
 // pure NodeJS cannot import electron modules.
 jest.mock('electron', () => ({
@@ -6,10 +7,6 @@ jest.mock('electron', () => ({
     dialog: jest.fn(),
   },
 }));
-
-function range(begin: number, end: number): number[] {
-  return Array.from({ length: end }, (v, k) => begin + k);
-}
 
 function timeout(ms: number) {
   return new Promise((resolve, reject) => setTimeout(resolve, ms));

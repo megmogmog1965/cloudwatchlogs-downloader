@@ -3,6 +3,20 @@ import * as index from './index';
 describe('utils/index', () => {
   it('random: Referential transparency', () => {
     // invalid range.
+    expect(() => index.range(0, 0)).toThrow();
+    expect(() => index.range(1, 1)).toThrow();
+    expect(() => index.range(1, 0)).toThrow();
+
+    // testing a list of seeds.
+    expect(index.range(0, 1)).toEqual([ 0 ]);
+    expect(index.range(0, 10)).toEqual([ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]);
+    expect(index.range(2, 5)).toEqual([ 2, 3, 4 ]);
+    expect(index.range(-5, -1)).toEqual([ -5, -4, -3, -2 ]);
+    expect(index.range(-2, 3)).toEqual([ -2, -1, 0, 1, 2 ]);
+  });
+
+  it('random: Referential transparency', () => {
+    // invalid range.
     expect(() => index.random(0, 0, 0)).toThrow();
 
     // testing a list of seeds.

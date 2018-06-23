@@ -2,6 +2,14 @@ import * as crypto from 'crypto';
 
 const algorithm = 'aes-256-ctr';
 
+export function range(begin: number, end: number): number[] {
+  if (begin >= end) {
+    throw new Error('begin >= end');
+  }
+
+  return Array.from({ length: end - begin }, (v, k) => begin + k);
+}
+
 export function random(seed: number, min: number = 0, max: number = 1) {
   if (min >= max) {
     throw new Error('min >= max');
