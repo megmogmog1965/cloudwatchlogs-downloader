@@ -11,7 +11,7 @@ const FiltersImpl: React.SFC<Props> = ({ handleSubmit }) => {
     <form className="Filters" onSubmit={handleSubmit}>
       <FieldArray name="filters" component={FilterList} />
 
-      <div className="form-actions">
+      <div className="form-group form-actions float-right-container">
         <button type="submit" className="btn btn-form btn-primary">Save</button>
       </div>
     </form>

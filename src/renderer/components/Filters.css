@@ -3,11 +3,17 @@
   padding: 1em;
 }
 
-.Filters .btn-primary {
-  float: right;
-}
-
 .Filters .list-group .form-group {
   white-space: normal;
   margin-bottom: 10px;
+}
+
+.float-right-container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.float-right-container > * {
+  float: right;
 }
