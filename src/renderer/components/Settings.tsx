@@ -49,9 +49,6 @@ let raw: React.SFC<Props> = ({ handleSubmit }) => {
           <option value={LineBreak.NO_MODIFICATION}>None (No modification. Just download logs.)</option>
         </Field>
       </div>
-      <div className="form-group">
-        <Field name="jsonKey" component="input" type="hidden" className="form-control" />
-      </div>
       <div className="form-actions">
         <button type="submit" className="btn btn-form btn-primary">Save</button>
       </div>

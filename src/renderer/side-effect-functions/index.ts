@@ -33,7 +33,7 @@ export function save(settings: Settings): void {
     awsAccessKeyId: utils.encrypt(settings.awsAccessKeyId, applicationPassphrase()),
     awsSecretAccessKey: utils.encrypt(settings.awsSecretAccessKey, applicationPassphrase()),
     lineBreak: settings.lineBreak,
-    jsonKey: settings.jsonKey,
+    filters: settings.filters,
   };
 
   storage.set('aws', crypted, (err: object) => console.log(err));
@@ -46,7 +46,7 @@ export function load(): Promise<Settings> {
       awsAccessKeyId: utils.decrypt(settings.awsAccessKeyId, applicationPassphrase()),
       awsSecretAccessKey: utils.decrypt(settings.awsSecretAccessKey, applicationPassphrase()),
       lineBreak: settings.lineBreak,
-      jsonKey: settings.jsonKey,
+      filters: settings.filters,
     };
   };
 
@@ -61,7 +61,7 @@ export function load(): Promise<Settings> {
           awsAccessKeyId: (typeof data.awsAccessKeyId === 'string') ? data.awsAccessKeyId : '',
           awsSecretAccessKey: (typeof data.awsSecretAccessKey === 'string') ? data.awsSecretAccessKey : '',
           lineBreak: (typeof data.lineBreak === 'string') ? data.lineBreak : constants.LineBreak.LF,
-          jsonKey: (typeof data.jsonKey === 'string') ? data.jsonKey : '',
+          filters: (Array.isArray(data.filters)) ? data.filters : [],
         };
         resolve(decrypted(settings));
       }

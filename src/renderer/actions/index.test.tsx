@@ -62,7 +62,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogGroups = (
@@ -100,7 +100,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogGroups = (
@@ -182,7 +182,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogStreams = (
@@ -220,7 +220,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogStreams = (
@@ -303,7 +303,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'NO_MODIFICATION',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogsEvents = (
@@ -351,7 +351,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogsEvents = (
@@ -399,7 +399,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogsEvents = (
@@ -447,7 +447,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogsEvents = (
@@ -515,7 +515,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let fileChooser = () => undefined; // stream.Writable | undefined
@@ -545,7 +545,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'NO_MODIFICATION',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -624,7 +624,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -703,7 +703,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -782,7 +782,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
-      jsonKey: 'log',
+      filters: [ { type: 'EXTRACT_JSON', key: 'log' } ],
     };
 
     let mockWrite = jest.fn();
@@ -791,7 +791,7 @@ describe('actions/index', () => {
 
     let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
 
-    let transformer = (line: string) => extractJson(line, settings.jsonKey);
+    let transformer = (line: string) => extractJson(line, 'log');
 
     let getCloudWatchLogsEvents = (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
@@ -863,7 +863,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -928,7 +928,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockSave = jest.fn();
@@ -953,7 +953,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let load = () => {
@@ -989,7 +989,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     expect(index.receiveSettings(

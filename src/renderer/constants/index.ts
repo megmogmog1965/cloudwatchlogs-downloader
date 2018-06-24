@@ -62,6 +62,14 @@ export namespace ActionTypes {
   export type RECEIVE_SETTINGS = typeof RECEIVE_SETTINGS;
 }
 
+export namespace TransformTypes {
+  export const REPLACE_REGEX = 'REPLACE_REGEX';
+  export type REPLACE_REGEX = typeof REPLACE_REGEX;
+
+  export const EXTRACT_JSON = 'EXTRACT_JSON';
+  export type EXTRACT_JSON = typeof EXTRACT_JSON;
+}
+
 export namespace Region {
   export const US_EAST_1 = 'us-east-1';
   export const US_EAST_2 = 'us-east-2';

@@ -747,12 +747,12 @@ describe('reducers/index', () => {
       undefined as any,
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
     );
@@ -760,17 +760,17 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - region.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -778,17 +778,17 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - awsAccessKeyId.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -796,17 +796,17 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - awsSecretAccessKey.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -814,35 +814,35 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - lineBreak.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     );
 
-    // SAVE_SETTINGS - jsonKey.
+    // SAVE_SETTINGS - filters.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     );
@@ -850,17 +850,17 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - merged partial settings.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { jsonKey: 'key' } as any,
+        settings: { filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] } as any,
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     );
@@ -868,17 +868,17 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - region.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -886,17 +886,17 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - awsAccessKeyId.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -904,17 +904,17 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - awsSecretAccessKey.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -922,35 +922,35 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - lineBreak.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     );
 
-    // RECEIVE_SETTINGS - jsonKey.
+    // RECEIVE_SETTINGS - filters.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     );
@@ -958,17 +958,17 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - merged partial settings.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { jsonKey: 'key' } as any,
+        settings: { filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] } as any,
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     );

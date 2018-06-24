@@ -1,3 +1,4 @@
+import { TransformTypes } from '../constants';
 
 type Timestamp = number;
 
@@ -6,7 +7,7 @@ export interface Settings {
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
   lineBreak: string;
-  jsonKey: string;
+  filters: Transform[];
 }
 
 export interface DownloadJob {
@@ -32,3 +33,16 @@ export interface LogStream {
   lastEventTimestamp: Timestamp;
   storedBytes: number;
 }
+
+export interface TransformReplaceRegex {
+  type: TransformTypes.REPLACE_REGEX;
+  pattern: string;
+  replacement: string;
+}
+
+export interface TransformExtractJson {
+  type: TransformTypes.EXTRACT_JSON;
+  key: string;
+}
+
+export type Transform = TransformReplaceRegex | TransformExtractJson;

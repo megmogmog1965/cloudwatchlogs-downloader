@@ -4,7 +4,7 @@ import { combineReducers, Reducer } from 'redux';
 import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
 import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, AsyncCallState, initialState } from '../types';
 import { ActionTypes } from '../constants';
-import { DownloadJob } from '../common-interfaces';
+import { DownloadJob, Transform } from '../common-interfaces';
 import { reducer as formReducer } from 'redux-form';
 
 export function window(state: WindowState, action: WindowAction): WindowState {
@@ -120,11 +120,14 @@ export function settings(state: SettingsState, action: SettingsAction): Settings
     return { ...initialState.settings };
   }
 
+  // remove invalid filters caused by redux-form.
+  let validFilters = (filters: Transform[]) => filters.filter(f => f.type);
+
   switch (action.type) {
     case ActionTypes.SAVE_SETTINGS:
-      return { ...state, settings: { ...state.settings, ...action.settings }, lastModified: action.lastModified };
+      return { ...state, settings: { ...state.settings, ...action.settings, filters: validFilters(action.settings.filters) }, lastModified: action.lastModified };
     case ActionTypes.RECEIVE_SETTINGS:
-      return { ...state, settings: { ...state.settings, ...action.settings }, lastModified: action.lastModified };
+      return { ...state, settings: { ...state.settings, ...action.settings, filters: validFilters(action.settings.filters) }, lastModified: action.lastModified };
     default:
       return state;
   }
