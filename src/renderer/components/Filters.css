@@ -5,3 +5,8 @@
 .Filters .btn-primary {
   float: right;
 }
+
+.Filters .list-group .form-group {
+  white-space: normal;
+  margin-bottom: 10px;
+}
