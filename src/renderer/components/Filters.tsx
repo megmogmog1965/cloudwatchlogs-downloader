@@ -11,7 +11,7 @@ const FiltersImpl: React.SFC<Props> = ({ handleSubmit }) => {
     <form className="Filters" onSubmit={handleSubmit}>
       <FieldArray name="filters" component={FilterList} />
 
-      <div className="form-actions">
+      <div className="form-group form-actions float-right-container">
         <button type="submit" className="btn btn-form btn-primary">Save</button>
       </div>
     </form>
@@ -58,7 +58,7 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
           <li key={index} className="list-group-item">
             <div className="media-body">
               <div className="form-group">
-                <h4 className="pull-left">#{index}</h4>
+                <h4 className="pull-left">#{index + 1}</h4>
                 <div className="pull-right btn-group">
                   <button className="btn btn-mini btn-default" type="button" onClick={() => fields.swap(index, index - 1)}>
                     <span className="icon icon-up-open" />
@@ -88,7 +88,7 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
 
                 <div className="form-group">
                   <label>Replacement.</label>
-                  <Field name={`${member}.replacement`} component="input" type="text" className="form-control" placeholder="Enter replacement string. $1, $2... represent captured groups." />
+                  <Field name={`${member}.replacement`} component="input" type="text" className="form-control" placeholder="Enter replacement string. '$1', '$2'... represent captured groups." />
                 </div>
               </div>
 

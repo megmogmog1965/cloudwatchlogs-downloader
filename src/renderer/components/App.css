@@ -11,8 +11,10 @@
   position: relative;
 }
 
-.float-left-container {
+.float-left-container:after {
+  content: "";
   display: block;
+  clear: both;
 }
 
 .float-left-container > * {
