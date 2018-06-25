@@ -95,7 +95,7 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
               <div id={`${member}.TransformExtractJson`}>
                 <div className="form-group">
                   <label>A root key of the json object.</label>
-                  <Field name={`${member}.key`} component="input" type="text" className="form-control" placeholder={'e.g., Enter key \'log\' for the json formatted log \'{ "log": "..."}\' .'} />
+                  <Field name={`${member}.key`} component="input" type="text" className="form-control" placeholder={'e.g., Enter key \'log\' for the json formatted log \'{ "log": "..." }\'.'} />
                 </div>
               </div>
             </div>
