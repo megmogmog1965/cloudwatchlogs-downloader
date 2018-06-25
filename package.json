@@ -5,6 +5,7 @@
   "description": "Cross-platform App to download logs from CloudWatch Logs.",
   "scripts": {
     "start": "npm run build:development && electron ./dist/",
+    "build": "npm run build:production",
     "build:development": "npx webpack --config webpack.development.js && gulp copy",
     "build:production": "npx webpack --config webpack.production.js && gulp copy",
     "test": "jest",
@@ -42,17 +43,14 @@
     ]
   },
   "devDependencies": {
-    "@types/electron": "^1.6.10",
     "@types/electron-json-storage": "^4.0.0",
     "@types/enzyme": "^3.1.9",
     "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/jest": "^22.2.3",
-    "@types/moment": "^2.13.0",
     "@types/node": "^9.6.5",
     "@types/react": "^16.3.10",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.15",
-    "@types/redux": "^3.6.0",
     "@types/redux-form": "^7.2.2",
     "@types/sanitize-filename": "^1.1.28",
     "@types/uuid": "^3.4.3",
