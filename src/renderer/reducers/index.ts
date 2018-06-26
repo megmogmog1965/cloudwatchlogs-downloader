@@ -4,7 +4,7 @@ import { combineReducers, Reducer } from 'redux';
 import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
 import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, AsyncCallState, initialState } from '../types';
 import { ActionTypes } from '../constants';
-import { DownloadJob, Transform } from '../common-interfaces';
+import { DownloadJob, Filter } from '../common-interfaces';
 import { reducer as formReducer } from 'redux-form';
 
 export function window(state: WindowState, action: WindowAction): WindowState {
@@ -121,7 +121,7 @@ export function settings(state: SettingsState, action: SettingsAction): Settings
   }
 
   // remove invalid filters caused by redux-form.
-  let validFilters = (filters: Transform[]) => filters.filter(f => f.type);
+  let validFilters = (filters: Filter[]) => filters.filter(f => f.type);
 
   switch (action.type) {
     case ActionTypes.SAVE_SETTINGS:

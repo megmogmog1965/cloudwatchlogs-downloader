@@ -24,15 +24,15 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
    */
   let onChange = (targetName: string) => () => {
     let value = (document.getElementById(targetName + '.type') as any).value;
-    document.getElementById(targetName + '.TransformReplaceRegex')!.style.display = 'none';
-    document.getElementById(targetName + '.TransformExtractJson')!.style.display = 'none';
+    document.getElementById(targetName + '.MapperReplaceRegex')!.style.display = 'none';
+    document.getElementById(targetName + '.MapperExtractJson')!.style.display = 'none';
 
     switch (value) {
       case 'REPLACE_REGEX':
-        document.getElementById(targetName + '.TransformReplaceRegex')!.style.display = 'block';
+        document.getElementById(targetName + '.MapperReplaceRegex')!.style.display = 'block';
         break;
       case 'EXTRACT_JSON':
-        document.getElementById(targetName + '.TransformExtractJson')!.style.display = 'block';
+        document.getElementById(targetName + '.MapperExtractJson')!.style.display = 'block';
         break;
       default:
         break;
@@ -80,7 +80,7 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
                 </Field>
               </div>
 
-              <div id={`${member}.TransformReplaceRegex`}>
+              <div id={`${member}.MapperReplaceRegex`}>
                 <div className="form-group">
                   <label>Regular expression pattern.</label>
                   <Field name={`${member}.pattern`} component="input" type="text" className="form-control" placeholder="Enter regular expression. (NOT partial match)" />
@@ -92,7 +92,7 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
                 </div>
               </div>
 
-              <div id={`${member}.TransformExtractJson`}>
+              <div id={`${member}.MapperExtractJson`}>
                 <div className="form-group">
                   <label>A root key of the json object.</label>
                   <Field name={`${member}.key`} component="input" type="text" className="form-control" placeholder={'e.g., Enter key \'log\' for the json formatted log \'{ "log": "..." }\'.'} />

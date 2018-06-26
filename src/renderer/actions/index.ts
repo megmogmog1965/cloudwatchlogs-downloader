@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
 import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
-import { safeTransformer } from '../utils';
+import { safeMapper } from '../utils';
 import voca from 'voca';
 
 //////////// Action object interfaces ////////////
@@ -358,7 +358,7 @@ export function downloadLogs(
     callbackError: (err: AWS.AWSError) => void,
     callbackEnd: () => void,
   ) => void,
-  transformer = (line: string) => line,
+  mapper = (line: string) => line,
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
@@ -382,7 +382,7 @@ export function downloadLogs(
       let messages = data.events
         .filter(e => e.message != null)
         .map(e => e.message!)
-        .map(safeTransformer(transformer))
+        .map(safeMapper(mapper))
         .map(trimmer(settings))
         .join(sep);
 

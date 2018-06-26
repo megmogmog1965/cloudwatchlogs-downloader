@@ -62,7 +62,7 @@ export namespace ActionTypes {
   export type RECEIVE_SETTINGS = typeof RECEIVE_SETTINGS;
 }
 
-export namespace TransformTypes {
+export namespace FilterTypes {
   export const REPLACE_REGEX = 'REPLACE_REGEX';
   export type REPLACE_REGEX = typeof REPLACE_REGEX;
 

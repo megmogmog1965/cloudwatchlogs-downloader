@@ -107,15 +107,15 @@ describe('utils/index', () => {
     expect(index.progressAt(new Date (30), new Date(10), new Date(20))).toBeCloseTo(1);
   });
 
-  it('safeTransformer: successful case', () => {
+  it('safeMapper: successful case', () => {
     // number => nubmer.
-    expect(index.safeTransformer((t: number) => t * 2)(3)).toBe(6);
+    expect(index.safeMapper((t: number) => t * 2)(3)).toBe(6);
     // string => string.
-    expect(index.safeTransformer((t: string) => 'hello ' + t)('world')).toBe('hello world');
+    expect(index.safeMapper((t: string) => 'hello ' + t)('world')).toBe('hello world');
   });
 
-  it('safeTransformer: error case', () => {
-    expect(index.safeTransformer((t: number) => {
+  it('safeMapper: error case', () => {
+    expect(index.safeMapper((t: number) => {
       throw new Error('its a test.');
     })(3)).toBe(3);
   });
