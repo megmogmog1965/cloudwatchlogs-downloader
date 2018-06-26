@@ -83,7 +83,7 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
               <div id={`${member}.MapperReplaceRegex`}>
                 <div className="form-group">
                   <label>Regular expression pattern.</label>
-                  <Field name={`${member}.pattern`} component="input" type="text" className="form-control" placeholder="Enter regular expression. (NOT partial match)" />
+                  <Field name={`${member}.pattern`} component="input" type="text" className="form-control" placeholder="Enter regular expression pattern." />
                 </div>
 
                 <div className="form-group">
