@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './Filters.css';
 import { Field, FieldArray, reduxForm } from 'redux-form';
+import { FilterTypes } from '../constants';
 
 export interface Props {
   handleSubmit: (value: object) => void;
@@ -24,14 +25,18 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
    */
   let onChange = (targetName: string) => () => {
     let value = (document.getElementById(targetName + '.type') as any).value;
+    document.getElementById(targetName + '.FilterReplaceRegex')!.style.display = 'none';
     document.getElementById(targetName + '.MapperReplaceRegex')!.style.display = 'none';
     document.getElementById(targetName + '.MapperExtractJson')!.style.display = 'none';
 
     switch (value) {
-      case 'REPLACE_REGEX':
+      case FilterTypes.FILTER_REGEX:
+        document.getElementById(targetName + '.FilterReplaceRegex')!.style.display = 'block';
+        break;
+      case FilterTypes.REPLACE_REGEX:
         document.getElementById(targetName + '.MapperReplaceRegex')!.style.display = 'block';
         break;
-      case 'EXTRACT_JSON':
+      case FilterTypes.EXTRACT_JSON:
         document.getElementById(targetName + '.MapperExtractJson')!.style.display = 'block';
         break;
       default:
@@ -75,9 +80,17 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
               <div className="form-group">
                 <Field id={`${member}.type`} name={`${member}.type`} component="select" className="form-control filter-type" onChange={onChange(`${member}`)}>
                   <option value="">None</option>
-                  <option value="REPLACE_REGEX">Replace with regular expression</option>
-                  <option value="EXTRACT_JSON">Extract a json value for the key</option>
+                  <option value={FilterTypes.FILTER_REGEX}>Filter with regular expression</option>
+                  <option value={FilterTypes.REPLACE_REGEX}>Replace with regular expression</option>
+                  <option value={FilterTypes.EXTRACT_JSON}>Extract a json value for the key</option>
                 </Field>
+              </div>
+
+              <div id={`${member}.FilterReplaceRegex`}>
+                <div className="form-group">
+                  <label>Regular expression pattern.</label>
+                  <Field name={`${member}.pattern`} component="input" type="text" className="form-control" placeholder="Enter regular expression pattern." />
+                </div>
               </div>
 
               <div id={`${member}.MapperReplaceRegex`}>

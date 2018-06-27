@@ -63,6 +63,9 @@ export namespace ActionTypes {
 }
 
 export namespace FilterTypes {
+  export const FILTER_REGEX = 'FILTER_REGEX';
+  export type FILTER_REGEX = typeof FILTER_REGEX;
+
   export const REPLACE_REGEX = 'REPLACE_REGEX';
   export type REPLACE_REGEX = typeof REPLACE_REGEX;
 

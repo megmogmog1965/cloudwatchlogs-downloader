@@ -24,8 +24,8 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
   return {
     SetDateRange: (startDate: Date, endDate: Date) => dispatch(actions.setDateRange(startDate, endDate)),
     DownloadLogs: (settings: Settings, logGroupName: string, logStreamName: string, startDate: Date, endDate: Date) => {
-      // how to transform logs ?
-      let mapper = createMapper(settings.filters);
+      // how to filter logs ?
+      let filter = createFilter(settings.filters);
 
       // create a job.
       let job: DownloadJob = {
@@ -45,29 +45,35 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
           callbackError: (err: AWS.AWSError) => void,
           callbackEnd: () => void,
         ) => getCloudWatchLogsEvents(connectCloudWatchLogs(settings), logGroupName, logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd), // currying.
-        mapper,
+        filter,
       ));
     },
   };
 }
 
-function createMapper(filters: Filter[])
-  : (line: string) => string {
+function createFilter(filters: Filter[])
+  : (line: string) => string | undefined {
 
-  let mappers = filters.map(f => {
-      switch (f.type) {
-        case FilterTypes.REPLACE_REGEX:
-          let regex = new RegExp(f.pattern, 'm');
-          return (line: string) => line.replace(regex, f.replacement);
-        case FilterTypes.EXTRACT_JSON:
-          return (line: string) => extractJson(line, f.key);
-        default:
-          throw new Error('error detected, invalid filter type.');
-      }
-    });
+  // create filter functions from filter types.
+  let funcs = filters.map(f => {
+    switch (f.type) {
+      case FilterTypes.FILTER_REGEX:
+        return (line: string) => new RegExp(f.pattern, 'm').test(line) ? line : undefined;
+      case FilterTypes.REPLACE_REGEX:
+        return (line: string) => line.replace(new RegExp(f.pattern, 'm'), f.replacement);
+      case FilterTypes.EXTRACT_JSON:
+        return (line: string) => extractJson(line, f.key);
+      default:
+        throw new Error('error detected, invalid filter type.');
+    }
+  });
 
-  return mappers.reduce(
-    (pre, cur) => (line: string) => cur(pre(line)),
+  // merge all filter functions to be called orderly.
+  return funcs.reduce(
+    (pre, cur) => (line: string) => {
+      let evaluated = pre(line);
+      return evaluated !== undefined ? cur(evaluated) : undefined;
+    },
     (line: string) => line,
   );
 }

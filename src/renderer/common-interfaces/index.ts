@@ -34,6 +34,11 @@ export interface LogStream {
   storedBytes: number;
 }
 
+export interface FilterReplaceRegex {
+  type: FilterTypes.FILTER_REGEX;
+  pattern: string;
+}
+
 export interface MapperReplaceRegex {
   type: FilterTypes.REPLACE_REGEX;
   pattern: string;
@@ -45,4 +50,4 @@ export interface MapperExtractJson {
   key: string;
 }
 
-export type Filter = MapperReplaceRegex | MapperExtractJson;
+export type Filter = FilterReplaceRegex | MapperReplaceRegex | MapperExtractJson;

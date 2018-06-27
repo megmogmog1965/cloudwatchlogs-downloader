@@ -73,7 +73,7 @@ export function progressAt(t: Date, startTime: Date, endTime: Date): number {
  * @param inner a transformer function.
  * @return a funtion returns a calculated value or the argument itself without throwing error.
  */
-export function safeMapper<T>(inner: (t: T) => T)
+export function safeFilter<T>(inner: (t: T) => T)
 : (t: T) => T {
   return (t: T) => {
     try {
