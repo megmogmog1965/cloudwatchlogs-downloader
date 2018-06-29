@@ -1,6 +1,6 @@
 {
   "name": "cloudwatchlogs-downloader",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": true,
   "description": "Cross-platform App to download logs from CloudWatch Logs.",
   "scripts": {
