@@ -112,11 +112,15 @@ function createWindowContent(windowContent: enums.WindowContent, props: Props) {
       );
     case enums.WindowContent.Filters:
       return (
-        <Filters />
+        <div className="pane">
+          <Filters />
+        </div>
       );
     case enums.WindowContent.Settings:
       return (
-        <Settings />
+        <div className="pane">
+          <Settings />
+        </div>
       );
     default:
       throw new Error('Undefined WindowContent: ' + windowContent);

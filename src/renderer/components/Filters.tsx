@@ -65,10 +65,10 @@ const FilterList: React.SFC<any> = ({ fields, meta: { error, submitFailed } }) =
               <div className="form-group">
                 <h4 className="pull-left">#{index + 1}</h4>
                 <div className="pull-right btn-group">
-                  <button className="btn btn-mini btn-default" type="button" onClick={() => fields.swap(index, index - 1)}>
+                  <button className="btn btn-mini btn-default" type="button" onClick={() => fields.swap(index, index - 1)} disabled={index <= 0}>
                     <span className="icon icon-up-open" />
                   </button>
-                  <button className="btn btn-mini btn-default" type="button" onClick={() => fields.swap(index, index + 1)}>
+                  <button className="btn btn-mini btn-default" type="button" onClick={() => fields.swap(index, index + 1)} disabled={index >= fields.length - 1}>
                     <span className="icon icon-down-open" />
                   </button>
                   <button className="btn btn-mini btn-default" type="button" onClick={() => fields.remove(index)}>
