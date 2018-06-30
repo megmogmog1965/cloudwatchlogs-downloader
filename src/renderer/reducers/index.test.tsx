@@ -4,7 +4,7 @@ import { ActionTypes } from '../constants';
 import * as types from '../types';
 
 describe('reducers/index', () => {
-  it('window', () => {
+  it('window - SHOW_WINDOW_CONTENT', () => {
     // initial state.
     expect(index.window(
       undefined as any,
@@ -39,7 +39,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logGroups', () => {
+  it('logGroups - initial state', () => {
     // initial state.
     expect(index.logGroups(
       undefined as any,
@@ -54,7 +54,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - REQUEST_LOG_GROUPS', () => {
     // REQUEST_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -74,7 +76,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - ERROR_LOG_GROUPS', () => {
     // ERROR_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -95,7 +99,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - RECEIVE_LOG_GROUPS', () => {
     // RECEIVE_LOG_GROUPS - empty.
     expect(index.logGroups(
       {
@@ -139,8 +145,10 @@ describe('reducers/index', () => {
         lastModified: new Date(100),
       },
     );
+  });
 
-    // ERROR_LOG_GROUPS.
+  it('logGroups - SELECT_LOG_GROUP', () => {
+    // SELECT_LOG_GROUP.
     expect(index.logGroups(
       {
         logGroups: [],
@@ -162,7 +170,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logStreams', () => {
+  it('logStreams - initial state', () => {
     // initial state.
     expect(index.logStreams(
       undefined as any,
@@ -177,7 +185,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - REQUEST_LOG_STREAMS', () => {
     // REQUEST_LOG_STREAMS.
     expect(index.logStreams(
       {
@@ -197,7 +207,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - ERROR_LOG_STREAMS', () => {
     // ERROR_LOG_STREAMS.
     expect(index.logStreams(
       {
@@ -218,7 +230,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - RECEIVE_LOG_STREAMS', () => {
     // RECEIVE_LOG_STREAMS - empty.
     expect(index.logStreams(
       {
@@ -262,7 +276,9 @@ describe('reducers/index', () => {
         lastModified: new Date(100),
       },
     );
+  });
 
+  it('logStreams - SELECT_LOG_STREAM', () => {
     // SELECT_LOG_STREAM.
     expect(index.logStreams(
       {
@@ -283,7 +299,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - SELECT_LOG_GROUP', () => {
     // SELECT_LOG_GROUP (log group action affects log stream state).
     expect(index.logStreams(
       {
@@ -306,7 +324,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logGroups', () => {
+  it('logGroups - initial state', () => {
     // initial state.
     expect(index.logGroups(
       undefined as any,
@@ -321,7 +339,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - REQUEST_LOG_GROUPS', () => {
     // REQUEST_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -341,7 +361,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - ERROR_LOG_GROUPS', () => {
     // ERROR_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -362,7 +384,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - RECEIVE_LOG_GROUPS', () => {
     // RECEIVE_LOG_GROUPS - empty.
     expect(index.logGroups(
       {
@@ -406,7 +430,9 @@ describe('reducers/index', () => {
         lastModified: new Date(100),
       },
     );
+  });
 
+  it('logGroups - SELECT_LOG_GROUP', () => {
     // ERROR_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -429,7 +455,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logText', () => {
+  it('logText - initial state', () => {
     // initial state.
     expect(index.logText(
       undefined as any,
@@ -442,7 +468,9 @@ describe('reducers/index', () => {
         text: '',
       },
     );
+  });
 
+  it('logText - REQUEST_LOG_TEXT', () => {
     // REQUEST_LOG_TEXT.
     expect(index.logText(
       {
@@ -456,7 +484,9 @@ describe('reducers/index', () => {
         text: 'old',
       },
     );
+  });
 
+  it('logText - RECEIVE_LOG_TEXT', () => {
     // RECEIVE_LOG_TEXT - empty.
     expect(index.logText(
       {
@@ -501,7 +531,9 @@ describe('reducers/index', () => {
         text: 'new',
       },
     );
+  });
 
+  it('logText - ERROR_LOG_TEXT', () => {
     // ERROR_LOG_TEXT.
     expect(index.logText(
       {
@@ -516,7 +548,9 @@ describe('reducers/index', () => {
         text: '', // clear.
       },
     );
+  });
 
+  it('logText - SELECT_LOG_GROUP', () => {
     // SELECT_LOG_GROUP (log group action affects log text state).
     expect(index.logText(
       {
@@ -533,7 +567,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logEvents', () => {
+  it('logEvents - initial state', () => {
     // initial state.
     expect(index.logEvents(
       undefined as any,
@@ -548,7 +582,9 @@ describe('reducers/index', () => {
         errorJobs: [],
       },
     );
+  });
 
+  it('logEvents - REQUEST_LOG_EVENTS', () => {
     // REQUEST_LOG_STREAMS.
     expect(index.logEvents(
       {
@@ -567,7 +603,9 @@ describe('reducers/index', () => {
         errorJobs: [],
       },
     );
+  });
 
+  it('logEvents - PROGRESS_LOG_EVENTS', () => {
     // PROGRESS_LOG_EVENTS.
     expect(index.logEvents(
       {
@@ -586,7 +624,9 @@ describe('reducers/index', () => {
         errorJobs: [],
       },
     );
+  });
 
+  it('logEvents - ERROR_LOG_EVENTS', () => {
     // ERROR_LOG_STREAMS - empty.
     expect(index.logEvents(
       {
@@ -646,7 +686,9 @@ describe('reducers/index', () => {
         errorJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
       },
     );
+  });
 
+  it('logEvents - RECEIVE_LOG_EVENTS', () => {
     // RECEIVE_LOG_STREAMS - empty.
     expect(index.logEvents(
       {
@@ -708,7 +750,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('dateRange', () => {
+  it('dateRange - SET_DATERANGE', () => {
     // initial state.
     // @fixme NO REFERENCIAL TRANSPARENCY.
     expect(index.dateRange(
@@ -741,7 +783,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('settings', () => {
+  it('settings - SAVE_SETTINGS', () => {
     // initial state.
     expect(index.settings(
       undefined as any,
@@ -864,7 +906,9 @@ describe('reducers/index', () => {
         lastModified: new Date(100),
       },
     );
+  });
 
+  it('settings - RECEIVE_SETTINGS', () => {
     // RECEIVE_SETTINGS - region.
     expect(index.settings(
       {
@@ -974,7 +1018,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('asyncCalls', () => {
+  it('asyncCalls - initial state', () => {
     // initial state.
     expect(index.asyncCalls(
       undefined as any,
@@ -986,7 +1030,9 @@ describe('reducers/index', () => {
         active: 0,
       },
     );
+  });
 
+  it('asyncCalls - negative value is forbidden', () => {
     // negative value is forbidden.
     expect(index.asyncCalls(
       {
@@ -1002,7 +1048,9 @@ describe('reducers/index', () => {
         active: 0,
       },
     );
+  });
 
+  it('asyncCalls - REQUEST_LOG_GROUPS', () => {
     // REQUEST_LOG_GROUPS.
     expect(index.asyncCalls(
       {
@@ -1016,7 +1064,9 @@ describe('reducers/index', () => {
         active: 1,
       },
     );
+  });
 
+  it('asyncCalls - RECEIVE_LOG_GROUPS', () => {
     // RECEIVE_LOG_GROUPS.
     expect(index.asyncCalls(
       {
@@ -1032,7 +1082,9 @@ describe('reducers/index', () => {
         active: 0,
       },
     );
+  });
 
+  it('asyncCalls - ERROR_LOG_GROUPS', () => {
     // ERROR_LOG_GROUPS.
     expect(index.asyncCalls(
       {
@@ -1047,7 +1099,9 @@ describe('reducers/index', () => {
         active: 1,
       },
     );
+  });
 
+  it('asyncCalls - REQUEST_LOG_STREAMS', () => {
     // REQUEST_LOG_STREAMS.
     expect(index.asyncCalls(
       {
@@ -1061,7 +1115,9 @@ describe('reducers/index', () => {
         active: 2,
       },
     );
+  });
 
+  it('asyncCalls - RECEIVE_LOG_STREAMS', () => {
     // RECEIVE_LOG_STREAMS.
     expect(index.asyncCalls(
       {
@@ -1077,7 +1133,9 @@ describe('reducers/index', () => {
         active: 1,
       },
     );
+  });
 
+  it('asyncCalls - ERROR_LOG_STREAMS', () => {
     // ERROR_LOG_STREAMS.
     expect(index.asyncCalls(
       {
@@ -1092,7 +1150,9 @@ describe('reducers/index', () => {
         active: 1,
       },
     );
+  });
 
+  it('asyncCalls - REQUEST_LOG_TEXT', () => {
     // REQUEST_LOG_TEXT.
     expect(index.asyncCalls(
       {
@@ -1106,7 +1166,9 @@ describe('reducers/index', () => {
         active: 2,
       },
     );
+  });
 
+  it('asyncCalls - RECEIVE_LOG_TEXT', () => {
     // RECEIVE_LOG_TEXT.
     expect(index.asyncCalls(
       {
@@ -1121,7 +1183,9 @@ describe('reducers/index', () => {
         active: 1,
       },
     );
+  });
 
+  it('asyncCalls - ERROR_LOG_TEXT', () => {
     // ERROR_LOG_TEXT.
     expect(index.asyncCalls(
       {
@@ -1136,7 +1200,9 @@ describe('reducers/index', () => {
         active: 1,
       },
     );
+  });
 
+  it('message - SHOW_MESSAGE', () => {
     // SHOW_MESSAGE.
     expect(index.message(
       {
@@ -1170,7 +1236,9 @@ describe('reducers/index', () => {
         visible: true,
       },
     );
+  });
 
+  it('message - HIDE_MESSAGE', () => {
     // HIDE_MESSAGE.
     expect(index.message(
       {
