@@ -20,6 +20,7 @@ describe('components/App', () => {
   it('renders "LogDownload" pane.', () => {
     let props = {
       LoadingOverlay: () => <MockComponent name="LoadingOverlay" />,
+      ModalPopup: () => <MockComponent name="ModalPopup" />,
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
@@ -49,6 +50,7 @@ describe('components/App', () => {
   it('renders "LogDownload" pane.', () => {
     let props = {
       LoadingOverlay: () => <MockComponent name="LoadingOverlay" />,
+      ModalPopup: () => <MockComponent name="ModalPopup" />,
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
@@ -78,6 +80,7 @@ describe('components/App', () => {
   it('renders NO "errors" text without errorJobs', () => {
     let props = {
       LoadingOverlay: () => <MockComponent name="LoadingOverlay" />,
+      ModalPopup: () => <MockComponent name="ModalPopup" />,
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
@@ -104,6 +107,7 @@ describe('components/App', () => {
   it('renders "errors" text with errorJobs', () => {
     let props = {
       LoadingOverlay: () => <MockComponent name="LoadingOverlay" />,
+      ModalPopup: () => <MockComponent name="ModalPopup" />,
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,
@@ -130,6 +134,7 @@ describe('components/App', () => {
   it('renders "DOWNLOADING" text with runningJobs', () => {
     let props = {
       LoadingOverlay: () => <MockComponent name="LoadingOverlay" />,
+      ModalPopup: () => <MockComponent name="ModalPopup" />,
       LogGroups: () => <MockComponent name="LogGroups" />,
       LogStreams: () => <MockComponent name="LogStreams" />,
       LogContent: () => <MockComponent name="LogContent" />,

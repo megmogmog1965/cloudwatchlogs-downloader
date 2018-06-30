@@ -60,6 +60,12 @@ export namespace ActionTypes {
 
   export const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
   export type RECEIVE_SETTINGS = typeof RECEIVE_SETTINGS;
+
+  export const SHOW_MESSAGE = 'SHOW_MESSAGE';
+  export type SHOW_MESSAGE = typeof SHOW_MESSAGE;
+
+  export const HIDE_MESSAGE = 'HIDE_MESSAGE';
+  export type HIDE_MESSAGE = typeof HIDE_MESSAGE;
 }
 
 export namespace FilterTypes {

@@ -1002,4 +1002,26 @@ describe('actions/index', () => {
         lastModified: new Date(100),
       });
   });
+
+  it('showMessage', () => {
+    expect(index.showMessage(''))
+      .toEqual({
+        type: ActionTypes.SHOW_MESSAGE,
+        message: '',
+      });
+
+    expect(index.showMessage('message'))
+      .toEqual({
+        type: ActionTypes.SHOW_MESSAGE,
+        message: 'message',
+      });
+  });
+
+  it('hideMessage', () => {
+    expect(index.hideMessage())
+      .toEqual({
+        type: ActionTypes.HIDE_MESSAGE,
+      });
+  });
+
 });

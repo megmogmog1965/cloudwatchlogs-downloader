@@ -1,0 +1,82 @@
+div.ModalPopup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+}
+
+div.ModalPopup.visible {
+  display: block;
+  opacity: 0;
+  animation: fadeIn .5s ease .0s 1 forwards;
+}
+
+div.ModalPopup.invisible {
+  display: none;
+}
+
+div.ModalPopup .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: gray;
+  opacity: 0.7;
+}
+
+div.middle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+div.popup {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+}
+
+div.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+div.popup .close {
+  position: absolute;
+  top: 15px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 35px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+div.popup .close:hover {
+  color: #06D85F;
+}
+
+div.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+  100% {
+    opacity: 1.0
+  }
+}

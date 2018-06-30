@@ -13,6 +13,7 @@ export interface StoreState {
   dateRange: DateRangeState;
   settings: SettingsState;
   asyncCalls: AsyncCallState;
+  message: MessageState;
 }
 
 export interface WindowState {
@@ -57,6 +58,11 @@ export interface AsyncCallState {
   active: number;
 }
 
+export interface MessageState {
+  message: string;
+  visible: boolean;
+}
+
 export const initialState: StoreState = {
   window: {
     windowContent: enums.WindowContent.LogDownload,
@@ -93,5 +99,9 @@ export const initialState: StoreState = {
   },
   asyncCalls: {
     active: 0,
+  },
+  message: {
+    message: '',
+    visible: false,
   },
 };

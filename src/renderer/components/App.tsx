@@ -6,6 +6,7 @@ import * as types from '../common-interfaces';
 
 export interface Props {
   LoadingOverlay: React.ComponentClass<any> | React.SFC<any>;
+  ModalPopup: React.ComponentClass<any> | React.SFC<any>;
   LogGroups: React.ComponentClass<any> | React.SFC<any>;
   LogStreams: React.ComponentClass<any> | React.SFC<any>;
   LogContent: React.ComponentClass<any> | React.SFC<any>;
@@ -80,6 +81,8 @@ class App extends React.Component<Props> {
         <div className="window-content relative">
           {createWindowContent(props.windowContent, this.props)}
         </div>
+
+        <props.ModalPopup />
       </div>
     );
   }

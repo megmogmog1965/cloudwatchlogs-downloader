@@ -1,8 +1,8 @@
 // src/reducers/index.tsx
 
 import { combineReducers, Reducer } from 'redux';
-import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
-import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, AsyncCallState, initialState } from '../types';
+import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction, MessageAction } from '../actions';
+import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, AsyncCallState, MessageState, initialState } from '../types';
 import { ActionTypes } from '../constants';
 import { DownloadJob, Filter } from '../common-interfaces';
 import { reducer as formReducer } from 'redux-form';
@@ -155,6 +155,21 @@ export function asyncCalls(state: AsyncCallState, action: LogGroupAction | LogSt
   }
 }
 
+export function message(state: MessageState, action: MessageAction): MessageState {
+  if (!state) {
+    return { ...initialState.message };
+  }
+
+  switch (action.type) {
+    case ActionTypes.SHOW_MESSAGE:
+      return { ...state, message: action.message, visible: true };
+    case ActionTypes.HIDE_MESSAGE:
+      return { ...state, message: '', visible: false };
+    default:
+      return state;
+  }
+}
+
 const reducers: Reducer<any> = combineReducers({
   window,
   logGroups,
@@ -164,6 +179,7 @@ const reducers: Reducer<any> = combineReducers({
   dateRange,
   settings,
   asyncCalls,
+  message,
   form: formReducer,
 });
 

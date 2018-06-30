@@ -106,6 +106,15 @@ export interface ReceiveSettings {
   lastModified: Date;
 }
 
+export interface ShowMessage {
+  type: ActionTypes.SHOW_MESSAGE;
+  message: string;
+}
+
+export interface HideMessage {
+  type: ActionTypes.HIDE_MESSAGE;
+}
+
 //////////// Action types ////////////
 
 export type WindowAction = ShowWindowContent;
@@ -121,6 +130,8 @@ export type LogEventAction = RequestLogEvents | ProgressLogEvents | ReceiveLogEv
 export type DateRangeAction = SetDateRange;
 
 export type SettingsAction = SaveSettings | ReceiveSettings;
+
+export type MessageAction = ShowMessage | HideMessage;
 
 //////////// Actions ////////////
 
@@ -443,5 +454,18 @@ export function receiveSettings(settings: Settings, lastModified: Date): Receive
     type: ActionTypes.RECEIVE_SETTINGS,
     settings: settings,
     lastModified: lastModified,
+  };
+}
+
+export function showMessage(message: string): ShowMessage {
+  return {
+    type: ActionTypes.SHOW_MESSAGE,
+    message: message,
+  };
+}
+
+export function hideMessage(): HideMessage {
+  return {
+    type: ActionTypes.HIDE_MESSAGE,
   };
 }

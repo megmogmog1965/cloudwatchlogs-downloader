@@ -25,18 +25,24 @@ export function mapStateToProps({ settings }: StoreState): Props {
 
 export function mapDispatchToProps(dispatch: Dispatch<actions.SettingsAction>) {
   return {
-    onSubmit: (values: types.Settings) => dispatch(
-      actions.saveSettings(
-        {
-          region: values.region,
-          awsAccessKeyId: values.awsAccessKeyId,
-          awsSecretAccessKey: values.awsSecretAccessKey,
-          lineBreak: values.lineBreak,
-          filters: values.filters,
-        },
-        new Date(),
-        save),
-    ),
+    onSubmit: (values: types.Settings) => {
+      dispatch(
+        actions.saveSettings(
+          {
+            region: values.region,
+            awsAccessKeyId: values.awsAccessKeyId,
+            awsSecretAccessKey: values.awsSecretAccessKey,
+            lineBreak: values.lineBreak,
+            filters: values.filters,
+          },
+          new Date(),
+          save),
+      );
+
+      dispatch(
+        actions.showMessage('Saved !'),
+      );
+    },
   };
 }
 

@@ -1137,5 +1137,55 @@ describe('reducers/index', () => {
       },
     );
 
+    // SHOW_MESSAGE.
+    expect(index.message(
+      {
+        message: 'previous message',
+        visible: false,
+      },
+      {
+        type: ActionTypes.SHOW_MESSAGE,
+        message: 'message',
+      },
+    )).toEqual(
+      {
+        message: 'message',
+        visible: true,
+      },
+    );
+
+    // SHOW_MESSAGE - overwrite.
+    expect(index.message(
+      {
+        message: 'previous message',
+        visible: true,
+      },
+      {
+        type: ActionTypes.SHOW_MESSAGE,
+        message: 'message',
+      },
+    )).toEqual(
+      {
+        message: 'message',
+        visible: true,
+      },
+    );
+
+    // HIDE_MESSAGE.
+    expect(index.message(
+      {
+        message: 'previous message',
+        visible: true,
+      },
+      {
+        type: ActionTypes.HIDE_MESSAGE,
+      },
+    )).toEqual(
+      {
+        message: '',
+        visible: false,
+      },
+    );
+
   });
 });
