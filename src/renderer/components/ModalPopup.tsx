@@ -13,7 +13,7 @@ const ModalPopup: React.SFC<Props> = ({ message, visible, HideMessage }) => {
       <div className="overlay" />
       <div className="popup middle">
         <h2>{message}</h2>
-        <label className="close" onClick={HideMessage}>&times;</label>
+        <span className="icon icon-cancel-squared close" onClick={HideMessage} />
         <div className="content">&nbsp;</div>
       </div>
     </div>

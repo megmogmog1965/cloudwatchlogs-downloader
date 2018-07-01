@@ -41,6 +41,7 @@ div.popup {
   background: #fff;
   border-radius: 5px;
   width: 30%;
+  min-width: 260px;
   position: relative;
 }
 
@@ -54,10 +55,11 @@ div.popup h2 {
 
 div.popup .close {
   position: absolute;
-  top: 15px;
-  right: 30px;
+  top: 20px;
+  right: 20px;
+  padding: 0 10px;
   transition: all 200ms;
-  font-size: 35px;
+  font-size: 25px;
   font-weight: bold;
   text-decoration: none;
   color: #333;

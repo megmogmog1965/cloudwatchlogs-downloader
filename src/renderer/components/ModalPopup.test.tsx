@@ -29,4 +29,15 @@ describe('components/Loading', () => {
     expect(wrapper.find('.ModalPopup').hasClass('visible')).toBe(false);
     expect(wrapper.find('.ModalPopup').hasClass('invisible')).toBe(true);
   });
+
+  it('message', () => {
+    let props = {
+      message: 'message',
+      visible: true,
+      HideMessage: () => 0,
+    };
+
+    let wrapper = shallow(<ModalPopup {...props} />);
+    expect(wrapper.find('.ModalPopup .popup h2').text()).toBe('message');
+  });
 });
