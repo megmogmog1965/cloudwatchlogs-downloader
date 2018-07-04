@@ -11,7 +11,7 @@ div.ModalPopup {
 div.ModalPopup.visible {
   display: block;
   opacity: 0;
-  animation: fadeIn .5s ease .0s 1 forwards;
+  animation: ModalPopup-fadeIn .5s ease .0s 1 forwards;
 }
 
 div.ModalPopup.invisible {
@@ -28,14 +28,14 @@ div.ModalPopup .overlay {
   opacity: 0.7;
 }
 
-div.middle {
+div.ModalPopup div.middle {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-div.popup {
+div.ModalPopup div.popup {
   font-family: Arial, sans-serif;
   padding: 20px;
   background: #fff;
@@ -45,7 +45,7 @@ div.popup {
   position: relative;
 }
 
-div.popup h2 {
+div.ModalPopup div.popup h2 {
   margin-top: 0;
   color: #333;
   font-size: 25px;
@@ -53,7 +53,7 @@ div.popup h2 {
   font-family: Tahoma, Arial, sans-serif;
 }
 
-div.popup .close {
+div.ModalPopup div.popup .close {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -65,16 +65,16 @@ div.popup .close {
   color: #333;
 }
 
-div.popup .close:hover {
+div.ModalPopup div.popup .close:hover {
   color: #06D85F;
 }
 
-div.popup .content {
+div.ModalPopup div.popup .content {
   max-height: 30%;
   overflow: auto;
 }
 
-@keyframes fadeIn {
+@keyframes ModalPopup-fadeIn {
   0% {
     opacity: 0
   }
