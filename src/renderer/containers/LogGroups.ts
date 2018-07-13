@@ -5,7 +5,7 @@ import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
 import { LogGroup, LogStream, Settings } from '../common-interfaces';
-import { getCloudWatchLogGroups, getCloudWatchLogStreams } from '../side-effect-functions';
+import { connectCloudWatchLogs, getCloudWatchLogGroups, getCloudWatchLogStreams } from '../side-effect-functions';
 
 export function mapStateToProps({ logGroups, settings }: StoreState) {
   return {
@@ -24,7 +24,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
         callbackStart: (time: Date) => void,
         callbackError: (time: Date, err: AWS.AWSError) => void,
         callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
-      ) => getCloudWatchLogGroups(settings, callbackStart, callbackError, callbackEnd), // currying.
+      ) => getCloudWatchLogGroups(connectCloudWatchLogs(settings), callbackStart, callbackError, callbackEnd), // currying.
     )),
     SelectLogGroup: (selectedName: string) => dispatch(actions.selectLogGroup(selectedName)),
     FetchLogStreams: (settings: Settings, logGroupName: string) => dispatch(actions.fetchLogStreams(
@@ -34,7 +34,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
         callbackStart: (time: Date) => void,
         callbackError: (time: Date, err: AWS.AWSError) => void,
         callbackEnd: (time: Date, logStreams: LogStream[]) => void,
-      ) => getCloudWatchLogStreams(settings, logGroupName, callbackStart, callbackError, callbackEnd), // currying.
+      ) => getCloudWatchLogStreams(connectCloudWatchLogs(settings), logGroupName, callbackStart, callbackError, callbackEnd), // currying.
     )),
   };
 }

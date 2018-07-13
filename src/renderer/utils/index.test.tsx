@@ -1,6 +1,21 @@
 import * as index from './index';
+import { FilterTypes } from '../constants';
 
 describe('utils/index', () => {
+  it('random: Referential transparency', () => {
+    // invalid range.
+    expect(() => index.range(0, 0)).toThrow();
+    expect(() => index.range(1, 1)).toThrow();
+    expect(() => index.range(1, 0)).toThrow();
+
+    // testing a list of seeds.
+    expect(index.range(0, 1)).toEqual([ 0 ]);
+    expect(index.range(0, 10)).toEqual([ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]);
+    expect(index.range(2, 5)).toEqual([ 2, 3, 4 ]);
+    expect(index.range(-5, -1)).toEqual([ -5, -4, -3, -2 ]);
+    expect(index.range(-2, 3)).toEqual([ -2, -1, 0, 1, 2 ]);
+  });
+
   it('random: Referential transparency', () => {
     // invalid range.
     expect(() => index.random(0, 0, 0)).toThrow();
@@ -66,17 +81,19 @@ describe('utils/index', () => {
 
   it('extractJson: successful case', () => {
     expect(index.extractJson('{ "key": "value", "dummy1": "1", "dummy2": 2, "dummy3": { "dummy4": 4 } }', 'key')).toBe('value');
+    expect(index.extractJson('{ "key": 999 }', 'key')).toBe('999');
+    expect(index.extractJson('{ "key": true }', 'key')).toBe('true');
+    expect(index.extractJson('{ "key": { "a": "b" } }', 'key')).toBe('{"a":"b"}');
+    expect(index.extractJson('{ "key": [ "a", "b" ] }', 'key')).toBe('["a","b"]');
   });
 
   it('extractJson: error case', () => {
+    // the value is NOT a string.
+    expect(index.extractJson('{ "key": 999 }', 'missing-key')).toBe('{ "key": 999 }');
+
     // invalid json format.
     expect(index.extractJson('{ "key": "value"', 'key')).toBe('{ "key": "value"');
-
-    // the value is NOT a string.
-    expect(index.extractJson('{ "key": 999 }', 'key')).toBe('{ "key": 999 }');
-    expect(index.extractJson('{ "key": true }', 'key')).toBe('{ "key": true }');
-    expect(index.extractJson('{ "key": { "a": "b" } }', 'key')).toBe('{ "key": { "a": "b" } }');
-    expect(index.extractJson('{ "key": [ "a", "b" ] }', 'key')).toBe('{ "key": [ "a", "b" ] }');
+    expect(index.extractJson('{ "key": "value", }', 'key')).toBe('{ "key": "value", }');
   });
 
   it('progressAt: successful case', () => {
@@ -93,16 +110,96 @@ describe('utils/index', () => {
     expect(index.progressAt(new Date (30), new Date(10), new Date(20))).toBeCloseTo(1);
   });
 
-  it('safeTransformer: successful case', () => {
+  it('safeFilter: successful case', () => {
     // number => nubmer.
-    expect(index.safeTransformer((t: number) => t * 2)(3)).toBe(6);
+    expect(index.safeFilter((t: number) => t * 2)(3)).toBe(6);
     // string => string.
-    expect(index.safeTransformer((t: string) => 'hello ' + t)('world')).toBe('hello world');
+    expect(index.safeFilter((t: string) => 'hello ' + t)('world')).toBe('hello world');
   });
 
-  it('safeTransformer: error case', () => {
-    expect(index.safeTransformer((t: number) => {
+  it('safeFilter: error case', () => {
+    expect(index.safeFilter((t: number) => {
       throw new Error('its a test.');
     })(3)).toBe(3);
+  });
+
+  it('mergeFilters: FILTER_REGEX', () => {
+    expect(index.mergeFilters([
+      { type: FilterTypes.FILTER_REGEX, pattern: '^hello .+$' },
+    ])('hello world')).toBe('hello world');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.FILTER_REGEX, pattern: 'hello .+' },
+    ])('hello world')).toBe('hello world');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.FILTER_REGEX, pattern: 'llo' },
+    ])('hello world')).toBe('hello world');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.FILTER_REGEX, pattern: 'foo bar' },
+    ])('hello world')).toBe(undefined);
+  });
+
+  it('mergeFilters: REPLACE_REGEX', () => {
+    expect(index.mergeFilters([
+      { type: FilterTypes.REPLACE_REGEX, pattern: '^hello (.+)$', replacement: '$1' },
+    ])('hello world')).toBe('world');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.REPLACE_REGEX, pattern: '(hello)( .+)', replacement: '$2'  },
+    ])('hello world')).toBe(' world');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.REPLACE_REGEX, pattern: '(llo).', replacement: '-$2-' },
+    ])('hello world')).toBe('he-$2-world');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.REPLACE_REGEX, pattern: 'foo bar', replacement: 'XXXXXXXX' },
+    ])('hello world')).toBe('hello world');
+  });
+
+  it('mergeFilters: EXTRACT_JSON', () => {
+    expect(index.mergeFilters([
+      { type: FilterTypes.EXTRACT_JSON, key: 'log' },
+    ])('{ "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }')).toBe('contents...');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.EXTRACT_JSON, key: 'number' },
+    ])('{ "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }')).toBe('99');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.EXTRACT_JSON, key: 'array' },
+    ])('{ "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }')).toBe('[1,2]');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.EXTRACT_JSON, key: 'object' },
+    ])('{ "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }')).toBe('{"key":"value"}');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.EXTRACT_JSON, key: 'missing-key' },
+    ])('{ "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }')).toBe('{ "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.EXTRACT_JSON, key: 'log' },
+    ])('{ "log": "contents...", ')).toBe('{ "log": "contents...", ');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.EXTRACT_JSON, key: 'log' },
+    ])('SOME-PREFIX { "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }')).toBe('SOME-PREFIX { "log": "contents...", "number": 99, "array": [ 1, 2 ], "object": { "key": "value" } }');
+  });
+
+  it('mergeFilters: FILTER_REGEX --> REPLACE_REGEX --> EXTRACT_JSON', () => {
+    expect(index.mergeFilters([
+      { type: FilterTypes.FILTER_REGEX, pattern: '^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2} [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}.[0-9]{3,3} (\{.+\})$' },
+      { type: FilterTypes.REPLACE_REGEX, pattern: '^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2} [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}.[0-9]{3,3} (\{.+\})$', replacement: '$1' },
+      { type: FilterTypes.EXTRACT_JSON, key: 'log' },
+    ])('2018-06-28 00:11:22.333 { "log": "log contents ...", "number": 999 }')).toBe('log contents ...');
+
+    expect(index.mergeFilters([
+      { type: FilterTypes.FILTER_REGEX, pattern: '^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2} [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}.[0-9]{3,3} (\{.+\})$' },
+      { type: FilterTypes.REPLACE_REGEX, pattern: '^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2} [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}.[0-9]{3,3} (\{.+\})$', replacement: '$1' },
+      { type: FilterTypes.EXTRACT_JSON, key: 'log' },
+    ])('2018-06-28 ANNOYING-MESSAGES { "log": "log contents ...", "number": 999 }')).toBe(undefined);
   });
 });

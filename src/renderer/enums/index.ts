@@ -3,4 +3,5 @@
 export enum WindowContent {
   LogDownload,
   Settings,
+  Filters,
 }

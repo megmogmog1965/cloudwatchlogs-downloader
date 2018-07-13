@@ -1,3 +1,4 @@
+import { FilterTypes } from '../constants';
 
 type Timestamp = number;
 
@@ -6,7 +7,7 @@ export interface Settings {
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
   lineBreak: string;
-  jsonKey: string;
+  filters: Filter[];
 }
 
 export interface DownloadJob {
@@ -32,3 +33,21 @@ export interface LogStream {
   lastEventTimestamp: Timestamp;
   storedBytes: number;
 }
+
+export interface FilterReplaceRegex {
+  type: FilterTypes.FILTER_REGEX;
+  pattern: string;
+}
+
+export interface MapperReplaceRegex {
+  type: FilterTypes.REPLACE_REGEX;
+  pattern: string;
+  replacement: string;
+}
+
+export interface MapperExtractJson {
+  type: FilterTypes.EXTRACT_JSON;
+  key: string;
+}
+
+export type Filter = FilterReplaceRegex | MapperReplaceRegex | MapperExtractJson;

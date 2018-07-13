@@ -12,6 +12,8 @@ export interface StoreState {
   logEvents: LogEventsState;
   dateRange: DateRangeState;
   settings: SettingsState;
+  asyncCalls: AsyncCallState;
+  message: MessageState;
 }
 
 export interface WindowState {
@@ -52,6 +54,15 @@ export interface DateRangeState {
   endDate: Date;
 }
 
+export interface AsyncCallState {
+  active: number;
+}
+
+export interface MessageState {
+  message: string;
+  visible: boolean;
+}
+
 export const initialState: StoreState = {
   window: {
     windowContent: enums.WindowContent.LogDownload,
@@ -83,12 +94,19 @@ export const initialState: StoreState = {
       awsAccessKeyId: '',
       awsSecretAccessKey: '',
       lineBreak: LineBreak.LF,
-      jsonKey: '',
+      filters: [],
     },
     lastModified: new Date(0),
   },
   dateRange: {
     startDate: new Date(),
     endDate: new Date(new Date().getTime() - 60 * 60 * 1000),
+  },
+  asyncCalls: {
+    active: 0,
+  },
+  message: {
+    message: '',
+    visible: false,
   },
 };

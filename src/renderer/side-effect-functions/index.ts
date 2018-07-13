@@ -33,7 +33,7 @@ export function save(settings: Settings): void {
     awsAccessKeyId: utils.encrypt(settings.awsAccessKeyId, applicationPassphrase()),
     awsSecretAccessKey: utils.encrypt(settings.awsSecretAccessKey, applicationPassphrase()),
     lineBreak: settings.lineBreak,
-    jsonKey: settings.jsonKey,
+    filters: settings.filters,
   };
 
   storage.set('aws', crypted, (err: object) => console.log(err));
@@ -46,7 +46,7 @@ export function load(): Promise<Settings> {
       awsAccessKeyId: utils.decrypt(settings.awsAccessKeyId, applicationPassphrase()),
       awsSecretAccessKey: utils.decrypt(settings.awsSecretAccessKey, applicationPassphrase()),
       lineBreak: settings.lineBreak,
-      jsonKey: settings.jsonKey,
+      filters: settings.filters,
     };
   };
 
@@ -61,7 +61,7 @@ export function load(): Promise<Settings> {
           awsAccessKeyId: (typeof data.awsAccessKeyId === 'string') ? data.awsAccessKeyId : '',
           awsSecretAccessKey: (typeof data.awsSecretAccessKey === 'string') ? data.awsSecretAccessKey : '',
           lineBreak: (typeof data.lineBreak === 'string') ? data.lineBreak : constants.LineBreak.LF,
-          jsonKey: (typeof data.jsonKey === 'string') ? data.jsonKey : '',
+          filters: (Array.isArray(data.filters)) ? data.filters : [],
         };
         resolve(decrypted(settings));
       }
@@ -98,10 +98,11 @@ export function showSaveDialog(fileName?: string): stream.Writable | undefined {
 }
 
 export function getCloudWatchLogGroups(
-  settings: Settings,
+  cloudwatchlogs: AWS.CloudWatchLogs,
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
   callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
+  retryDelay = 1000,
 ): void {
 
   //////////// stub ////////////
@@ -123,11 +124,12 @@ export function getCloudWatchLogGroups(
 }
 
 export function getCloudWatchLogStreams(
-  settings: Settings,
+  cloudwatchlogs: AWS.CloudWatchLogs,
   logGroupName: string,
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
   callbackEnd: (time: Date, logStreams: LogStream[]) => void,
+  retryDelay = 1000,
 ): void {
 
   //////////// stub ////////////
@@ -151,7 +153,7 @@ export function getCloudWatchLogStreams(
 }
 
 export function getCloudWatchLogsEvents(
-  settings: Settings,
+  cloudwatchlogs: AWS.CloudWatchLogs,
   logGroupName: string,
   logStreamName: string,
   startDate: Date,
@@ -160,7 +162,9 @@ export function getCloudWatchLogsEvents(
   callbackError: (err: AWS.AWSError) => void,
   callbackEnd: () => void,
   startFromHead = true,
-  limit?: number): void {
+  limit?: number,
+  retryDelay = 2000,
+): void {
 
   //////////// stub ////////////
   let now = new Date().getTime();
@@ -184,7 +188,7 @@ export function getCloudWatchLogsEvents(
   //////////// stub ////////////
 }
 
-function connectCloudWatchLogs(settings: Settings): AWS.CloudWatchLogs {
+export function connectCloudWatchLogs(settings: Settings): AWS.CloudWatchLogs {
   return new AWS.CloudWatchLogs({
     region: settings.region,
     accessKeyId: settings.awsAccessKeyId,

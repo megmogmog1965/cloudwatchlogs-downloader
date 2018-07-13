@@ -31,8 +31,14 @@ export namespace ActionTypes {
   export const SELECT_LOG_STREAM = 'SELECT_LOG_STREAM';
   export type SELECT_LOG_STREAM = typeof SELECT_LOG_STREAM;
 
+  export const REQUEST_LOG_TEXT = 'REQUEST_LOG_TEXT';
+  export type REQUEST_LOG_TEXT = typeof REQUEST_LOG_TEXT;
+
   export const RECEIVE_LOG_TEXT = 'RECEIVE_LOG_TEXT';
   export type RECEIVE_LOG_TEXT = typeof RECEIVE_LOG_TEXT;
+
+  export const ERROR_LOG_TEXT = 'ERROR_LOG_TEXT';
+  export type ERROR_LOG_TEXT = typeof ERROR_LOG_TEXT;
 
   export const REQUEST_LOG_EVENTS = 'REQUEST_LOG_EVENTS';
   export type REQUEST_LOG_EVENTS = typeof REQUEST_LOG_EVENTS;
@@ -54,6 +60,23 @@ export namespace ActionTypes {
 
   export const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
   export type RECEIVE_SETTINGS = typeof RECEIVE_SETTINGS;
+
+  export const SHOW_MESSAGE = 'SHOW_MESSAGE';
+  export type SHOW_MESSAGE = typeof SHOW_MESSAGE;
+
+  export const HIDE_MESSAGE = 'HIDE_MESSAGE';
+  export type HIDE_MESSAGE = typeof HIDE_MESSAGE;
+}
+
+export namespace FilterTypes {
+  export const FILTER_REGEX = 'FILTER_REGEX';
+  export type FILTER_REGEX = typeof FILTER_REGEX;
+
+  export const REPLACE_REGEX = 'REPLACE_REGEX';
+  export type REPLACE_REGEX = typeof REPLACE_REGEX;
+
+  export const EXTRACT_JSON = 'EXTRACT_JSON';
+  export type EXTRACT_JSON = typeof EXTRACT_JSON;
 }
 
 export namespace Region {

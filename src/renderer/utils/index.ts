@@ -1,6 +1,16 @@
 import * as crypto from 'crypto';
+import { FilterTypes } from '../constants';
+import { Filter } from '../common-interfaces';
 
 const algorithm = 'aes-256-ctr';
+
+export function range(begin: number, end: number): number[] {
+  if (begin >= end) {
+    throw new Error('begin >= end');
+  }
+
+  return Array.from({ length: end - begin }, (v, k) => begin + k);
+}
 
 export function random(seed: number, min: number = 0, max: number = 1) {
   if (min >= max) {
@@ -44,7 +54,13 @@ export function decrypt(text: string, passphrase: string): string {
 export function extractJson(jsonstr: string, key: string): string {
   try {
     let val = JSON.parse(jsonstr)[key];
-    return (typeof val === 'string') ? val : jsonstr;
+
+    // missing key.
+    if (val === undefined) {
+      return jsonstr;
+    }
+
+    return (typeof val === 'string') ? val : JSON.stringify(val);
 
   } catch (e) {
     // return itself when "jsonstr" is NOT as json format.
@@ -65,7 +81,7 @@ export function progressAt(t: Date, startTime: Date, endTime: Date): number {
  * @param inner a transformer function.
  * @return a funtion returns a calculated value or the argument itself without throwing error.
  */
-export function safeTransformer<T>(inner: (t: T) => T)
+export function safeFilter<T>(inner: (t: T) => T)
 : (t: T) => T {
   return (t: T) => {
     try {
@@ -74,4 +90,35 @@ export function safeTransformer<T>(inner: (t: T) => T)
       return t;
     }
   };
+}
+
+/**
+ * @param filters filter params.
+ * @return a function returns transformed line or undefined that represents removed.
+ */
+export function mergeFilters(filters: Filter[])
+  : (line: string) => string | undefined {
+
+  // create filter functions from filter types.
+  let funcs = filters.map(f => {
+    switch (f.type) {
+      case FilterTypes.FILTER_REGEX:
+        return (line: string) => new RegExp(f.pattern, 'm').test(line) ? line : undefined;
+      case FilterTypes.REPLACE_REGEX:
+        return (line: string) => line.replace(new RegExp(f.pattern, 'm'), f.replacement);
+      case FilterTypes.EXTRACT_JSON:
+        return (line: string) => extractJson(line, f.key);
+      default:
+        throw new Error('error detected, invalid filter type.');
+    }
+  });
+
+  // merge all filter functions to be called orderly.
+  return funcs.reduce(
+    (pre, cur) => (line: string) => {
+      let evaluated = pre(line);
+      return evaluated !== undefined ? cur(evaluated) : undefined;
+    },
+    (line: string) => line,
+  );
 }

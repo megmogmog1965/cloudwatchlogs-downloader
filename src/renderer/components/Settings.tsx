@@ -49,11 +49,7 @@ let raw: React.SFC<Props> = ({ handleSubmit }) => {
           <option value={LineBreak.NO_MODIFICATION}>None (No modification. Just download logs.)</option>
         </Field>
       </div>
-      <div className="form-group">
-        <label><strong>[Optional] Root object key for json formatted logs</strong></label>
-        <Field name="jsonKey" component="input" type="text" className="form-control" placeholder="Enter root object key to extract json value as a log." />
-      </div>
-      <div className="form-actions">
+      <div className="form-group form-actions float-right-container">
         <button type="submit" className="btn btn-form btn-primary">Save</button>
       </div>
     </form>

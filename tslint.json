@@ -23,6 +23,8 @@
     "no-console": false,
     "no-namespace": false,
     "no-implicit-dependencies": false,
-    "no-unused-variable": false
+    "no-unused-variable": false,
+    "prefer-for-of": false,
+    "max-classes-per-file": false
   }
 }

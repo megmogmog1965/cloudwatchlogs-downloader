@@ -4,7 +4,7 @@ import { ActionTypes } from '../constants';
 import * as types from '../types';
 
 describe('reducers/index', () => {
-  it('window', () => {
+  it('window - SHOW_WINDOW_CONTENT', () => {
     // initial state.
     expect(index.window(
       undefined as any,
@@ -39,7 +39,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logGroups', () => {
+  it('logGroups - initial state', () => {
     // initial state.
     expect(index.logGroups(
       undefined as any,
@@ -54,7 +54,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - REQUEST_LOG_GROUPS', () => {
     // REQUEST_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -74,7 +76,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - ERROR_LOG_GROUPS', () => {
     // ERROR_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -95,7 +99,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - RECEIVE_LOG_GROUPS', () => {
     // RECEIVE_LOG_GROUPS - empty.
     expect(index.logGroups(
       {
@@ -139,8 +145,10 @@ describe('reducers/index', () => {
         lastModified: new Date(100),
       },
     );
+  });
 
-    // ERROR_LOG_GROUPS.
+  it('logGroups - SELECT_LOG_GROUP', () => {
+    // SELECT_LOG_GROUP.
     expect(index.logGroups(
       {
         logGroups: [],
@@ -162,7 +170,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logStreams', () => {
+  it('logStreams - initial state', () => {
     // initial state.
     expect(index.logStreams(
       undefined as any,
@@ -177,7 +185,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - REQUEST_LOG_STREAMS', () => {
     // REQUEST_LOG_STREAMS.
     expect(index.logStreams(
       {
@@ -197,7 +207,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - ERROR_LOG_STREAMS', () => {
     // ERROR_LOG_STREAMS.
     expect(index.logStreams(
       {
@@ -218,7 +230,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - RECEIVE_LOG_STREAMS', () => {
     // RECEIVE_LOG_STREAMS - empty.
     expect(index.logStreams(
       {
@@ -262,7 +276,9 @@ describe('reducers/index', () => {
         lastModified: new Date(100),
       },
     );
+  });
 
+  it('logStreams - SELECT_LOG_STREAM', () => {
     // SELECT_LOG_STREAM.
     expect(index.logStreams(
       {
@@ -283,7 +299,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logStreams - SELECT_LOG_GROUP', () => {
     // SELECT_LOG_GROUP (log group action affects log stream state).
     expect(index.logStreams(
       {
@@ -306,7 +324,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logGroups', () => {
+  it('logGroups - initial state', () => {
     // initial state.
     expect(index.logGroups(
       undefined as any,
@@ -321,7 +339,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - REQUEST_LOG_GROUPS', () => {
     // REQUEST_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -341,7 +361,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - ERROR_LOG_GROUPS', () => {
     // ERROR_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -362,7 +384,9 @@ describe('reducers/index', () => {
         lastModified: new Date(0),
       },
     );
+  });
 
+  it('logGroups - RECEIVE_LOG_GROUPS', () => {
     // RECEIVE_LOG_GROUPS - empty.
     expect(index.logGroups(
       {
@@ -406,7 +430,9 @@ describe('reducers/index', () => {
         lastModified: new Date(100),
       },
     );
+  });
 
+  it('logGroups - SELECT_LOG_GROUP', () => {
     // ERROR_LOG_GROUPS.
     expect(index.logGroups(
       {
@@ -429,7 +455,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('logText', () => {
+  it('logText - initial state', () => {
     // initial state.
     expect(index.logText(
       undefined as any,
@@ -442,39 +468,106 @@ describe('reducers/index', () => {
         text: '',
       },
     );
+  });
 
-    // RECEIVE_LOG_STREAMS - empty.
+  it('logText - REQUEST_LOG_TEXT', () => {
+    // REQUEST_LOG_TEXT.
     expect(index.logText(
       {
-        text: '',
+        text: 'old',
       },
       {
-        type: ActionTypes.RECEIVE_LOG_TEXT,
-        text: '',
+        type: ActionTypes.REQUEST_LOG_TEXT,
       },
     )).toEqual(
       {
-        text: '',
-      },
-    );
-
-    // RECEIVE_LOG_STREAMS - 2 lines.
-    expect(index.logText(
-      {
-        text: '',
-      },
-      {
-        type: ActionTypes.RECEIVE_LOG_TEXT,
-        text: 'line 1\nline 2\n',
-      },
-    )).toEqual(
-      {
-        text: 'line 1\nline 2\n',
+        text: 'old',
       },
     );
   });
 
-  it('logEvents', () => {
+  it('logText - RECEIVE_LOG_TEXT', () => {
+    // RECEIVE_LOG_TEXT - empty.
+    expect(index.logText(
+      {
+        text: '',
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: '',
+      },
+    )).toEqual(
+      {
+        text: '',
+      },
+    );
+
+    // RECEIVE_LOG_TEXT - 2 lines.
+    expect(index.logText(
+      {
+        text: '',
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: 'line 1\nline 2\n',
+      },
+    )).toEqual(
+      {
+        text: 'line 1\nline 2\n',
+      },
+    );
+
+    // RECEIVE_LOG_TEXT - overwrite old text.
+    expect(index.logText(
+      {
+        text: 'old',
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: 'new',
+      },
+    )).toEqual(
+      {
+        text: 'new',
+      },
+    );
+  });
+
+  it('logText - ERROR_LOG_TEXT', () => {
+    // ERROR_LOG_TEXT.
+    expect(index.logText(
+      {
+        text: 'old',
+      },
+      {
+        type: ActionTypes.ERROR_LOG_TEXT,
+        errorMessage: 'error messages',
+      },
+    )).toEqual(
+      {
+        text: '', // clear.
+      },
+    );
+  });
+
+  it('logText - SELECT_LOG_GROUP', () => {
+    // SELECT_LOG_GROUP (log group action affects log text state).
+    expect(index.logText(
+      {
+        text: 'line 1\nline 2\n',
+      },
+      {
+        type: ActionTypes.SELECT_LOG_GROUP,
+        selectedName: 'name',
+      },
+    )).toEqual(
+      {
+        text: '',
+      },
+    );
+  });
+
+  it('logEvents - initial state', () => {
     // initial state.
     expect(index.logEvents(
       undefined as any,
@@ -489,7 +582,9 @@ describe('reducers/index', () => {
         errorJobs: [],
       },
     );
+  });
 
+  it('logEvents - REQUEST_LOG_EVENTS', () => {
     // REQUEST_LOG_STREAMS.
     expect(index.logEvents(
       {
@@ -508,7 +603,9 @@ describe('reducers/index', () => {
         errorJobs: [],
       },
     );
+  });
 
+  it('logEvents - PROGRESS_LOG_EVENTS', () => {
     // PROGRESS_LOG_EVENTS.
     expect(index.logEvents(
       {
@@ -527,7 +624,9 @@ describe('reducers/index', () => {
         errorJobs: [],
       },
     );
+  });
 
+  it('logEvents - ERROR_LOG_EVENTS', () => {
     // ERROR_LOG_STREAMS - empty.
     expect(index.logEvents(
       {
@@ -587,7 +686,9 @@ describe('reducers/index', () => {
         errorJobs: [{ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}],
       },
     );
+  });
 
+  it('logEvents - RECEIVE_LOG_EVENTS', () => {
     // RECEIVE_LOG_STREAMS - empty.
     expect(index.logEvents(
       {
@@ -649,7 +750,7 @@ describe('reducers/index', () => {
     );
   });
 
-  it('dateRange', () => {
+  it('dateRange - SET_DATERANGE', () => {
     // initial state.
     // @fixme NO REFERENCIAL TRANSPARENCY.
     expect(index.dateRange(
@@ -682,18 +783,18 @@ describe('reducers/index', () => {
     );
   });
 
-  it('settings', () => {
+  it('settings - SAVE_SETTINGS', () => {
     // initial state.
     expect(index.settings(
       undefined as any,
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
     );
@@ -701,17 +802,17 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - region.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -719,17 +820,17 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - awsAccessKeyId.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -737,17 +838,17 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - awsSecretAccessKey.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -755,35 +856,73 @@ describe('reducers/index', () => {
     // SAVE_SETTINGS - lineBreak.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.SAVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     );
 
-    // RECEIVE_SETTINGS - region.
+    // SAVE_SETTINGS - filters.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
-        type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        type: ActionTypes.SAVE_SETTINGS,
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
+        lastModified: new Date(100),
+      },
+    );
+
+    // SAVE_SETTINGS - merged partial settings.
+    expect(index.settings(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.SAVE_SETTINGS,
+        settings: { filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] } as any,
+        lastModified: new Date(100),
+      },
+    )).toEqual(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
+        lastModified: new Date(100),
+      },
+    );
+  });
+
+  it('settings - RECEIVE_SETTINGS', () => {
+    // RECEIVE_SETTINGS - region.
+    expect(index.settings(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.RECEIVE_SETTINGS,
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
+        lastModified: new Date(100),
+      },
+    )).toEqual(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -791,17 +930,17 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - awsAccessKeyId.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: 'xxxx', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -809,17 +948,17 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - awsSecretAccessKey.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: 'xxxx', lineBreak: 'LF', filters: [] },
         lastModified: new Date(100),
       },
     );
@@ -827,37 +966,294 @@ describe('reducers/index', () => {
     // RECEIVE_SETTINGS - lineBreak.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'CRLF', filters: [] },
         lastModified: new Date(100),
       },
     );
 
-    // RECEIVE_SETTINGS - jsonKey.
+    // RECEIVE_SETTINGS - filters.
     expect(index.settings(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: '' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
         lastModified: new Date(0),
       },
       {
         type: ActionTypes.RECEIVE_SETTINGS,
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     )).toEqual(
       {
-        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', jsonKey: 'key' },
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
         lastModified: new Date(100),
       },
     );
+
+    // RECEIVE_SETTINGS - merged partial settings.
+    expect(index.settings(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [] },
+        lastModified: new Date(0),
+      },
+      {
+        type: ActionTypes.RECEIVE_SETTINGS,
+        settings: { filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] } as any,
+        lastModified: new Date(100),
+      },
+    )).toEqual(
+      {
+        settings: { region: 'ap-northeast-1', awsAccessKeyId: '', awsSecretAccessKey: '', lineBreak: 'LF', filters: [ { type: 'EXTRACT_JSON', key: 'log' } ] },
+        lastModified: new Date(100),
+      },
+    );
+  });
+
+  it('asyncCalls - initial state', () => {
+    // initial state.
+    expect(index.asyncCalls(
+      undefined as any,
+      {
+        type: ActionTypes.REQUEST_LOG_GROUPS,
+      },
+    )).toEqual(
+      {
+        active: 0,
+      },
+    );
+  });
+
+  it('asyncCalls - negative value is forbidden', () => {
+    // negative value is forbidden.
+    expect(index.asyncCalls(
+      {
+        active: 0,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_GROUPS,
+        logGroups: [],
+        lastModified: new Date(0),
+      },
+    )).toEqual(
+      {
+        active: 0,
+      },
+    );
+  });
+
+  it('asyncCalls - REQUEST_LOG_GROUPS', () => {
+    // REQUEST_LOG_GROUPS.
+    expect(index.asyncCalls(
+      {
+        active: 0,
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_GROUPS,
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+  });
+
+  it('asyncCalls - RECEIVE_LOG_GROUPS', () => {
+    // RECEIVE_LOG_GROUPS.
+    expect(index.asyncCalls(
+      {
+        active: 1,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_GROUPS,
+        logGroups: [],
+        lastModified: new Date(0),
+      },
+    )).toEqual(
+      {
+        active: 0,
+      },
+    );
+  });
+
+  it('asyncCalls - ERROR_LOG_GROUPS', () => {
+    // ERROR_LOG_GROUPS.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_GROUPS,
+        errorMessage: '',
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+  });
+
+  it('asyncCalls - REQUEST_LOG_STREAMS', () => {
+    // REQUEST_LOG_STREAMS.
+    expect(index.asyncCalls(
+      {
+        active: 1,
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_STREAMS,
+      },
+    )).toEqual(
+      {
+        active: 2,
+      },
+    );
+  });
+
+  it('asyncCalls - RECEIVE_LOG_STREAMS', () => {
+    // RECEIVE_LOG_STREAMS.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_STREAMS,
+        logStreams: [],
+        lastModified: new Date(0),
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+  });
+
+  it('asyncCalls - ERROR_LOG_STREAMS', () => {
+    // ERROR_LOG_STREAMS.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_STREAMS,
+        errorMessage: '',
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+  });
+
+  it('asyncCalls - REQUEST_LOG_TEXT', () => {
+    // REQUEST_LOG_TEXT.
+    expect(index.asyncCalls(
+      {
+        active: 1,
+      },
+      {
+        type: ActionTypes.REQUEST_LOG_TEXT,
+      },
+    )).toEqual(
+      {
+        active: 2,
+      },
+    );
+  });
+
+  it('asyncCalls - RECEIVE_LOG_TEXT', () => {
+    // RECEIVE_LOG_TEXT.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.RECEIVE_LOG_TEXT,
+        text: '',
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+  });
+
+  it('asyncCalls - ERROR_LOG_TEXT', () => {
+    // ERROR_LOG_TEXT.
+    expect(index.asyncCalls(
+      {
+        active: 2,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_TEXT,
+        errorMessage: '',
+      },
+    )).toEqual(
+      {
+        active: 1,
+      },
+    );
+  });
+
+  it('message - SHOW_MESSAGE', () => {
+    // SHOW_MESSAGE.
+    expect(index.message(
+      {
+        message: 'previous message',
+        visible: false,
+      },
+      {
+        type: ActionTypes.SHOW_MESSAGE,
+        message: 'message',
+      },
+    )).toEqual(
+      {
+        message: 'message',
+        visible: true,
+      },
+    );
+
+    // SHOW_MESSAGE - overwrite.
+    expect(index.message(
+      {
+        message: 'previous message',
+        visible: true,
+      },
+      {
+        type: ActionTypes.SHOW_MESSAGE,
+        message: 'message',
+      },
+    )).toEqual(
+      {
+        message: 'message',
+        visible: true,
+      },
+    );
+  });
+
+  it('message - HIDE_MESSAGE', () => {
+    // HIDE_MESSAGE.
+    expect(index.message(
+      {
+        message: 'previous message',
+        visible: true,
+      },
+      {
+        type: ActionTypes.HIDE_MESSAGE,
+      },
+    )).toEqual(
+      {
+        message: '',
+        visible: false,
+      },
+    );
+
   });
 });

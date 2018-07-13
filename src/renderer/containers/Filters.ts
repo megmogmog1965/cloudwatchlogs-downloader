@@ -1,6 +1,6 @@
-// src/containers/Settings.ts
+// src/containers/Filters.ts
 
-import Settings from '../components/Settings';
+import Filters from '../components/Filters';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
@@ -46,4 +46,4 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.SettingsAction>) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default connect(mapStateToProps, mapDispatchToProps)(Filters);

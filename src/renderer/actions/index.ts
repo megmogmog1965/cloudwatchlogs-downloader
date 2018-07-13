@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
 import { LogGroup, LogStream, Settings, DownloadJob } from '../common-interfaces';
-import { safeTransformer } from '../utils';
+import { safeFilter } from '../utils';
 import voca from 'voca';
 
 //////////// Action object interfaces ////////////
@@ -54,9 +54,18 @@ export interface SelectLogStream {
   selectedName?: string;
 }
 
+export interface RequestLogText {
+  type: ActionTypes.REQUEST_LOG_TEXT;
+}
+
 export interface ReceiveLogText {
   type: ActionTypes.RECEIVE_LOG_TEXT;
   text: string;
+}
+
+export interface ErrorLogText {
+  type: ActionTypes.ERROR_LOG_TEXT;
+  errorMessage: string;
 }
 
 export interface RequestLogEvents {
@@ -97,6 +106,15 @@ export interface ReceiveSettings {
   lastModified: Date;
 }
 
+export interface ShowMessage {
+  type: ActionTypes.SHOW_MESSAGE;
+  message: string;
+}
+
+export interface HideMessage {
+  type: ActionTypes.HIDE_MESSAGE;
+}
+
 //////////// Action types ////////////
 
 export type WindowAction = ShowWindowContent;
@@ -105,13 +123,15 @@ export type LogGroupAction = RequestLogGroups | ReceiveLogGroups | ErrorLogGroup
 
 export type LogStreamAction = RequestLogStreams | ReceiveLogStreams | ErrorLogStreams | SelectLogStream;
 
-export type LogTextAction = ReceiveLogText;
+export type LogTextAction = RequestLogText | ReceiveLogText | ErrorLogText;
 
 export type LogEventAction = RequestLogEvents | ProgressLogEvents | ReceiveLogEvents | ErrorLogEvents;
 
 export type DateRangeAction = SetDateRange;
 
 export type SettingsAction = SaveSettings | ReceiveSettings;
+
+export type MessageAction = ShowMessage | HideMessage;
 
 //////////// Actions ////////////
 
@@ -247,10 +267,23 @@ const separator: (lineBreak: string) => string = (lineBreak) => {
   }
 };
 
+export function requestLogText(): RequestLogText {
+  return {
+    type: ActionTypes.REQUEST_LOG_TEXT,
+  };
+}
+
 export function receiveLogText(text: string): ReceiveLogText {
   return {
     type: ActionTypes.RECEIVE_LOG_TEXT,
     text,
+  };
+}
+
+export function errorLogText(errorMessage: string): ErrorLogText {
+  return {
+    type: ActionTypes.ERROR_LOG_TEXT,
+    errorMessage,
   };
 }
 
@@ -266,6 +299,9 @@ export function fetchLogText(
   let logs = '';
 
   return (dispatch: Dispatch<LogGroupAction>) => {
+    // start fetching.
+    dispatch(requestLogText());
+
     // callback for receive log chunks.
     let callbackData = (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => {
       if (!data.events) {
@@ -283,7 +319,7 @@ export function fetchLogText(
     };
 
     // callback for end processing.
-    let callbackError = (err: AWS.AWSError) => 0; // ignore errors.
+    let callbackError = (err: AWS.AWSError) => dispatch(errorLogText(err.message));
 
     // callback for handling errors.
     let callbackEnd = () => dispatch(receiveLogText(logs));
@@ -333,7 +369,7 @@ export function downloadLogs(
     callbackError: (err: AWS.AWSError) => void,
     callbackEnd: () => void,
   ) => void,
-  transformer = (line: string) => line,
+  filter: (line: string) => string | undefined = (line: string) => line,
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
@@ -357,7 +393,8 @@ export function downloadLogs(
       let messages = data.events
         .filter(e => e.message != null)
         .map(e => e.message!)
-        .map(safeTransformer(transformer))
+        .map(safeFilter(filter))
+        .filter(e => e !== undefined)
         .map(trimmer(settings))
         .join(sep);
 
@@ -417,5 +454,18 @@ export function receiveSettings(settings: Settings, lastModified: Date): Receive
     type: ActionTypes.RECEIVE_SETTINGS,
     settings: settings,
     lastModified: lastModified,
+  };
+}
+
+export function showMessage(message: string): ShowMessage {
+  return {
+    type: ActionTypes.SHOW_MESSAGE,
+    message: message,
+  };
+}
+
+export function hideMessage(): HideMessage {
+  return {
+    type: ActionTypes.HIDE_MESSAGE,
   };
 }

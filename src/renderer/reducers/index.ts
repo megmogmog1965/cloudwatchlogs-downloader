@@ -1,10 +1,10 @@
 // src/reducers/index.tsx
 
 import { combineReducers, Reducer } from 'redux';
-import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction } from '../actions';
-import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, initialState } from '../types';
+import { LogGroupAction, LogStreamAction, LogTextAction, LogEventAction, WindowAction, DateRangeAction, SettingsAction, MessageAction } from '../actions';
+import { LogGroupsState, LogStreamsState, LogTextState, LogEventsState, WindowState, DateRangeState, SettingsState, AsyncCallState, MessageState, initialState } from '../types';
 import { ActionTypes } from '../constants';
-import { DownloadJob } from '../common-interfaces';
+import { DownloadJob, Filter } from '../common-interfaces';
 import { reducer as formReducer } from 'redux-form';
 
 export function window(state: WindowState, action: WindowAction): WindowState {
@@ -61,14 +61,21 @@ export function logStreams(state: LogStreamsState, action: LogStreamAction | Log
   }
 }
 
-export function logText(state: LogTextState, action: LogTextAction): LogTextState {
+export function logText(state: LogTextState, action: LogTextAction | LogGroupAction): LogTextState {
   if (!state) {
     return { ...initialState.logText };
   }
 
   switch (action.type) {
+    case ActionTypes.REQUEST_LOG_TEXT:
+      return { ...state };
     case ActionTypes.RECEIVE_LOG_TEXT:
       return { ...state, text: action.text };
+    case ActionTypes.ERROR_LOG_TEXT:
+      return { ...state, text: '' }; // clear on error.
+    // SHOULD respond to LogGroupAction.
+    case ActionTypes.SELECT_LOG_GROUP:
+      return { ...state, text: '' }; // clear log text state when log group is updated.
     default:
       return state;
   }
@@ -113,11 +120,51 @@ export function settings(state: SettingsState, action: SettingsAction): Settings
     return { ...initialState.settings };
   }
 
+  // remove invalid filters caused by redux-form.
+  let validFilters = (filters: Filter[]) => filters.filter(f => f.type);
+
   switch (action.type) {
     case ActionTypes.SAVE_SETTINGS:
-      return { ...state, settings: action.settings, lastModified: action.lastModified };
+      return { ...state, settings: { ...state.settings, ...action.settings, filters: validFilters(action.settings.filters) }, lastModified: action.lastModified };
     case ActionTypes.RECEIVE_SETTINGS:
-      return { ...state, settings: action.settings, lastModified: action.lastModified };
+      return { ...state, settings: { ...state.settings, ...action.settings, filters: validFilters(action.settings.filters) }, lastModified: action.lastModified };
+    default:
+      return state;
+  }
+}
+
+export function asyncCalls(state: AsyncCallState, action: LogGroupAction | LogStreamAction | LogTextAction): AsyncCallState {
+  if (!state) {
+    return { ...initialState.asyncCalls };
+  }
+
+  switch (action.type) {
+    case ActionTypes.REQUEST_LOG_GROUPS:
+    case ActionTypes.REQUEST_LOG_STREAMS:
+    case ActionTypes.REQUEST_LOG_TEXT:
+      return { ...state, active: state.active + 1 }; // increment count.
+    case ActionTypes.RECEIVE_LOG_GROUPS:
+    case ActionTypes.RECEIVE_LOG_STREAMS:
+    case ActionTypes.RECEIVE_LOG_TEXT:
+    case ActionTypes.ERROR_LOG_GROUPS:
+    case ActionTypes.ERROR_LOG_STREAMS:
+    case ActionTypes.ERROR_LOG_TEXT:
+      return { ...state, active: (state.active > 0) ? state.active - 1 : 0 }; // decrement count.
+    default:
+      return state;
+  }
+}
+
+export function message(state: MessageState, action: MessageAction): MessageState {
+  if (!state) {
+    return { ...initialState.message };
+  }
+
+  switch (action.type) {
+    case ActionTypes.SHOW_MESSAGE:
+      return { ...state, message: action.message, visible: true };
+    case ActionTypes.HIDE_MESSAGE:
+      return { ...state, message: '', visible: false };
     default:
       return state;
   }
@@ -131,6 +178,8 @@ const reducers: Reducer<any> = combineReducers({
   logEvents,
   dateRange,
   settings,
+  asyncCalls,
+  message,
   form: formReducer,
 });
 

@@ -5,9 +5,12 @@ import Progress from '../components/Progress';
 import * as types from '../common-interfaces';
 
 export interface Props {
+  LoadingOverlay: React.ComponentClass<any> | React.SFC<any>;
+  ModalPopup: React.ComponentClass<any> | React.SFC<any>;
   LogGroups: React.ComponentClass<any> | React.SFC<any>;
   LogStreams: React.ComponentClass<any> | React.SFC<any>;
   LogContent: React.ComponentClass<any> | React.SFC<any>;
+  Filters: React.ComponentClass<any> | React.SFC<any>;
   Settings: React.ComponentClass<any> | React.SFC<any>;
   DownloadList: React.ComponentClass<any> | React.SFC<any>;
   DownloadBadge: React.ComponentClass<any> | React.SFC<any>;
@@ -45,6 +48,9 @@ class App extends React.Component<Props> {
               <button className={'btn btn-default ' + buttonState(enums.WindowContent.LogDownload, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.LogDownload)}>
                 <span className="icon icon-install icon-text" />Download Logs
               </button>
+              <button className={'btn btn-default ' + buttonState(enums.WindowContent.Filters, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.Filters)}>
+                <span className="icon icon-shuffle icon-text" />Filters
+              </button>
               <button className={'btn btn-default ' + buttonState(enums.WindowContent.Settings, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.Settings)}>
                 <span className="icon icon-cog icon-text" />Settings
               </button>
@@ -72,9 +78,11 @@ class App extends React.Component<Props> {
           </div>
         </header>
 
-        <div className="window-content">
+        <div className="window-content relative">
           {createWindowContent(props.windowContent, this.props)}
         </div>
+
+        <props.ModalPopup />
       </div>
     );
   }
@@ -85,12 +93,13 @@ function buttonState(target: enums.WindowContent, current: enums.WindowContent):
 }
 
 function createWindowContent(windowContent: enums.WindowContent, props: Props) {
-  let { LogGroups, LogStreams, LogContent, Settings } = props;
+  let { LogGroups, LogStreams, LogContent, Settings, Filters } = props;
 
   switch (windowContent) {
     case enums.WindowContent.LogDownload:
       return (
         <div className="pane-group">
+          <props.LoadingOverlay />
           <div className="pane pane-group">
             <div className="pane">
               <LogGroups />
@@ -104,9 +113,17 @@ function createWindowContent(windowContent: enums.WindowContent, props: Props) {
           </div>
         </div>
       );
+    case enums.WindowContent.Filters:
+      return (
+        <div className="pane">
+          <Filters />
+        </div>
+      );
     case enums.WindowContent.Settings:
       return (
-        <Settings />
+        <div className="pane">
+          <Settings />
+        </div>
       );
     default:
       throw new Error('Undefined WindowContent: ' + windowContent);

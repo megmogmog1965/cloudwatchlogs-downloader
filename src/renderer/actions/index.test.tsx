@@ -62,7 +62,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogGroups = (
@@ -100,7 +100,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogGroups = (
@@ -182,7 +182,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogStreams = (
@@ -220,7 +220,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogStreams = (
@@ -274,11 +274,26 @@ describe('actions/index', () => {
       });
   });
 
+  it('requestLogText', () => {
+    expect(index.requestLogText())
+      .toEqual({
+        type: ActionTypes.REQUEST_LOG_TEXT,
+      });
+  });
+
   it('receiveLogText', () => {
     expect(index.receiveLogText('line 1\nline 2\n'))
       .toEqual({
         type: ActionTypes.RECEIVE_LOG_TEXT,
         text: 'line 1\nline 2\n',
+      });
+  });
+
+  it('errorLogText', () => {
+    expect(index.errorLogText('error messages'))
+      .toEqual({
+        type: ActionTypes.ERROR_LOG_TEXT,
+        errorMessage: 'error messages',
       });
   });
 
@@ -288,7 +303,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'NO_MODIFICATION',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogsEvents = (
@@ -319,6 +334,9 @@ describe('actions/index', () => {
     setTimeout(() => {
       expect(store.getActions())
         .toEqual([
+          {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
           {
             type: ActionTypes.RECEIVE_LOG_TEXT,
             text: 'log line 1\nlog line 2\r\n',
@@ -333,7 +351,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogsEvents = (
@@ -364,6 +382,9 @@ describe('actions/index', () => {
     setTimeout(() => {
       expect(store.getActions())
         .toEqual([
+          {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
           {
             type: ActionTypes.RECEIVE_LOG_TEXT,
             text: 'log line 1\nlog line 2\n',
@@ -378,7 +399,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let getCloudWatchLogsEvents = (
@@ -410,8 +431,55 @@ describe('actions/index', () => {
       expect(store.getActions())
         .toEqual([
           {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
+          {
             type: ActionTypes.RECEIVE_LOG_TEXT,
             text: 'log line 1\r\nlog line 2\r\n',
+          },
+        ]);
+    }, 100);
+  });
+
+  it('fetchLogText - Start/Error', () => {
+    let settings: Settings = {
+      region: 'ap-northeast-1',
+      awsAccessKeyId: 'xxxx',
+      awsSecretAccessKey: 'yyyy',
+      lineBreak: 'CRLF',
+      filters: [],
+    };
+
+    let getCloudWatchLogsEvents = (
+      callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse) => void,
+      callbackError: (err: AWS.AWSError) => void,
+      callbackEnd: () => void,
+    ) => {
+      callbackData({
+        events: [
+          {
+            timestamp: new Date(1).getTime(),
+            message: 'log line 1\n',
+          },
+        ],
+      });
+      callbackError({ message: 'error message' } as any);
+    };
+
+    let store = mockStore({});
+
+    // dispatch.
+    store.dispatch(index.fetchLogText(settings, getCloudWatchLogsEvents));
+
+    setTimeout(() => {
+      expect(store.getActions())
+        .toEqual([
+          {
+            type: ActionTypes.REQUEST_LOG_TEXT,
+          },
+          {
+            type: ActionTypes.ERROR_LOG_TEXT,
+            errorMessage: 'error message',
           },
         ]);
     }, 100);
@@ -447,7 +515,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let fileChooser = () => undefined; // stream.Writable | undefined
@@ -477,7 +545,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'NO_MODIFICATION',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -556,7 +624,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -635,7 +703,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -714,7 +782,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
-      jsonKey: 'log',
+      filters: [ { type: 'EXTRACT_JSON', key: 'log' } ],
     };
 
     let mockWrite = jest.fn();
@@ -723,7 +791,7 @@ describe('actions/index', () => {
 
     let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
 
-    let transformer = (line: string) => extractJson(line, settings.jsonKey);
+    let transformer = (line: string) => extractJson(line, 'log');
 
     let getCloudWatchLogsEvents = (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
@@ -795,7 +863,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockWrite = jest.fn();
@@ -860,7 +928,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let mockSave = jest.fn();
@@ -885,7 +953,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     let load = () => {
@@ -921,7 +989,7 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'CRLF',
-      jsonKey: '',
+      filters: [],
     };
 
     expect(index.receiveSettings(
@@ -934,4 +1002,26 @@ describe('actions/index', () => {
         lastModified: new Date(100),
       });
   });
+
+  it('showMessage', () => {
+    expect(index.showMessage(''))
+      .toEqual({
+        type: ActionTypes.SHOW_MESSAGE,
+        message: '',
+      });
+
+    expect(index.showMessage('message'))
+      .toEqual({
+        type: ActionTypes.SHOW_MESSAGE,
+        message: 'message',
+      });
+  });
+
+  it('hideMessage', () => {
+    expect(index.hideMessage())
+      .toEqual({
+        type: ActionTypes.HIDE_MESSAGE,
+      });
+  });
+
 });
