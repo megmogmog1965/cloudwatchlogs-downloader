@@ -8,7 +8,7 @@ export interface Props {
 
 const Balloon: React.SFC<Props> = ({ visible, message }) => {
   return (
-    <div className="Balloon pane" style={{ display: visible ? 'block' : 'none' }}>
+    <div className="Balloon" style={{ display: visible ? 'block' : 'none' }}>
       <p>{message}</p>
     </div>
   );

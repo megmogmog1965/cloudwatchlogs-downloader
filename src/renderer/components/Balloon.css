@@ -9,9 +9,24 @@
   line-height: 1.2;
   padding: 10px;
   margin: 0;
-  background-color: white;
+  color: white;
+  background-color: darkslateblue;
   border-radius: 5px;
   box-shadow: 2px 3px 5px #999;
+}
+
+.Balloon::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+  width: 0;
+  height: 0;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid darkslateblue;
+  border-left: 10px solid transparent;
 }
 
 .Balloon p {
