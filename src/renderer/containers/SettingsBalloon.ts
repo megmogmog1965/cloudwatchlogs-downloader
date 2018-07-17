@@ -12,9 +12,8 @@ interface Props {
 
 export function mapStateToProps({ settings, window }: StoreState): Props {
   return {
-    visible: settings.settings.awsAccessKeyId.length !== 0
-      && settings.settings.awsSecretAccessKey.length !== 0
-      && window.windowContent !== enums.WindowContent.Settings,
+    visible: window.windowContent !== enums.WindowContent.Settings
+      && (settings.settings.awsSecretAccessKey.length === 0 || settings.settings.awsAccessKeyId.length === 0),
     message: 'Fill me !',
   };
 }

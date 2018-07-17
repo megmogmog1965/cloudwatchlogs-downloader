@@ -8,10 +8,14 @@ export interface Props {
 
 const Balloon: React.SFC<Props> = ({ visible, message }) => {
   return (
-    <div className="Balloon" style={{ display: visible ? 'block' : 'none' }}>
+    <div className={className(visible)}>
       <p>{message}</p>
     </div>
   );
+}
+
+function className(visible: boolean): string {
+  return visible ? 'Balloon visible' : 'Balloon invisible';
 }
 
 export default Balloon;

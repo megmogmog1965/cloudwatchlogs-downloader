@@ -15,8 +15,10 @@ describe('components/Balloon', () => {
 
     let wrapper = shallow(<Balloon {...props} />);
     expect(wrapper.find('div.Balloon').exists()).toBe(true);
-    expect(wrapper.find('div.Balloon.p').exists()).toBe(true);
-    expect(wrapper.find('div.Balloon.p').text()).toBe('hello world');
+    expect(wrapper.find('div.Balloon p').exists()).toBe(true);
+    expect(wrapper.find('div.Balloon p').text()).toBe('hello world');
+    expect(wrapper.find('div.Balloon').hasClass('visible')).toBe(true);
+    expect(wrapper.find('div.Balloon').hasClass('invisible')).toBe(false);
   });
 
   it('render with visible=false', () => {
@@ -27,6 +29,8 @@ describe('components/Balloon', () => {
     };
 
     let wrapper = shallow(<Balloon {...props} />);
-    expect(wrapper.find('div.Balloon').exists()).toBe(false);
+    expect(wrapper.find('div.Balloon').exists()).toBe(true);
+    expect(wrapper.find('div.Balloon').hasClass('visible')).toBe(false);
+    expect(wrapper.find('div.Balloon').hasClass('invisible')).toBe(true);
   });
 });
