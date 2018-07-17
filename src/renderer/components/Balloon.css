@@ -13,6 +13,7 @@
   background-color: darkslateblue;
   border-radius: 5px;
   box-shadow: 2px 3px 5px #999;
+  animation: balloon-bob 1.5s ease-in-out .3s infinite alternate forwards;
 }
 
 .Balloon::before {
@@ -33,4 +34,16 @@
   margin: 0;
   padding: 0;
   font-weight: bold;
+}
+
+@keyframes balloon-bob {
+  0% {
+    transform: translate(-50%, 10px);
+  }
+  50% {
+    transform: translate(-50%, 6px);
+  }
+  100% {
+    transform: translate(-50%, 10px);
+  }
 }
