@@ -14,6 +14,7 @@ export interface Props {
   Settings: React.ComponentClass<any> | React.SFC<any>;
   DownloadList: React.ComponentClass<any> | React.SFC<any>;
   DownloadBadge: React.ComponentClass<any> | React.SFC<any>;
+  SettingsBalloon: React.ComponentClass<any> | React.SFC<any>;
   windowContent: enums.WindowContent;
   settings: types.Settings;
   logGroupName?: string;
@@ -51,8 +52,9 @@ class App extends React.Component<Props> {
               <button className={'btn btn-default ' + buttonState(enums.WindowContent.Filters, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.Filters)}>
                 <span className="icon icon-shuffle icon-text" />Filters
               </button>
-              <button className={'btn btn-default ' + buttonState(enums.WindowContent.Settings, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.Settings)}>
+              <button className={'btn btn-default relative ' + buttonState(enums.WindowContent.Settings, props.windowContent)} onClick={() => props.ShowWindowContent(enums.WindowContent.Settings)}>
                 <span className="icon icon-cog icon-text" />Settings
+                <props.SettingsBalloon />
               </button>
             </div>
 

@@ -12,6 +12,7 @@ import Filters from '../containers/Filters';
 import Settings from '../containers/Settings';
 import DownloadList from '../containers/DownloadList';
 import DownloadBadge from '../containers/DownloadBadge';
+import SettingsBalloon from '../containers/SettingsBalloon';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
 import { connect, Dispatch } from 'react-redux';
@@ -29,6 +30,7 @@ export function mapStateToProps({ window, settings, logGroups, logStreams, logEv
     Settings: Settings,
     DownloadList: DownloadList,
     DownloadBadge: DownloadBadge,
+    SettingsBalloon: SettingsBalloon,
     windowContent: window.windowContent,
     settings: settings.settings,
     logGroupName: logGroups.selectedName,
