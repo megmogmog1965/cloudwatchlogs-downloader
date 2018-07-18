@@ -7,6 +7,9 @@
     "buildResources": "src/resources",
     "output": "releases"
   },
+  "asar": {
+    "smartUnpack": false
+  },
   "mac": {
     "target": [
       {
