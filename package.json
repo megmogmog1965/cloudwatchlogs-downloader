@@ -62,6 +62,7 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "gulp": "^3.9.1",
+    "gulp-json-editor": "^2.4.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^22.4.3",
     "redux-mock-store": "^1.5.1",
