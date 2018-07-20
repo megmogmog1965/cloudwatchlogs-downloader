@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 
 gulp.task('copy', function() {
-  gulp.src(['public/**/*', 'package.json'])
+  gulp.src(['public/**/*'])
     .pipe(gulp.dest('dist'));
 });

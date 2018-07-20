@@ -1,0 +1,14 @@
+{
+  "name": "cloudwatchlogs-downloader",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Cross-platform App to download logs from CloudWatch Logs.",
+  "scripts": {
+  },
+  "homepage": ".",
+  "repository": "https://github.com/megmogmog1965/cloudwatchlogs-downloader",
+  "keywords": [
+  ],
+  "author": "Yusuke Kawatsu",
+  "license": "MIT"
+}
