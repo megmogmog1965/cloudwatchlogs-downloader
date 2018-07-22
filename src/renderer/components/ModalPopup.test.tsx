@@ -8,8 +8,8 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('components/Loading', () => {
   it('visible', () => {
     let props = {
-      message: 'message',
       visible: true,
+      message: 'message',
       HideMessage: () => 0,
     };
 
@@ -20,8 +20,8 @@ describe('components/Loading', () => {
 
   it('invisible', () => {
     let props = {
-      message: '',
       visible: false,
+      message: '',
       HideMessage: () => 0,
     };
 
@@ -32,8 +32,8 @@ describe('components/Loading', () => {
 
   it('message', () => {
     let props = {
-      message: 'message',
       visible: true,
+      message: 'message',
       HideMessage: () => 0,
     };
 

@@ -2,19 +2,20 @@ import * as React from 'react';
 import './ModalPopup.css';
 
 export interface Props {
-  message: string;
   visible: boolean;
+  message: string;
+  subMessage?: string;
   HideMessage: () => void;
 }
 
-const ModalPopup: React.SFC<Props> = ({ message, visible, HideMessage }) => {
+const ModalPopup: React.SFC<Props> = ({ visible, message, subMessage, HideMessage }) => {
   return (
     <div className={className(visible)}>
       <div className="overlay" />
       <div className="popup middle">
         <h2>{message}</h2>
         <span className="icon icon-cancel-squared close" onClick={HideMessage} />
-        <div className="content">&nbsp;</div>
+        <div className="content">{subMessage !== undefined ? subMessage : ' '}</div>
       </div>
     </div>
   );

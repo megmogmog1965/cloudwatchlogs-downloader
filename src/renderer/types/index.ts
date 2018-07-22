@@ -60,6 +60,7 @@ export interface AsyncCallState {
 
 export interface MessageState {
   message: string;
+  subMessage?: string;
   visible: boolean;
 }
 
@@ -102,6 +103,7 @@ export const initialState: StoreState = {
   },
   message: {
     message: '',
+    subMessage: undefined,
     visible: false,
   },
 };

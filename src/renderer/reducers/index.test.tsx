@@ -1207,6 +1207,7 @@ describe('reducers/index', () => {
     expect(index.message(
       {
         message: 'previous message',
+        subMessage: 'previous sub message',
         visible: false,
       },
       {
@@ -1216,6 +1217,7 @@ describe('reducers/index', () => {
     )).toEqual(
       {
         message: 'message',
+        subMessage: undefined,
         visible: true,
       },
     );
@@ -1224,6 +1226,7 @@ describe('reducers/index', () => {
     expect(index.message(
       {
         message: 'previous message',
+        subMessage: 'previous sub message',
         visible: true,
       },
       {
@@ -1233,6 +1236,70 @@ describe('reducers/index', () => {
     )).toEqual(
       {
         message: 'message',
+        subMessage: undefined,
+        visible: true,
+      },
+    );
+  });
+
+  it('message - ERROR_LOG_GROUPS', () => {
+    // ERROR_LOG_GROUPS.
+    expect(index.message(
+      {
+        message: 'previous message',
+        subMessage: 'previous sub message',
+        visible: false,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_GROUPS,
+        errorMessage: 'message',
+      },
+    )).toEqual(
+      {
+        message: 'Error',
+        subMessage: 'message',
+        visible: true,
+      },
+    );
+  });
+
+  it('message - ERROR_LOG_STREAMS', () => {
+    // ERROR_LOG_STREAMS.
+    expect(index.message(
+      {
+        message: 'previous message',
+        subMessage: 'previous sub message',
+        visible: false,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_STREAMS,
+        errorMessage: 'message',
+      },
+    )).toEqual(
+      {
+        message: 'Error',
+        subMessage: 'message',
+        visible: true,
+      },
+    );
+  });
+
+  it('message - ERROR_LOG_TEXT', () => {
+    // ERROR_LOG_TEXT.
+    expect(index.message(
+      {
+        message: 'previous message',
+        subMessage: 'previous sub message',
+        visible: false,
+      },
+      {
+        type: ActionTypes.ERROR_LOG_TEXT,
+        errorMessage: 'message',
+      },
+    )).toEqual(
+      {
+        message: 'Error',
+        subMessage: 'message',
         visible: true,
       },
     );
@@ -1243,6 +1310,7 @@ describe('reducers/index', () => {
     expect(index.message(
       {
         message: 'previous message',
+        subMessage: 'previous sub message',
         visible: true,
       },
       {
@@ -1251,6 +1319,7 @@ describe('reducers/index', () => {
     )).toEqual(
       {
         message: '',
+        subMessage: undefined,
         visible: false,
       },
     );

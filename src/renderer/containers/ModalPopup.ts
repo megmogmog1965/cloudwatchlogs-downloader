@@ -7,12 +7,14 @@ import { connect, Dispatch } from 'react-redux';
 
 interface Props {
   message: string;
+  subMessage?: string;
   visible: boolean;
 }
 
 export function mapStateToProps({ message }: StoreState): Props {
   return {
     message: message.message,
+    subMessage: message.subMessage,
     visible: message.visible,
   };
 }

@@ -155,16 +155,22 @@ export function asyncCalls(state: AsyncCallState, action: LogGroupAction | LogSt
   }
 }
 
-export function message(state: MessageState, action: MessageAction): MessageState {
+export function message(state: MessageState, action: MessageAction | LogGroupAction | LogStreamAction | LogTextAction): MessageState {
   if (!state) {
     return { ...initialState.message };
   }
 
   switch (action.type) {
     case ActionTypes.SHOW_MESSAGE:
-      return { ...state, message: action.message, visible: true };
+      return { ...state, message: action.message, subMessage: undefined, visible: true };
+    case ActionTypes.ERROR_LOG_GROUPS:
+      return { ...state, message: 'Error', subMessage: action.errorMessage, visible: true };
+    case ActionTypes.ERROR_LOG_STREAMS:
+      return { ...state, message: 'Error', subMessage: action.errorMessage, visible: true };
+    case ActionTypes.ERROR_LOG_TEXT:
+      return { ...state, message: 'Error', subMessage: action.errorMessage, visible: true };
     case ActionTypes.HIDE_MESSAGE:
-      return { ...state, message: '', visible: false };
+      return { ...state, message: '', subMessage: undefined, visible: false };
     default:
       return state;
   }
