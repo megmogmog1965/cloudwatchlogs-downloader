@@ -173,6 +173,7 @@ export function fetchLogGroups(
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
+    // @fixme need this ?
     if (!settings.region || !settings.awsAccessKeyId || !settings.awsSecretAccessKey) {
       return;
     }
@@ -224,10 +225,6 @@ export function fetchLogStreams(
 ): (dispatch: Dispatch<LogStreamAction>) => void {
 
   return (dispatch: Dispatch<LogStreamAction>) => {
-    if (!settings.region || !settings.awsAccessKeyId || !settings.awsSecretAccessKey || !logGroupName) {
-      return;
-    }
-
     getCloudWatchLogStreams(
       (time: Date) => dispatch(requestLogStreams()),
       (time: Date, err: AWS.AWSError) => dispatch(errorLogStreams(err.message)),
