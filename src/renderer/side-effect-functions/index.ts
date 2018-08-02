@@ -101,7 +101,8 @@ export function getCloudWatchLogGroups(
   cloudwatchlogs: AWS.CloudWatchLogs,
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
-  callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
+  callbackEnd: (time: Date, logGroups: LogGroup[], nextToken?: string) => void,
+  nextLogGroupsToken?: string,
   retryDelay = 1000,
 ): void {
 
@@ -141,8 +142,15 @@ export function getCloudWatchLogGroups(
 
       let merged = groups.concat(part);
 
+      // end of groups.
       if (!data.nextToken) {
         callbackEnd(now, merged);
+        return;
+      }
+
+      // paging with limit.
+      if (merged.length > 1000) {
+        callbackEnd(now, merged, data.nextToken);
         return;
       }
 
@@ -151,7 +159,7 @@ export function getCloudWatchLogGroups(
     });
   };
 
-  fetchRecursively([]);
+  fetchRecursively([], nextLogGroupsToken);
 }
 
 export function getCloudWatchLogStreams(
@@ -159,7 +167,8 @@ export function getCloudWatchLogStreams(
   logGroupName: string,
   callbackStart: (time: Date) => void,
   callbackError: (time: Date, err: AWS.AWSError) => void,
-  callbackEnd: (time: Date, logStreams: LogStream[]) => void,
+  callbackEnd: (time: Date, logStreams: LogStream[], nextToken?: string) => void,
+  nextLogStreamsToken?: string,
   retryDelay = 1000,
 ): void {
 
@@ -203,8 +212,15 @@ export function getCloudWatchLogStreams(
 
       let merged = streams.concat(part);
 
+      // end of streams.
       if (!data.nextToken) {
         callbackEnd(now, merged);
+        return;
+      }
+
+      // paging with limit.
+      if (merged.length > 1000) {
+        callbackEnd(now, merged, data.nextToken);
         return;
       }
 
@@ -213,7 +229,7 @@ export function getCloudWatchLogStreams(
     });
   };
 
-  fetchRecursively([]);
+  fetchRecursively([], nextLogStreamsToken);
 }
 
 export function getCloudWatchLogsEvents(

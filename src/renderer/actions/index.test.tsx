@@ -45,6 +45,7 @@ describe('actions/index', () => {
         type: ActionTypes.RECEIVE_LOG_GROUPS,
         logGroups: ['a' as any, 'b' as any],
         lastModified: new Date(200),
+        nextToken: undefined,
       });
   });
 
@@ -77,7 +78,7 @@ describe('actions/index', () => {
     let store = mockStore({});
 
     // dispatch.
-    store.dispatch(index.fetchLogGroups(settings, getCloudWatchLogGroups));
+    store.dispatch(index.fetchLogGroups(settings, getCloudWatchLogGroups, ['c' as any]));
 
     setTimeout(() => {
       expect(store.getActions())
@@ -87,8 +88,9 @@ describe('actions/index', () => {
           },
           {
             type: ActionTypes.RECEIVE_LOG_GROUPS,
-            logGroups: ['a' as any, 'b' as any],
+            logGroups: ['c' as any, 'a' as any, 'b' as any],
             lastModified: new Date(1),
+            nextToken: undefined,
           },
         ]);
     }, 100);
@@ -165,6 +167,7 @@ describe('actions/index', () => {
         type: ActionTypes.RECEIVE_LOG_STREAMS,
         logStreams: ['a' as any, 'b' as any],
         lastModified: new Date(200),
+        nextToken: undefined,
       });
   });
 
@@ -197,7 +200,7 @@ describe('actions/index', () => {
     let store = mockStore({});
 
     // dispatch.
-    store.dispatch(index.fetchLogStreams(settings, 'loggroup', getCloudWatchLogStreams));
+    store.dispatch(index.fetchLogStreams(settings, 'loggroup', getCloudWatchLogStreams, ['c' as any]));
 
     setTimeout(() => {
       expect(store.getActions())
@@ -207,8 +210,9 @@ describe('actions/index', () => {
           },
           {
             type: ActionTypes.RECEIVE_LOG_STREAMS,
-            logStreams: ['a' as any, 'b' as any],
+            logStreams: ['c' as any, 'a' as any, 'b' as any],
             lastModified: new Date(1),
+            nextToken: undefined,
           },
         ]);
     }, 100);
@@ -486,26 +490,26 @@ describe('actions/index', () => {
   });
 
   it('requestLogEvents', () => {
-    expect(index.requestLogEvents({id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}))
+    expect(index.requestLogEvents({ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 }))
       .toEqual({
         type: ActionTypes.REQUEST_LOG_EVENTS,
-        job: {id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
       });
   });
 
   it('receiveLogEvents', () => {
-    expect(index.receiveLogEvents({id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}))
+    expect(index.receiveLogEvents({ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 }))
       .toEqual({
         type: ActionTypes.RECEIVE_LOG_EVENTS,
-        job: {id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
       });
   });
 
   it('errorLogEvents', () => {
-    expect(index.errorLogEvents({id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0}))
+    expect(index.errorLogEvents({ id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 }))
       .toEqual({
         type: ActionTypes.ERROR_LOG_EVENTS,
-        job: {id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+        job: { id: 'xxxx', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
       });
   });
 
@@ -520,7 +524,7 @@ describe('actions/index', () => {
 
     let fileChooser = () => undefined; // stream.Writable | undefined
 
-    let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
+    let job = { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 };
 
     let getCloudWatchLogsEvents = (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
@@ -552,7 +556,7 @@ describe('actions/index', () => {
     let mockEnd = jest.fn();
     let fileChooser = () => ({ write: mockWrite, end: mockEnd }) as any; // stream.Writable | undefined
 
-    let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
+    let job = { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 };
 
     let getCloudWatchLogsEvents = (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
@@ -592,19 +596,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9 },
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0 },
           },
         ]);
 
@@ -631,7 +635,7 @@ describe('actions/index', () => {
     let mockEnd = jest.fn();
     let fileChooser = () => ({ write: mockWrite, end: mockEnd }) as any; // stream.Writable | undefined
 
-    let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
+    let job = { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 };
 
     let getCloudWatchLogsEvents = (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
@@ -671,19 +675,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9 },
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0 },
           },
         ]);
 
@@ -710,7 +714,7 @@ describe('actions/index', () => {
     let mockEnd = jest.fn();
     let fileChooser = () => ({ write: mockWrite, end: mockEnd }) as any; // stream.Writable | undefined
 
-    let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
+    let job = { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 };
 
     let getCloudWatchLogsEvents = (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
@@ -750,19 +754,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9 },
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0 },
           },
         ]);
 
@@ -782,14 +786,14 @@ describe('actions/index', () => {
       awsAccessKeyId: 'xxxx',
       awsSecretAccessKey: 'yyyy',
       lineBreak: 'LF',
-      filters: [ { type: 'EXTRACT_JSON', key: 'log' } ],
+      filters: [{ type: 'EXTRACT_JSON', key: 'log' }],
     };
 
     let mockWrite = jest.fn();
     let mockEnd = jest.fn();
     let fileChooser = () => ({ write: mockWrite, end: mockEnd }) as any; // stream.Writable | undefined
 
-    let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
+    let job = { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 };
 
     let transformer = (line: string) => extractJson(line, 'log');
 
@@ -831,19 +835,19 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.9 },
           },
           {
             type: ActionTypes.RECEIVE_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 1.0 },
           },
         ]);
 
@@ -870,7 +874,7 @@ describe('actions/index', () => {
     let mockEnd = jest.fn();
     let fileChooser = () => ({ write: mockWrite, end: mockEnd }) as any; // stream.Writable | undefined
 
-    let job = {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0};
+    let job = { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 };
 
     let getCloudWatchLogsEvents = (
       callbackData: (data: AWS.CloudWatchLogs.Types.GetLogEventsResponse, progress: number) => void,
@@ -902,15 +906,15 @@ describe('actions/index', () => {
         .toEqual([
           {
             type: ActionTypes.REQUEST_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0 },
           },
           {
             type: ActionTypes.PROGRESS_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5 },
           },
           {
             type: ActionTypes.ERROR_LOG_EVENTS,
-            job: {id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5},
+            job: { id: 'jobid', logGroupName: 'group', logStreamName: 'stream', startTime: 0, progress: 0.5 },
           },
         ]);
 

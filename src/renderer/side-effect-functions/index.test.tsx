@@ -12,7 +12,7 @@ function timeout(ms: number) {
   return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
 
-describe('utils/index', () => {
+describe('side-effect-functions/index', () => {
   it('applicationPassphrase: characters.', () => {
     expect(/^[-+.0-9a-z]+_.+$/.test(index.applicationPassphrase())).toBe(true);
   });
@@ -37,6 +37,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 
@@ -77,6 +78,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 
@@ -122,6 +124,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 
@@ -187,6 +190,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 
@@ -260,6 +264,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 
@@ -301,6 +306,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 
@@ -347,6 +353,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 
@@ -413,6 +420,7 @@ describe('utils/index', () => {
       mockCallbackStart,
       mockCallbackError,
       mockCallbackEnd,
+      undefined,
       10,
     );
 

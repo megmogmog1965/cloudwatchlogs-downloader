@@ -22,6 +22,7 @@ export interface ReceiveLogGroups {
   type: ActionTypes.RECEIVE_LOG_GROUPS;
   logGroups: LogGroup[];
   lastModified: Date;
+  nextToken?: string;
 }
 
 export interface ErrorLogGroups {
@@ -42,6 +43,7 @@ export interface ReceiveLogStreams {
   type: ActionTypes.RECEIVE_LOG_STREAMS;
   logStreams: LogStream[];
   lastModified: Date;
+  nextToken?: string;
 }
 
 export interface ErrorLogStreams {
@@ -148,11 +150,12 @@ export function requestLogGroups(): RequestLogGroups {
   };
 }
 
-export function receiveLogGroups(logGroups: LogGroup[], lastModified: Date): ReceiveLogGroups {
+export function receiveLogGroups(logGroups: LogGroup[], lastModified: Date, nextToken?: string): ReceiveLogGroups {
   return {
     type: ActionTypes.RECEIVE_LOG_GROUPS,
     logGroups: logGroups,
     lastModified: lastModified,
+    nextToken: nextToken,
   };
 }
 
@@ -170,6 +173,7 @@ export function fetchLogGroups(
     callbackError: (time: Date, err: AWS.AWSError) => void,
     callbackEnd: (time: Date, logGroups: LogGroup[]) => void,
   ) => void,
+  currentLogGroups: LogGroup[] = [],
 ): (dispatch: Dispatch<LogGroupAction>) => void {
 
   return (dispatch: Dispatch<LogGroupAction>) => {
@@ -181,7 +185,7 @@ export function fetchLogGroups(
     getCloudWatchLogGroups(
       (time: Date) => dispatch(requestLogGroups()),
       (time: Date, err: AWS.AWSError) => dispatch(errorLogGroups(err.message)),
-      (time: Date, logGroups: LogGroup[]) => dispatch(receiveLogGroups(logGroups, time)),
+      (time: Date, logGroups: LogGroup[], nextToken?: string) => dispatch(receiveLogGroups(currentLogGroups.concat(logGroups), time, nextToken)),
     );
   };
 }
@@ -199,11 +203,12 @@ export function requestLogStreams(): RequestLogStreams {
   };
 }
 
-export function receiveLogStreams(logStreams: LogStream[], lastModified: Date): ReceiveLogStreams {
+export function receiveLogStreams(logStreams: LogStream[], lastModified: Date, nextToken?: string): ReceiveLogStreams {
   return {
     type: ActionTypes.RECEIVE_LOG_STREAMS,
     logStreams: logStreams,
     lastModified: lastModified,
+    nextToken: nextToken,
   };
 }
 
@@ -222,13 +227,14 @@ export function fetchLogStreams(
     callbackError: (time: Date, err: AWS.AWSError) => void,
     callbackEnd: (time: Date, logStreams: LogStream[]) => void,
   ) => void,
+  currentLogStreams: LogStream[] = [],
 ): (dispatch: Dispatch<LogStreamAction>) => void {
 
   return (dispatch: Dispatch<LogStreamAction>) => {
     getCloudWatchLogStreams(
       (time: Date) => dispatch(requestLogStreams()),
       (time: Date, err: AWS.AWSError) => dispatch(errorLogStreams(err.message)),
-      (time: Date, logStreams: LogStream[]) => dispatch(receiveLogStreams(logStreams, time)),
+      (time: Date, logStreams: LogStream[], nextToken?: string) => dispatch(receiveLogStreams(currentLogStreams.concat(logStreams), time, nextToken)),
     );
   };
 }
