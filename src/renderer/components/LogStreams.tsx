@@ -11,6 +11,7 @@ export interface Props {
   logGroupName?: string;
   SelectLogStream: (selectedName: string) => void;
   FetchLogText: (settings: Settings, logGroupName: string, logStream: LogStream) => void;
+  FetchMoreLogStreams: (settings: Settings, logGroupName: string, currentLogStreams: LogStream[]) => void;
   Now: () => Date;
 }
 

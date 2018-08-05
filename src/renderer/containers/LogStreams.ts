@@ -3,7 +3,7 @@
 import LogStreams from '../components/LogStreams';
 import * as actions from '../actions/';
 import { StoreState } from '../types';
-import { currentDate, connectCloudWatchLogs, getCloudWatchLogsEvents } from '../side-effect-functions';
+import { currentDate, connectCloudWatchLogs, getCloudWatchLogStreams, getCloudWatchLogsEvents } from '../side-effect-functions';
 import { Settings, LogStream } from '../common-interfaces';
 import { connect, Dispatch } from 'react-redux';
 
@@ -35,6 +35,16 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.LogGroupAction>) {
         ) => getCloudWatchLogsEvents(connectCloudWatchLogs(settings), logGroupName, logStream.logStreamName, startDate, endDate, callbackData, callbackError, callbackEnd, false, limit), // currying.
       ));
     },
+    FetchMoreLogStreams: (settings: Settings, logGroupName: string, currentLogStreams: LogStream[]) => dispatch(actions.fetchLogStreams(
+      settings,
+      logGroupName,
+      (
+        callbackStart: (time: Date) => void,
+        callbackError: (time: Date, err: AWS.AWSError) => void,
+        callbackEnd: (time: Date, logStreams: LogStream[]) => void,
+      ) => getCloudWatchLogStreams(connectCloudWatchLogs(settings), logGroupName, callbackStart, callbackError, callbackEnd), // currying.
+      currentLogStreams,
+    )),
     Now: currentDate,
   };
 }

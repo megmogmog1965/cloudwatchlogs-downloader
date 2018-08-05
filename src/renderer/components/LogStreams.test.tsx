@@ -18,6 +18,7 @@ describe('components/LogStreams', () => {
   it('render NO <li> without logStreams.', () => {
     let mockSelectLogStream = jest.fn();
     let mockFetchLogText = jest.fn();
+    let mockFetchMoreLogStreams = jest.fn();
 
     let props = {
       logStreams: [],
@@ -27,6 +28,7 @@ describe('components/LogStreams', () => {
       logGroupName: 'loggroup',
       SelectLogStream: mockSelectLogStream,
       FetchLogText: mockFetchLogText,
+      FetchMoreLogStreams: mockFetchMoreLogStreams,
       Now: () => new Date(0),
     };
 
@@ -38,6 +40,7 @@ describe('components/LogStreams', () => {
   it('render <li> with logStreams.', () => {
     let mockSelectLogStream = jest.fn();
     let mockFetchLogText = jest.fn();
+    let mockFetchMoreLogStreams = jest.fn();
 
     // ignore locale of test environment.
     let ignoreTimezone = (date: Date) => {
@@ -59,6 +62,7 @@ describe('components/LogStreams', () => {
       logGroupName: 'loggroup',
       SelectLogStream: mockSelectLogStream,
       FetchLogText: mockFetchLogText,
+      FetchMoreLogStreams: mockFetchMoreLogStreams,
       Now: () => new Date(0),
     };
 
@@ -84,6 +88,7 @@ describe('components/LogStreams', () => {
   it('called SelectLogStream on click list items.', () => {
     let mockSelectLogStream = jest.fn();
     let mockFetchLogText = jest.fn();
+    let mockFetchMoreLogStreams = jest.fn();
 
     let logStreams = [
       { arn: 'xxxx', logStreamName: 'yyyy', creationTime: new Date(1).getTime(), firstEventTimestamp: new Date(2).getTime(), lastEventTimestamp: new Date(3).getTime(), storedBytes: 300 },
@@ -98,6 +103,7 @@ describe('components/LogStreams', () => {
       logGroupName: 'loggroup',
       SelectLogStream: mockSelectLogStream,
       FetchLogText: mockFetchLogText,
+      FetchMoreLogStreams: mockFetchMoreLogStreams,
       Now: () => new Date(0),
     };
 
