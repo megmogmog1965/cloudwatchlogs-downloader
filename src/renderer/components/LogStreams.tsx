@@ -15,39 +15,52 @@ export interface Props {
   Now: () => Date;
 }
 
-const LogStreams: React.SFC<Props> = ({ logStreams, selectedName, lastModified, settings, logGroupName, SelectLogStream, FetchLogText, Now }) => {
-  // first & last timestamps.
-  let first = Math.min(...logStreams.map(s => s.firstEventTimestamp));
+class LogStreams extends React.Component<Props> {
 
-  const onClick = (logStream: LogStream) => {
-    SelectLogStream(logStream.logStreamName);
-    if (logGroupName) {
-      FetchLogText(settings, logGroupName, logStream);
-    }
+  constructor(props: Props) {
+    super(props);
   }
 
-  return (
-    <ul className="LogStreams list-group">
-      <li className="list-group-header">
-        <strong>Log Streams</strong>
-      </li>
-      {logStreams
-        .slice() // clone it before sort.
-        .sort(descendedCompareFn) // mutated by sort().
-        .map(s => (
-          <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(s)}>
-            <div className="media-body">
-              <strong>{s.logStreamName}</strong>
-              <div className="clearfix">
-                <p className="left">From: {dateString(new Date(s.firstEventTimestamp))}</p>
-                <p className="right">To: {dateString(new Date(s.lastEventTimestamp))}</p>
+  componentDidMount() {
+    window.addEventListener('scroll', e => console.log(e), false);
+  }
+
+  render() {
+    let { logStreams, selectedName, settings, logGroupName, SelectLogStream, FetchLogText, Now } = this.props;
+
+    // first & last timestamps.
+    let first = Math.min(...logStreams.map(s => s.firstEventTimestamp));
+
+    const onClick = (logStream: LogStream) => {
+      SelectLogStream(logStream.logStreamName);
+      if (logGroupName) {
+        FetchLogText(settings, logGroupName, logStream);
+      }
+    }
+
+    return (
+      <ul className="LogStreams list-group">
+        <li className="list-group-header">
+          <strong>Log Streams</strong>
+        </li>
+        {logStreams
+          .slice() // clone it before sort.
+          .sort(descendedCompareFn) // mutated by sort().
+          .map(s => (
+            <li className={(selectedName === s.logStreamName) ? 'list-group-item active' : 'list-group-item'} onClick={() => onClick(s)}>
+              <div className="media-body">
+                <strong>{s.logStreamName}</strong>
+                <div className="clearfix">
+                  <p className="left">From: {dateString(new Date(s.firstEventTimestamp))}</p>
+                  <p className="right">To: {dateString(new Date(s.lastEventTimestamp))}</p>
+                </div>
+                {timeRange(first, s, Now)}
               </div>
-              {timeRange(first, s, Now)}
-            </div>
-          </li>
-        ))}
-    </ul>
-  );
+            </li>
+          ))}
+      </ul>
+    );
+  }
 }
 
 /**
